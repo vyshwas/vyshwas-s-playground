@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html lang="en" class="antialiased">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Vishwas Mehta — Strategic Designer</title>
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Libraries -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/studio-freight/lenis@1.0.19/bundled/lenis.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/matter-js/0.19.0/matter.min.js"></script>
+
+    <style>
+        :root { --bg-color: #050505; --text-color: #f3f4f6; }
+        body { font-family: 'Inter', sans-serif; background-color: var(--bg-color); color: var(--text-color); margin: 0; padding: 0; overflow-x: hidden; }
+        
+        /* Noise Overlay */
+        .film-grain { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; pointer-events: none; z-index: 9999; opacity: 0.04; background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E"); }
+
+        nav { position: fixed; top: 0; left: 0; width: 100%; padding: 2rem 3rem; display: flex; justify-content: space-between; align-items: flex-start; z-index: 100; mix-blend-mode: difference; pointer-events: none; }
+        .nav-left, .nav-right { pointer-events: auto; }
+        .nav-right { display: flex; flex-direction: column; gap: 0.5rem; text-align: right; }
+        nav a { color: white; text-decoration: none; font-size: 0.85rem; font-weight: 500; letter-spacing: 0.05em; text-transform: uppercase; opacity: 0.7; transition: opacity 0.3s ease; }
+        nav a:hover { opacity: 1; }
+
+        /* Hero */
+        .hero-container { position: relative; height: 100vh; width: 100vw; overflow: hidden; display: flex; align-items: center; justify-content: center; }
+        /* Using a subtle, warm, moody environment image */
+        .environment-bg { position: absolute; top: -10%; left: -10%; width: 120%; height: 120%; background-image: url('https://images.unsplash.com/photo-1473448912268-2022ce9509d8?q=80&w=2041&auto=format&fit=crop'); background-size: cover; background-position: center; z-index: 1; filter: brightness(0.6) contrast(1.2) blur(2px); transform-origin: center center; will-change: transform, filter; }
+        
+        /* The TV Portal */
+        .tv-wrapper { position: relative; z-index: 10; width: 400px; height: 300px; transform-origin: center center; display: flex; align-items: center; justify-content: center; will-change: transform; }
+        .tv-casing { position: absolute; inset: 0; background: #111; border-radius: 20px; box-shadow: inset 0 0 40px rgba(0,0,0,0.9), 0 20px 50px rgba(0,0,0,0.8); border: 2px solid #2a2a2a; z-index: 11; }
+        .tv-glass { position: absolute; inset: 20px; border-radius: 40% / 10%; box-shadow: inset 0 0 20px rgba(255,255,255,0.1); z-index: 13; pointer-events: none; background: radial-gradient(circle, rgba(255,255,255,0.05) 0%, rgba(0,0,0,0) 60%); }
+        .tv-screen { position: absolute; inset: 20px; background-color: #000; border-radius: 40% / 10%; overflow: hidden; z-index: 12; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 2rem; box-shadow: 0 0 30px rgba(200, 200, 255, 0.2); }
+        
+        /* Scanlines */
+        .tv-screen::before { content: " "; display: block; position: absolute; inset: 0; background: linear-gradient(to bottom, rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%); background-size: 100% 4px; z-index: 50; pointer-events: none; }
+        
+        .tv-content-wrapper { width: 100%; height: 100%; display: flex; flex-direction: column; justify-content: center; align-items: center; background: radial-gradient(circle at center, #1a1a2e 0%, #000000 100%); }
+        .screen-headline { font-size: 1.5rem; font-weight: 300; color: #e2e8f0; letter-spacing: -0.02em; line-height: 1.2; text-shadow: 0 0 5px rgba(255,255,255,0.3); }
+
+        /* Terminal Overlay (Moved OUTSIDE the scaling TV container) */
+        .loading-sequence { position: fixed; inset: 0; background: #000; z-index: 9000; display: flex; flex-direction: column; justify-content: center; align-items: center; color: #10b981; font-family: monospace; font-size: 1rem; opacity: 0; pointer-events: none; padding: 2rem; text-align: left; }
+        .loading-text { width: 100%; max-width: 300px; }
+
+        /* Journal */
+        .journal-section { position: relative; background-color: var(--bg-color); padding: 8rem 2rem; z-index: 20; opacity: 0; }
+        .journal-chapter { margin-bottom: 15rem; max-width: 1000px; margin-left: auto; margin-right: auto; }
+        .journal-headline { font-size: clamp(2rem, 5vw, 4rem); font-weight: 300; line-height: 1.1; letter-spacing: -0.03em; color: #ffffff; }
+        .journal-paragraph { font-size: clamp(1.1rem, 2vw, 1.5rem); line-height: 1.6; color: #94a3b8; font-weight: 300; max-width: 600px; }
+        .gsap-reveal { opacity: 0; transform: translateY(40px); }
+
+        /* Playground */
+        .playground-section { position: relative; width: 100vw; height: 100vh; background-color: #0a0a0a; overflow: hidden; z-index: 20; border-top: 1px solid #1a1a1a; }
+        .playground-header { position: absolute; top: 10vh; left: 0; width: 100%; text-align: center; z-index: 10; pointer-events: none; }
+        .playground-header h3 { font-size: 1.5rem; font-weight: 400; color: #e2e8f0; letter-spacing: 0.05em; text-transform: uppercase; }
+        .playground-header p { font-size: 0.85rem; color: #64748b; margin-top: 0.5rem; }
+        
+        #playground-controls { position: absolute; bottom: 40px; left: 50%; transform: translateX(-50%); z-index: 50; display: flex; gap: 12px; }
+        .playground-btn { background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1); color: white; padding: 10px 24px; border-radius: 999px; font-size: 14px; font-weight: 500; cursor: pointer; backdrop-filter: blur(8px); transition: all 0.2s ease; }
+        .playground-btn:hover { background: rgba(255, 255, 255, 0.15); }
+
+        .physics-element { position: absolute; top: 0; left: 0; will-change: transform; transform-origin: center center; background: rgba(24, 24, 27, 0.85); backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 16px; box-shadow: 0 10px 40px -10px rgba(0,0,0,0.5); padding: 24px; cursor: grab; user-select: none; display: flex; flex-direction: column; gap: 12px; z-index: 30; opacity: 0; transition: opacity 0.5s ease, border-color 0.2s; }
+        .physics-element.visible { opacity: 1; }
+        .physics-element:active { cursor: grabbing; border-color: rgba(99, 102, 241, 0.5); }
+        .pill-shape { border-radius: 999px; padding: 16px 32px; align-items: center; justify-content: center; }
+    </style>
+</head>
+<body>
+
+    <!-- Cinematic Grain Overlay -->
+    <div class="film-grain"></div>
+
+    <!-- Minimal Navigation -->
+    <nav>
+        <div class="nav-left"><a href="#">Vishwas Mehta</a></div>
+        <div class="nav-right">
+            <a href="#selected-work">Work</a><a href="#journal-dest">About</a>
+            <a href="#playground">Experiments</a><a href="mailto:vyommehta197@gmail.com">Contact</a>
+        </div>
+    </nav>
+
+    <!-- Hero Section: TV Portal -->
+    <div class="hero-container" id="pinned-hero">
+        <div class="environment-bg" id="env-bg"></div>
+        <div class="tv-wrapper" id="tv-portal">
+            <div class="tv-casing"></div>
+            <div class="tv-glass"></div>
+            <div class="tv-screen">
+                <div class="tv-content-wrapper">
+                    <h2 class="screen-headline">Every great product begins with a different way of seeing.</h2>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Loading Sequence (Rendered outside the scaling TV) -->
+    <div class="loading-sequence" id="loading-seq">
+        <div class="loading-text">
+            <div id="load-bar"></div>
+            <div id="load-msg-1"></div>
+            <div id="load-msg-2"></div>
+            <div id="load-msg-3"></div>
+            <div id="load-bar-2"></div>
+        </div>
+    </div>
+
+    <!-- Animation Track for GSAP (Shortened for 0.5s equivalent fast scroll) -->
+    <div class="scroll-spacer" id="animation-track" style="height: 60vh;"></div>
+
+    <!-- Editorial Journal Section -->
+    <section class="journal-section" id="journal-dest">
+        <div class="journal-chapter gsap-reveal">
+            <h2 class="journal-headline">Curiosity led me to design. <br><span class="text-slate-500">Systems made me stay.</span></h2>
+            <p class="journal-paragraph mt-8">I started in computer science, where I learned to think in systems before I ever designed an interface. That mindset taught me to look beyond individual screens and understand how every decision shapes a larger experience.</p>
+        </div>
+        
+        <div class="journal-chapter flex justify-end gsap-reveal">
+            <div class="max-w-xl">
+                <p class="journal-paragraph text-right">Even before design, I was fascinated by human psychology and how visuals, media, and everyday experiences influence our decisions. That curiosity led me to UX, where I discovered that great design isn't built on assumptions, but on observing behavior.</p>
+                <p class="journal-paragraph text-right mt-6 font-medium text-white">People often say one thing and do another, and understanding that gap is where meaningful design begins.</p>
+            </div>
+        </div>
+
+        <div class="journal-chapter text-center my-32 gsap-reveal">
+            <h3 class="text-3xl md:text-5xl font-light italic text-indigo-200">"I'm less interested in adding features than removing friction. Less interested in making things look different than making them feel inevitable."</h3>
+        </div>
+
+        <div class="journal-chapter gsap-reveal">
+            <p class="journal-paragraph">Over time, I realized a brand isn't just a logo and a product isn't just a collection of screens. Together, they shape how people understand, trust, and remember something.</p>
+            <p class="journal-paragraph mt-6">That's why my work spans brand identity, product design, and storytelling. I'm interested in designing complete experiences, not isolated deliverables.</p>
+            <div class="mt-12 p-8 border border-indigo-500/30 rounded-2xl bg-indigo-900/10 inline-block">
+                <p class="text-xl text-indigo-100 font-medium">Long term, I want to build products, brands, and eventually companies that people genuinely remember.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Selected Works Section -->
+    <section class="relative bg-[#050505] py-32 px-6 z-20 border-t border-zinc-900" id="selected-work">
+        <div class="max-w-6xl mx-auto">
+            <h2 class="text-4xl md:text-6xl font-light mb-24 text-white tracking-tight">Selected <span class="text-zinc-500">Works</span></h2>
+            
+            <!-- Project 1: Whole Fruit -->
+            <div class="mb-32 flex flex-col md:flex-row gap-12 items-center group">
+                <div class="w-full md:w-1/2 overflow-hidden rounded-2xl border border-zinc-800 bg-zinc-900 aspect-video relative">
+                    <!-- Note: Since TWF was a PDF, I've added a clean placeholder here. -->
+                    <img src="https://placehold.co/1200x800/18181b/ffffff?text=Whole+Fruit+Brand+Identity" alt="Whole Fruit Branding" class="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-700 ease-out">
+                </div>
+                <div class="w-full md:w-1/2">
+                    <span class="text-orange-400 text-sm font-semibold tracking-widest uppercase mb-4 block">Brand Strategy & Packaging</span>
+                    <h3 class="text-3xl md:text-4xl font-semibold text-white mb-6">Whole Fruit</h3>
+                    <p class="text-zinc-400 text-lg leading-relaxed mb-8">Repositioning smoothie bowls as a premium wellness and gifting experience. A ritual of indulgence crafted to nourish the body and delight the senses.</p>
+                    <a href="#" class="inline-flex items-center gap-2 text-white border-b border-zinc-700 pb-1 hover:border-orange-400 hover:text-orange-400 transition-colors">View Case Study <span class="text-xl">→</span></a>
+                </div>
+            </div>
+
+            <!-- Project 2: Travel Itinerary -->
+            <div class="flex flex-col md:flex-row-reverse gap-12 items-center group">
+                <div class="w-full md:w-1/2 overflow-hidden rounded-2xl border border-zinc-800 bg-zinc-900 aspect-[4/3] relative">
+                    <!-- Linking directly to the uploaded DS work file -->
+                    <img src="./DS work for portfolio.jpg" alt="UX/UI Design Work" class="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-700 ease-out" onerror="this.src='https://placehold.co/1200x800/18181b/ffffff?text=Travel+App+UX/UI'">
+                </div>
+                <div class="w-full md:w-1/2">
+                    <span class="text-blue-400 text-sm font-semibold tracking-widest uppercase mb-4 block">UX/UI Design</span>
+                    <h3 class="text-3xl md:text-4xl font-semibold text-white mb-6">Personalized Travel Itinerary</h3>
+                    <p class="text-zinc-400 text-lg leading-relaxed mb-8">An AI-assisted travel planning platform that generates personalized itineraries based on user preferences, enabling flexible and context-aware travel experiences.</p>
+                    <a href="#" class="inline-flex items-center gap-2 text-white border-b border-zinc-700 pb-1 hover:border-blue-400 hover:text-blue-400 transition-colors">View Case Study <span class="text-xl">→</span></a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Anti-Gravity Playground Section -->
+    <section class="playground-section" id="playground">
+        <div class="playground-header">
+            <h3>Interactive Playground</h3>
+            <p>Grab, throw, and explore the chaos.</p>
+        </div>
+
+        <div id="playground-controls">
+            <button class="playground-btn" id="btn-zero-g">Zero Gravity</button>
+            <button class="playground-btn" id="btn-explode">Explode</button>
+        </div>
+
+        <!-- Project Cards -->
+        <div class="physics-element" style="width: 320px;">
+            <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-full bg-orange-500 flex items-center justify-center text-xl">🍊</div>
+                <h3 class="text-xl font-bold text-white">Whole Fruit</h3>
+            </div>
+            <p class="text-sm text-zinc-400">Repositioned a traditional fruit brand into a modern wellness brand through consumer research, brand strategy, visual identity, packaging, and digital touchpoints.</p>
+            <div class="flex gap-2 mt-2">
+                <span class="text-xs bg-zinc-800 px-2 py-1 rounded-md text-zinc-300 border border-zinc-700">Brand Strategy</span>
+                <span class="text-xs bg-zinc-800 px-2 py-1 rounded-md text-zinc-300 border border-zinc-700">Packaging</span>
+            </div>
+        </div>
+
+        <div class="physics-element" style="width: 300px;">
+            <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-full bg-blue-500 flex items-center justify-center text-xl">✈️</div>
+                <h3 class="text-xl font-bold text-white">Katalyse.ai</h3>
+            </div>
+            <p class="text-sm text-zinc-400">Designed an AI-powered Shopify plugin that improves customer engagement and reduces cart abandonment through conversational experiences.</p>
+            <div class="flex gap-2 mt-2">
+                <span class="text-xs bg-zinc-800 px-2 py-1 rounded-md text-zinc-300 border border-zinc-700">UX Design</span>
+                <span class="text-xs bg-zinc-800 px-2 py-1 rounded-md text-zinc-300 border border-zinc-700">User Flows</span>
+            </div>
+        </div>
+
+        <!-- Skills Block -->
+        <div class="physics-element" style="width: 260px;">
+            <h3 class="text-lg font-bold text-zinc-200">Core Toolkit</h3>
+            <div class="flex flex-wrap gap-2">
+                <span class="text-xs bg-zinc-800 px-3 py-1.5 rounded-full text-zinc-300">Figma</span>
+                <span class="text-xs bg-zinc-800 px-3 py-1.5 rounded-full text-zinc-300">Photoshop</span>
+                <span class="text-xs bg-zinc-800 px-3 py-1.5 rounded-full text-zinc-300">Illustrator</span>
+                <span class="text-xs bg-zinc-800 px-3 py-1.5 rounded-full text-zinc-300">DaVinci Resolve</span>
+                <span class="text-xs bg-zinc-800 px-3 py-1.5 rounded-full text-zinc-300">Claude</span>
+            </div>
+        </div>
+
+        <!-- Contact Pill -->
+        <div class="physics-element pill-shape flex items-center justify-center text-center" style="width: auto;">
+            <a href="mailto:vyommehta197@gmail.com" class="font-bold text-white tracking-wide hover:text-indigo-400 transition-colors">vyommehta197@gmail.com</a>
+        </div>
+    </section>
+
+    <script>
+        // --- 1. Smooth Scrolling Setup ---
+        const lenis = new Lenis({
+            duration: 1.2,
+            easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+            direction: 'vertical',
+            smooth: true,
+        });
+
+        lenis.on('scroll', ScrollTrigger.update);
+        gsap.ticker.add((time) => { lenis.raf(time * 1000); });
+        gsap.ticker.lagSmoothing(0);
+
+        // --- 2. GSAP Animations ---
+        gsap.registerPlugin(ScrollTrigger);
+
+        // Pin the hero section during the scroll transition
+        ScrollTrigger.create({
+            trigger: "#pinned-hero",
+            start: "top top",
+            endTrigger: "#animation-track",
+            end: "bottom bottom",
+            pin: true,
+            pinSpacing: false,
+        });
+
+        // The TV Portal Timeline
+        const portalTl = gsap.timeline({
+            scrollTrigger: { trigger: "#animation-track", start: "top top", end: "bottom bottom", scrub: 0.5 }
+        });
+        
+        // Dim the background
+        portalTl.to("#env-bg", { scale: 1.5, filter: "brightness(0.3) contrast(1) blur(10px)", duration: 0.2, ease: "power2.inOut" }, 0);
+        
+        // Scale up the TV massively
+        const tvScaleFactor = Math.max(window.innerWidth / 300, window.innerHeight / 200) * 1.5;
+        portalTl.to("#tv-portal", { scale: tvScaleFactor, duration: 0.15, ease: "power2.inOut" }, 0);
+        portalTl.to(".tv-casing", { opacity: 0, duration: 0.1 }, 0.05);
+        
+        // Show Terminal Loading Sequence earlier and keep it on screen longer
+        portalTl.to("#loading-seq", { opacity: 1, duration: 0.05 }, 0.15);
+
+        // Fake typing effect mapped to the scroll timeline
+        const typeText = (selector, text, startOffset) => {
+            document.querySelector(selector).innerText = text;
+            portalTl.fromTo(selector, { opacity: 0 }, { opacity: 1, duration: 0.02 }, startOffset);
+        };
+
+        typeText("#load-bar", "██████████████", 0.2);
+        typeText("#load-msg-1", "> Signal Found", 0.3);
+        typeText("#load-msg-2", "> Identity Detected", 0.4);
+        typeText("#load-msg-3", "> Entering Portfolio...", 0.5);
+        typeText("#load-bar-2", "██████████████", 0.6);
+
+        // Fade out Loading and Hero, fade in Journal
+        portalTl.to("#loading-seq", { opacity: 0, duration: 0.1 }, 0.85);
+        portalTl.to("#pinned-hero", { opacity: 0, duration: 0.1 }, 0.85);
+        portalTl.to("#journal-dest", { opacity: 1, duration: 0.1 }, 0.85);
+
+        // Reveal animations for the Journal Text
+        gsap.utils.toArray('.gsap-reveal').forEach(element => {
+            gsap.to(element, {
+                scrollTrigger: {
+                    trigger: element,
+                    start: "top 85%", // Triggers when the top of the element hits 85% of viewport
+                    end: "top 40%",
+                    scrub: 1 // Link animation strictly to scrollbar movement
+                },
+                y: 0,
+                opacity: 1,
+                ease: "none"
+            });
+        });
+
+        // Ambient animations for the TV
+        gsap.to("#tv-portal", { y: "-=15", rotationZ: 1, duration: 4, ease: "sine.inOut", yoyo: true, repeat: -1 });
+        gsap.to("#env-bg", { backgroundPosition: "55% 50%", duration: 20, ease: "sine.inOut", yoyo: true, repeat: -1 });
+
+
+        // --- 3. Matter.js Physics Engine ---
+        const { Engine, World, Bodies, Mouse, MouseConstraint, Composite, Events, Runner } = Matter;
+        const playground = document.getElementById('playground');
+        let engine, world, runner;
+        let domBodies = [];
+        let physicsInitialized = false;
+
+        function initPhysics() {
+            engine = Engine.create();
+            world = engine.world;
+            engine.gravity.y = 1; // Normal downward gravity
+
+            runner = Runner.create();
+            Runner.run(runner, engine);
+
+            createBoundaries();
+            mapDomToPhysics();
+            setupMouseInteraction();
+
+            // The critical sync loop mapping the invisible physics bodies to the DOM elements
+            Events.on(engine, 'afterUpdate', syncDomElements);
+        }
+
+        function createBoundaries() {
+            const w = playground.clientWidth;
+            const h = playground.clientHeight;
+            const thickness = 60;
+
+            const boundOptions = { isStatic: true, render: { visible: false }, friction: 0.8, restitution: 0.4 };
+            const walls = [
+                Bodies.rectangle(w / 2, h + thickness / 2, w, thickness, boundOptions), // Floor
+                Bodies.rectangle(-thickness / 2, h / 2, thickness, h * 2, boundOptions), // Left Wall
+                Bodies.rectangle(w + thickness / 2, h / 2, thickness, h * 2, boundOptions) // Right Wall
+                // Intentionally left out the ceiling so items can fall *into* the playground
+            ];
+            Composite.add(world, walls);
+        }
+
+        function mapDomToPhysics() {
+            const elements = document.querySelectorAll('.playground-section .physics-element');
+            const w = playground.clientWidth;
+            
+            elements.forEach((el, index) => {
+                el.classList.add('visible'); // Fade them in
+                
+                const width = el.offsetWidth || 300;
+                const height = el.offsetHeight || 100;
+
+                // Start high above the playground container so they drop down
+                const startX = (w / 2) + (Math.random() * 200 - 100);
+                const startY = -400 - (index * 200); 
+                
+                const isPill = el.classList.contains('pill-shape');
+                
+                // Create the Matter.js body
+                const body = Bodies.rectangle(startX, startY, width, height, {
+                    chamfer: { radius: isPill ? height / 2 : 16 },
+                    restitution: 0.5, // Bounciness
+                    friction: 0.2,
+                    density: 0.05
+                });
+
+                body.domElement = el; // Store reference to DOM
+                body.width = width;
+                body.height = height;
+                domBodies.push(body);
+            });
+
+            Composite.add(world, domBodies);
+        }
+
+        function syncDomElements() {
+            domBodies.forEach(body => {
+                const el = body.domElement;
+                // Offset the center coordinates from Matter.js to the top-left for CSS
+                const x = body.position.x - (body.width / 2);
+                const y = body.position.y - (body.height / 2);
+                const angle = body.angle;
+                el.style.transform = `translate3d(${x}px, ${y}px, 0) rotate(${angle}rad)`;
+            });
+        }
+
+        function setupMouseInteraction() {
+            const mouse = Mouse.create(playground);
+            const mouseConstraint = MouseConstraint.create(engine, {
+                mouse: mouse,
+                constraint: { stiffness: 0.2, render: { visible: false } }
+            });
+
+            // Crucial: Stop grabbing from scrolling the page
+            mouse.element.removeEventListener("mousewheel", mouse.mousewheel);
+            mouse.element.removeEventListener("DOMMouseScroll", mouse.mousewheel);
+            
+            Composite.add(world, mouseConstraint);
+
+            // Lock lenis smooth scrolling when interacting with physics elements
+            const pElements = document.querySelectorAll('.playground-section .physics-element');
+            pElements.forEach(el => {
+                el.addEventListener('mousedown', () => lenis.stop());
+                el.addEventListener('touchstart', () => lenis.stop());
+            });
+            window.addEventListener('mouseup', () => lenis.start());
+            window.addEventListener('touchend', () => lenis.start());
+        }
+
+        // --- 4. Controls ---
+        document.getElementById('btn-zero-g').addEventListener('click', function() {
+            if (engine.gravity.y === 0) {
+                engine.gravity.y = 1;
+                this.innerText = "Zero Gravity";
+                this.style.background = "rgba(255, 255, 255, 0.05)";
+            } else {
+                engine.gravity.y = 0;
+                this.innerText = "Restore Gravity";
+                this.style.background = "rgba(99, 102, 241, 0.8)"; // Indigo glow
+                // Give a tiny nudge so they float
+                domBodies.forEach(body => Matter.Body.applyForce(body, body.position, { x: (Math.random() - 0.5) * 0.05, y: (Math.random() - 0.5) * 0.05 }));
+            }
+        });
+
+        document.getElementById('btn-explode').addEventListener('click', function() {
+            // Apply a strong, random outward force with an extra upward kick based on MASS
+            domBodies.forEach(body => {
+                // Calculating force via body mass ensures heavy and light items fly equally well!
+                const forceMagnitude = body.mass * 0.06; 
+                const forceX = (Math.random() - 0.5) * forceMagnitude; 
+                const forceY = -forceMagnitude - (Math.random() * forceMagnitude * 0.5); // Push UP heavily
+                
+                Matter.Body.applyForce(body, body.position, {
+                    x: forceX,
+                    y: forceY
+                });
+            });
+        });
+
+        // --- 5. Triggers ---
+        // Only initialize physics when the user reaches the playground section
+        ScrollTrigger.create({
+            trigger: "#playground",
+            start: "top 30%", // Start dropping when top of playground hits 30% of viewport height
+            onEnter: () => {
+                if (!physicsInitialized) {
+                    initPhysics();
+                    physicsInitialized = true;
+                }
+            }
+        });
+
+    </script>
+</body>
+</html>
