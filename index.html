@@ -551,11 +551,25 @@
         }
         initCursorHovers();
 
-        const lenis = new Lenis({ duration: 1.2, easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)) });
-        lenis.scrollTo(0, { immediate: true });
-        function raf(time) { lenis.raf(time); requestAnimationFrame(raf); }
-        requestAnimationFrame(raf);
-        lenis.stop(); // Stop scroll during cinematic intro
+        const isTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+        let lenis;
+
+        function stopScroll() { if (lenis) lenis.stop(); }
+        function startScroll() { if (lenis) lenis.start(); }
+
+        if (!isTouchDevice) {
+            lenis = new Lenis({ duration: 1.2, easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)) });
+            lenis.scrollTo(0, { immediate: true });
+            function raf(time) { lenis.raf(time); requestAnimationFrame(raf); }
+            requestAnimationFrame(raf);
+            stopScroll(); // Stop scroll during cinematic intro
+        } else {
+            // Restore native touch scroll contexts
+            document.documentElement.style.overflowY = 'auto';
+            document.body.style.overflowY = 'auto';
+            document.documentElement.style.scrollBehavior = 'smooth';
+            window.scrollTo(0, 0);
+        }
 
         // --- 2. Cinematic Entry (Interaction 01) ---
         document.getElementById('meta-display').innerText = `${window.screen.width}x${window.screen.height}`;
@@ -600,7 +614,7 @@
               mainWeb.style.pointerEvents = 'auto';
               document.getElementById('intro-sequence').style.display = 'none';
               
-              lenis.start(); // Enable scrolling!
+              startScroll(); // Enable scrolling!
               ScrollTrigger.refresh();
           });
 
@@ -691,14 +705,14 @@
 
                 // Slide Drawer
                 drawer.classList.add('open');
-                lenis.stop(); // Lock scroll behind drawer
+                stopScroll(); // Lock scroll behind drawer
             });
         });
 
         // Click Close Drawer
         closeBtn.addEventListener('click', () => {
             drawer.classList.remove('open');
-            lenis.start(); 
+            startScroll(); 
         });
 
 
@@ -783,22 +797,14 @@
             mouse.element.removeEventListener("DOMMouseScroll", mouse.mousewheel);
             Composite.add(world, mouseConstraint);
 
-            // Pause scroll when dragging elements
-            setupScrollLocks();
-        }
-
-        function setupScrollLocks() {
-            document.querySelectorAll('.playground-section .physics-element').forEach(el => {
-                el.removeEventListener('mousedown', lockLenis);
-                el.removeEventListener('touchstart', lockLenis);
-                el.addEventListener('mousedown', lockLenis);
-                el.addEventListener('touchstart', lockLenis, {passive: true});
+            // Pause scroll when dragging elements in Matter.js
+            Events.on(mouseConstraint, 'startdrag', () => {
+                stopScroll();
+            });
+            Events.on(mouseConstraint, 'enddrag', () => {
+                startScroll();
             });
         }
-        function lockLenis() { lenis.stop(); }
-
-        window.addEventListener('mouseup', () => { if (physicsInitialized) lenis.start(); });
-        window.addEventListener('touchend', () => { if (physicsInitialized) lenis.start(); }, {passive: true});
 
         // Dynamic element spawner logic
         function spawnCustomElement(text, type) {
@@ -865,9 +871,8 @@
             domBodies.push(body);
             Composite.add(world, body);
             
-            // Re-bind mouse events & cursor hovers for the newly created element
+            // Re-bind cursor hovers for the newly created element
             initCursorHovers();
-            setupScrollLocks();
             
             // Apply a slight impulse to make it look dynamic when spawning
             Matter.Body.applyForce(body, body.position, { x: (Math.random() - 0.5) * 0.02, y: 0.05 });
