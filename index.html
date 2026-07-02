@@ -733,9 +733,8 @@
             const thickness = 2000; 
 
             const boundOptions = { isStatic: true, render: { visible: false }, friction: 0.8, restitution: 0.5 };
-            const floorOffset = window.innerWidth < 768 ? 160 : 100;
             const walls = [
-                Bodies.rectangle(w / 2, h - floorOffset + thickness / 2, w + 4000, thickness, boundOptions), 
+                Bodies.rectangle(w / 2, h + thickness / 2, w + 4000, thickness, boundOptions), 
                 // Moved the ceiling 1500px upwards so elements don't spawn trapped inside it
                 Bodies.rectangle(w / 2, -1500 - (thickness / 2), w + 4000, thickness, boundOptions), 
                 Bodies.rectangle(-thickness / 2, h / 2, thickness, h + 4000, boundOptions), 
