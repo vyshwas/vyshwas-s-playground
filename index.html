@@ -194,6 +194,80 @@
         .physics-element:active { cursor: grabbing; border-color: var(--vermilion); box-shadow: 0 15px 40px rgba(252, 76, 19, 0.15);}
         .physics-element.is-pill { border-radius: 999px; padding: 16px 32px; justify-content: center; align-items: center; }
         .physics-element.is-circle { border-radius: 50%; padding: 0; justify-content: center; align-items: center; background: rgba(252, 76, 19, 0.1); border-color: rgba(252, 76, 19, 0.3); }
+
+        /* Mobile and Tablet Responsive Layout Adjustments */
+        @media (max-width: 768px) {
+            nav {
+                padding: 1.2rem 1.5rem !important;
+            }
+            nav a {
+                font-size: 0.75rem !important;
+            }
+            .hero-title {
+                font-size: 2.8rem !important;
+                line-height: 1.2 !important;
+            }
+            .hero-subtitle {
+                font-size: 0.95rem !important;
+                padding: 0 1rem;
+            }
+            .cta-container {
+                flex-direction: column;
+                gap: 0.75rem;
+                width: 80%;
+                align-items: center;
+                margin-top: 2rem !important;
+            }
+            .cta-primary, .cta-secondary {
+                width: 100%;
+                text-align: center;
+                padding: 10px 24px !important;
+                font-size: 0.8rem !important;
+            }
+            
+            /* Pinned About section overrides on mobile: Hide floating assets and resize text to prevent overflow */
+            .about-assets {
+                display: none !important;
+            }
+            .about-step {
+                max-width: 95% !important;
+                padding: 1rem !important;
+            }
+            .journal-headline {
+                font-size: 1.8rem !important;
+                line-height: 1.2 !important;
+            }
+            .journal-paragraph {
+                font-size: 0.95rem !important;
+                margin-top: 1rem !important;
+                line-height: 1.5 !important;
+            }
+            
+            /* Selected works overrides */
+            .projects-section {
+                padding: 6rem 1.5rem !important;
+            }
+            .project-row {
+                padding: 2rem 0 !important;
+                flex-direction: column;
+                align-items: flex-start !important;
+                gap: 1rem;
+            }
+            .project-meta {
+                text-align: left !important;
+            }
+            .project-title {
+                font-size: 1.8rem !important;
+            }
+            
+            /* Playground control panel styling on mobile */
+            #playground-controls {
+                width: 90% !important;
+                bottom: 20px !important;
+                padding: 12px !important;
+                gap: 10px !important;
+            }
+        }
     </style>
 </head>
 <body>
@@ -636,6 +710,7 @@
 
         // --- 4. Physics Engine (Bulletproof Init) ---
         gsap.registerPlugin(ScrollTrigger);
+        ScrollTrigger.config({ ignoreMobileResize: true });
         const { Engine, World, Bodies, Mouse, MouseConstraint, Composite, Events, Runner } = Matter;
         const playground = document.getElementById('playground');
         let engine, world, runner;
@@ -658,8 +733,9 @@
             const thickness = 2000; 
 
             const boundOptions = { isStatic: true, render: { visible: false }, friction: 0.8, restitution: 0.5 };
+            const floorOffset = window.innerWidth < 768 ? 160 : 100;
             const walls = [
-                Bodies.rectangle(w / 2, h + thickness / 2, w + 4000, thickness, boundOptions), 
+                Bodies.rectangle(w / 2, h - floorOffset + thickness / 2, w + 4000, thickness, boundOptions), 
                 // Moved the ceiling 1500px upwards so elements don't spawn trapped inside it
                 Bodies.rectangle(w / 2, -1500 - (thickness / 2), w + 4000, thickness, boundOptions), 
                 Bodies.rectangle(-thickness / 2, h / 2, thickness, h + 4000, boundOptions), 
@@ -711,8 +787,43 @@
 
             const mouse = Mouse.create(playground);
             const mouseConstraint = MouseConstraint.create(engine, { mouse: mouse, constraint: { stiffness: 0.2 } });
+            
+            // Remove standard Matter.js mouse event listeners to prevent blocking native page scrolling
             mouse.element.removeEventListener("mousewheel", mouse.mousewheel);
             mouse.element.removeEventListener("DOMMouseScroll", mouse.mousewheel);
+            mouse.element.removeEventListener("touchstart", mouse.mousedown);
+            mouse.element.removeEventListener("touchmove", mouse.mousemove);
+            mouse.element.removeEventListener("touchend", mouse.mouseup);
+            
+            // Add custom touch event listeners that only block scroll when actively dragging a body
+            playground.addEventListener('touchstart', (e) => {
+                const touch = e.touches[0];
+                const rect = playground.getBoundingClientRect();
+                const mouseX = touch.clientX - rect.left;
+                const mouseY = touch.clientY - rect.top;
+                
+                const bodies = Composite.allBodies(world);
+                const clickedBody = Matter.Query.point(bodies, { x: mouseX, y: mouseY })[0];
+                
+                if (clickedBody && !clickedBody.isStatic) {
+                    e.preventDefault(); // Block page scroll
+                    mouse.mousedown(e);
+                }
+            }, { passive: false });
+
+            playground.addEventListener('touchmove', (e) => {
+                if (mouseConstraint.body) {
+                    e.preventDefault(); // Block page scroll only during active drag
+                    mouse.mousemove(e);
+                }
+            }, { passive: false });
+
+            playground.addEventListener('touchend', (e) => {
+                if (mouseConstraint.body) {
+                    mouse.mouseup(e);
+                }
+            }, { passive: true });
+
             Composite.add(world, mouseConstraint);
 
             // Pause scroll when dragging elements in Matter.js
