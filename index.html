@@ -185,6 +185,7 @@
         .playground-header h3 { font-size: 1.5rem; font-weight: 300; color: var(--white); letter-spacing: 0.05em; text-transform: uppercase; }
         
         #playground-controls { position: absolute; bottom: 40px; left: 50%; transform: translateX(-50%); z-index: 50; display: flex; gap: 12px; }
+        #playground-interactive-zone { position: absolute; inset: 0; z-index: 25; }
         .playground-btn { background: var(--codgray); border: 1px solid rgba(255,255,255,0.2); color: var(--white); padding: 12px 28px; border-radius: 999px; font-size: 11px; font-weight: 500; cursor: pointer; transition: all 0.3s ease; letter-spacing: 0.1em; text-transform: uppercase;}
         .playground-btn:hover { border-color: var(--vermilion); color: var(--vermilion); background: rgba(252, 76, 19, 0.05); }
 
@@ -519,8 +520,10 @@
                 </div>
             </div>
 
-            <!-- Inline width/height ensures Matter.js ALWAYS knows the size -->
-            <div class="physics-element" style="width: 280px; height: 120px;">
+            <!-- Isolated interactive zone for Matter.js physics interaction -->
+            <div id="playground-interactive-zone" style="position: absolute; inset: 0; z-index: 25;">
+                <!-- Inline width/height ensures Matter.js ALWAYS knows the size -->
+                <div class="physics-element" style="width: 280px; height: 120px;">
                 <h3 class="text-lg font-medium text-white">Whole Fruit</h3>
                 <p class="text-xs text-gray">Brand Strategy & Packaging.</p>
                 <div class="flex gap-2 mt-2">
@@ -809,7 +812,8 @@
                 });
             });
 
-            const mouse = Mouse.create(playground);
+            const interactionZone = document.getElementById('playground-interactive-zone');
+            const mouse = Mouse.create(interactionZone);
             const mouseConstraint = MouseConstraint.create(engine, { mouse: mouse, constraint: { stiffness: 0.2 } });
             
             // Remove standard Matter.js mouse event listeners to prevent blocking native page scrolling
@@ -820,9 +824,9 @@
             mouse.element.removeEventListener("touchend", mouse.mouseup);
             
             // Add custom touch event listeners that only block scroll when actively dragging a body
-            playground.addEventListener('touchstart', (e) => {
+            interactionZone.addEventListener('touchstart', (e) => {
                 const touch = e.touches[0];
-                const rect = playground.getBoundingClientRect();
+                const rect = interactionZone.getBoundingClientRect();
                 const mouseX = touch.clientX - rect.left;
                 const mouseY = touch.clientY - rect.top;
                 
@@ -835,14 +839,14 @@
                 }
             }, { passive: false });
 
-            playground.addEventListener('touchmove', (e) => {
+            interactionZone.addEventListener('touchmove', (e) => {
                 if (mouseConstraint.body) {
                     e.preventDefault(); // Block page scroll only during active drag
                     mouse.mousemove(e);
                 }
             }, { passive: false });
 
-            playground.addEventListener('touchend', (e) => {
+            interactionZone.addEventListener('touchend', (e) => {
                 if (mouseConstraint.body) {
                     mouse.mouseup(e);
                 }
@@ -894,7 +898,7 @@
                 `;
             }
             
-            playground.appendChild(el);
+            document.getElementById('playground-interactive-zone').appendChild(el);
             
             const width = type === 'circle' ? 80 : (type === 'pill' ? 180 : 240);
             const height = type === 'circle' ? 80 : (type === 'pill' ? 50 : 100);
