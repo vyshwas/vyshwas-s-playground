@@ -31,7 +31,7 @@
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/gh/studio-freight/lenis@1.0.19/bundled/lenis.min.js"></script>
+    <!-- Lenis library removed for native scroll reliability -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/matter-js/0.19.0/matter.min.js"></script>
 
     <style>
@@ -47,7 +47,6 @@
             color: var(--white); 
             margin: 0; padding: 0; 
             overflow-x: hidden;
-            overscroll-behavior: none;
             cursor: none;
         }
         
@@ -591,23 +590,20 @@
         initCursorHovers();
 
         const isTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
-        let lenis;
 
-        function stopScroll() { if (lenis) lenis.stop(); }
-        function startScroll() { if (lenis) lenis.start(); }
-
-        if (!isTouchDevice) {
-            lenis = new Lenis({ duration: 1.2, easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)) });
-            lenis.scrollTo(0, { immediate: true });
-            function raf(time) { lenis.raf(time); requestAnimationFrame(raf); }
-            requestAnimationFrame(raf);
-        } else {
-            // Restore native touch scroll contexts
-            document.documentElement.style.overflowY = 'auto';
-            document.body.style.overflowY = 'auto';
-            document.documentElement.style.scrollBehavior = 'smooth';
-            window.scrollTo(0, 0);
+        // Native scroll control functions to prevent scroll when project drawer is open
+        function stopScroll() {
+            document.body.style.overflow = 'hidden';
+            document.documentElement.style.overflow = 'hidden';
         }
+        function startScroll() {
+            document.body.style.overflow = '';
+            document.documentElement.style.overflow = '';
+        }
+
+        // Initialize scroll behaviors and refresh GSAP triggers
+        window.scrollTo(0, 0);
+        document.documentElement.style.scrollBehavior = 'smooth';
         ScrollTrigger.refresh();
 
         // --- 2.5 Scrollytelling About Section Logic ---
@@ -825,13 +821,7 @@
 
             Composite.add(world, mouseConstraint);
 
-            // Pause scroll when dragging elements in Matter.js
-            Events.on(mouseConstraint, 'startdrag', () => {
-                stopScroll();
-            });
-            Events.on(mouseConstraint, 'enddrag', () => {
-                startScroll();
-            });
+            // Custom touch event listeners handle scroll prevention natively on touch devices
         }
 
         // Dynamic element spawner logic
