@@ -3,13 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Vishwas Mehta — Strategic Designer</title>
-    <link rel="icon" type="image/png" href="favicon.png?v=2">
+    <title>Vishwas Mehta — Design Engineer</title>
+    
+    <link rel="icon" type="image/png" href="favicon.png">
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@200;300;400;500;600;700&family=JetBrains+Mono:wght@100;300;400&display=swap" rel="stylesheet">
-    <script src="https://cdn.tailwindcss.com"></script>
     
+    <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
             theme: {
@@ -31,7 +32,7 @@
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
-    <!-- Lenis library removed for native scroll reliability -->
+    <!-- Lenis removed — using native scroll for full mobile compatibility -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/matter-js/0.19.0/matter.min.js"></script>
 
     <style>
@@ -48,270 +49,178 @@
             margin: 0; padding: 0; 
             overflow-x: hidden;
             cursor: none;
-        }
-        
-        /* Disable custom cursor & restore normal cursor behavior on mobile touch screens */
-        @media (hover: none) and (pointer: coarse) {
-            body, html {
-                cursor: auto !important;
-            }
-            #custom-cursor, #cursor-glow, #project-preview-container {
-                display: none !important;
-            }
+            scroll-behavior: smooth;
         }
 
-        /* Ambient Background Lighting */
-        .ambient-glow {
-            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
-            pointer-events: none; z-index: 0; opacity: 0.15;
-            background: radial-gradient(circle at 50% 0%, var(--vermilion) 0%, transparent 60%);
+        /* Disable custom cursor on touch devices */
+        @media (hover: none) and (pointer: coarse) {
+            body, html { cursor: auto !important; }
+            #custom-cursor, #cursor-glow, #project-preview-container { display: none !important; }
+        }
+
+        /* Matte Background */
+        .matte-bg {
+            position: fixed; inset: 0; width: 100vw; height: 100vh;
+            pointer-events: none; z-index: 0;
+            background-image: url('assets/bg_matte.jpg');
+            background-size: cover;
+            background-position: center;
+            opacity: 0.18;
         }
 
         /* Film Grain */
         .film-grain { 
             position: fixed; inset: 0; width: 100vw; height: 100vh; pointer-events: none; z-index: 9990; 
-            opacity: 0.04; mix-blend-mode: overlay;
+            opacity: 0.035; mix-blend-mode: overlay;
             background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E"); 
         }
 
-        /* Custom Cursor */
+        /* Global Cutting Mat Grid */
+        .global-grid {
+            position: fixed; inset: 0; width: 100vw; height: 100vh;
+            pointer-events: none; z-index: 0;
+            background-image: 
+                linear-gradient(to right, rgba(255,255,255,0.06) 1px, transparent 1px),
+                linear-gradient(to bottom, rgba(255,255,255,0.06) 1px, transparent 1px),
+                linear-gradient(to right, rgba(255,255,255,0.02) 1px, transparent 1px),
+                linear-gradient(to bottom, rgba(255,255,255,0.02) 1px, transparent 1px);
+            background-size: 300px 300px, 300px 300px, 60px 60px, 60px 60px;
+            background-position: center center;
+        }
+
         #custom-cursor {
             position: fixed; top: 0; left: 0; width: 12px; height: 12px;
             border-radius: 50%; background: var(--white);
             pointer-events: none; z-index: 99999;
             transform: translate(-50%, -50%);
-            transition: width 0.3s, height 0.3s, background 0.3s, border 0.3s, mix-blend-mode 0.3s, border-radius 0.3s;
+            transition: width 0.3s, height 0.3s, background 0.3s, border 0.3s, mix-blend-mode 0.3s;
             mix-blend-mode: difference;
-            display: flex; align-items: center; justify-content: center;
-            font-size: 8px; font-weight: 700; color: transparent; letter-spacing: 0.1em;
         }
-        #custom-cursor span { opacity: 0; transition: opacity 0.2s; pointer-events: none; font-family: 'JetBrains Mono', monospace; }
-        
         #cursor-glow {
             position: fixed; top: 0; left: 0; width: 300px; height: 300px;
             border-radius: 50%; background: radial-gradient(circle, rgba(252, 76, 19, 0.15) 0%, transparent 70%);
             pointer-events: none; z-index: 1; transform: translate(-50%, -50%);
             transition: opacity 0.3s; mix-blend-mode: screen;
         }
-        .cursor-hover { width: 32px !important; height: 32px !important; background: transparent !important; border: 1px solid var(--white); mix-blend-mode: normal !important; backdrop-filter: blur(2px); }
-        .cursor-view {
-            width: 56px !important; height: 56px !important;
-            background: var(--white) !important;
-            color: var(--codgray) !important;
-            mix-blend-mode: normal !important;
-        }
-        .cursor-view span { opacity: 1 !important; color: var(--codgray) !important; }
-        .cursor-drag {
-            width: 56px !important; height: 56px !important;
-            background: transparent !important;
-            border: 1px dashed var(--vermilion) !important;
-            mix-blend-mode: normal !important;
-        }
-        .cursor-drag span { opacity: 1 !important; color: var(--vermilion) !important; }
+        .cursor-hover { width: 40px !important; height: 40px !important; background: transparent !important; border: 1px solid var(--white); mix-blend-mode: normal !important; backdrop-filter: blur(2px); }
         .cursor-hidden { opacity: 0 !important; }
 
-        /* Floating Project Image Reveal */
-        #project-preview-container {
-            position: fixed; top: 0; left: 0; width: 450px; height: 600px;
-            pointer-events: none; z-index: 90; opacity: 0; transform: scale(0.95) translate(-50%, -50%);
-            overflow: hidden; border-radius: 4px;
-            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.5);
-            will-change: transform, opacity;
-        }
-        #project-preview-img {
-            width: 100%; height: 100%; object-fit: cover;
-            transform: scale(1.1); transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
-        }
-        .project-row:hover ~ #project-preview-container #project-preview-img { transform: scale(1); }
-
-        /* Main Website */
-        #main-website { opacity: 1; pointer-events: auto; position: relative; z-index: 10; }
-        
+        /* Navigation */
         nav { position: fixed; top: 0; left: 0; width: 100%; padding: 2rem 3rem; display: flex; justify-content: space-between; align-items: flex-start; z-index: 80; mix-blend-mode: difference; pointer-events: none; }
         .nav-left, .nav-right { pointer-events: auto; }
-        .nav-right { display: flex; flex-direction: column; gap: 0.5rem; text-align: right; }
         nav a { color: var(--white); text-decoration: none; font-size: 0.85rem; font-weight: 400; letter-spacing: 0.05em; text-transform: uppercase; opacity: 0.6; transition: opacity 0.3s ease; }
         nav a:hover { opacity: 1; }
+        .nav-right { display: flex; flex-direction: column; gap: 0.5rem; text-align: right; }
 
-        .hero-section { height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 2rem; position: relative; z-index: 10; }
-        .hero-title { font-size: clamp(3rem, 8vw, 7rem); font-weight: 200; tracking-tight; line-height: 1.1; margin-bottom: 1.5rem; letter-spacing: -0.02em; }
-        .hero-subtitle { font-size: 1.1rem; color: var(--gray); font-weight: 300; max-width: 600px; line-height: 1.6; }
+        /* --- 1. HERO SECTION --- */
+        .hero-section { 
+            position: relative; width: 100vw; height: 100vh; overflow: hidden; z-index: 10;
+        }
+        .hero-title { font-size: clamp(3rem, 7vw, 6.5rem); font-weight: 200; line-height: 1.1; margin-bottom: 1.5rem; letter-spacing: -0.02em; }
         
-        .cta-container { display: flex; gap: 1rem; margin-top: 3rem; }
-        .cta-primary { background: var(--vermilion); color: var(--white); padding: 12px 32px; border-radius: 999px; font-size: 0.85rem; font-weight: 500; text-transform: uppercase; letter-spacing: 0.05em; transition: all 0.3s; }
-        .cta-primary:hover { transform: translateY(-2px); box-shadow: 0 10px 20px rgba(252, 76, 19, 0.2); }
-        .cta-secondary { background: transparent; color: var(--white); border: 1px solid rgba(255,255,255,0.2); padding: 12px 32px; border-radius: 999px; font-size: 0.85rem; font-weight: 500; text-transform: uppercase; letter-spacing: 0.05em; transition: all 0.3s; }
-        .cta-secondary:hover { border-color: var(--white); background: rgba(255,255,255,0.05); }
+        /* Continuous CSS Glitch Flicker */
+        .flicker-text { animation: digitalFlicker 4s infinite linear; display: inline-block; }
+        @keyframes digitalFlicker {
+            0%, 19.999%, 22%, 62.999%, 64%, 64.999%, 70%, 100% { opacity: 1; filter: blur(0px); transform: translateX(0); }
+            20%, 21.999%, 63%, 63.999%, 65%, 69.999% { opacity: 0.8; filter: blur(1px); transform: translateX(-2px); color: var(--vermilion); }
+        }
 
-        /* Pinned About Section (Scrollytelling) */
-        .pinned-about-section { position: relative; width: 100vw; height: 100vh; overflow: hidden; background: var(--codgray); border-top: 1px solid rgba(255,255,255,0.05); }
-        
-        .about-assets { position: absolute; inset: 0; pointer-events: none; z-index: 1; }
-        .about-asset { position: absolute; background: rgba(29,29,29,0.7); backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; overflow: hidden; opacity: 0; will-change: transform, opacity; box-shadow: 0 20px 40px rgba(0,0,0,0.5); }
-        .about-asset img { width: 100%; height: 100%; object-fit: cover; }
-        
-        /* Floating Elements matching reference */
-        .a-type { top: 25%; left: 10%; padding: 24px; width: 220px; border-radius: 8px; }
-        .a-img1 { top: 15%; right: 15%; width: 280px; height: 380px; }
-        .a-tag { bottom: 25%; right: 20%; padding: 16px 40px; border-radius: 999px; font-weight: 700; font-size: 28px; background: #94a3b8; color: #111; letter-spacing: 0.05em; border: none; }
-        .a-img2 { bottom: 15%; left: 20%; width: 320px; height: 220px; }
+        /* --- 2. Z-AXIS ABOUT SECTION --- */
+        .z-scroll-section { position: relative; width: 100vw; height: 100vh; overflow: hidden; background: transparent; border-top: 1px solid rgba(255,255,255,0.05); border-bottom: 1px solid rgba(255,255,255,0.05); }
+        .z-perspective-wrapper { width: 100%; height: 100%; perspective: 1200px; transform-style: preserve-3d; display: flex; align-items: center; justify-content: center; overflow: hidden; }
+        #z-world { position: absolute; width: 100%; height: 100%; transform-style: preserve-3d; will-change: transform; pointer-events: none; }
+        .z-item { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); will-change: transform, filter, opacity; text-align: center; width: 90%; max-width: 800px; }
+        .z-headline { font-size: clamp(2rem, 5vw, 4.5rem); font-weight: 300; line-height: 1.1; letter-spacing: -0.02em; color: var(--white); }
+        .z-paragraph { font-size: clamp(1rem, 2vw, 1.5rem); line-height: 1.6; color: var(--gray); font-weight: 300; margin-top: 1rem; }
+        .z-asset { position: absolute; background: rgba(29,29,29,0.7); backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; overflow: hidden; box-shadow: 0 20px 40px rgba(0,0,0,0.5); }
+        .z-asset img { width: 100%; height: 100%; object-fit: cover; opacity: 0.9; }
 
-        .about-copy-container { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; z-index: 10; pointer-events: none; }
-        .about-step { position: absolute; text-align: center; opacity: 0; transform: translateY(60px) scale(0.95); will-change: transform, opacity; max-width: 900px; padding: 2rem; }
-        
-        .journal-headline { font-size: clamp(2.5rem, 5vw, 4.5rem); font-weight: 300; line-height: 1.1; letter-spacing: -0.02em; color: var(--white); }
-        .journal-paragraph { font-size: clamp(1.1rem, 2vw, 1.5rem); line-height: 1.6; color: var(--gray); font-weight: 300; max-width: 600px; margin: 2rem auto 0; }
-        .vermilion-highlight { color: var(--vermilion); }
-        
-        .about-progress { position: absolute; bottom: 40px; left: 50%; transform: translateX(-50%); width: 200px; height: 2px; background: rgba(255,255,255,0.1); z-index: 20; }
-        .about-progress .progress-bar { height: 100%; width: 0%; background: var(--vermilion); }
-
-        .projects-section { position: relative; padding: 10rem 2rem; border-top: 1px solid rgba(255,255,255,0.05); }
+        /* --- 3. ARCHIVE / PROJECTS --- */
+        .projects-section { position: relative; padding: 10rem 2rem; background: var(--codgray); }
         .projects-header { max-width: 1200px; margin: 0 auto 4rem auto; font-family: 'JetBrains Mono', monospace; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--gray); }
         .projects-list { max-width: 1200px; margin: 0 auto; display: flex; flex-direction: column; }
-        .project-row { display: flex; justify-content: space-between; align-items: flex-end; padding: 3rem 0; border-bottom: 1px solid rgba(255,255,255,0.1); cursor: pointer; transition: all 0.4s ease; }
+        .project-row { display: flex; flex-direction: column; align-items: flex-start; padding: 3rem 0; border-bottom: 1px solid rgba(255,255,255,0.1); cursor: pointer; transition: all 0.4s ease; }
+        @media (min-width: 768px) { .project-row { flex-direction: row; justify-content: space-between; align-items: flex-end; } }
         .project-row:hover { padding-left: 2rem; padding-right: 2rem; border-bottom-color: var(--vermilion); }
         .project-row:hover .project-title { color: var(--vermilion); }
         .project-title { font-size: clamp(2rem, 4vw, 4rem); font-weight: 300; margin: 0; transition: color 0.4s ease; line-height: 1; color: var(--white); letter-spacing: -0.02em;}
-        .project-meta { font-size: 1rem; color: var(--gray); font-weight: 300; text-align: right; pointer-events: none;}
+        .project-meta { font-size: 1rem; color: var(--gray); font-weight: 300; text-align: left; margin-top: 1rem; pointer-events: none; }
+        @media (min-width: 768px) { .project-meta { text-align: right; margin-top: 0; } }
+
+        #project-preview-container {
+            position: fixed; top: 0; left: 0; width: 450px; height: 600px;
+            pointer-events: none; z-index: 90; opacity: 0; transform: scale(0.95) translate(-50%, -50%);
+            overflow: hidden; border-radius: 4px; box-shadow: 0 30px 60px rgba(0, 0, 0, 0.5); will-change: transform, opacity;
+        }
+        #project-preview-img { width: 100%; height: 100%; object-fit: cover; transform: scale(1.1); transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1); }
 
         /* Sliding Drawer */
         #project-drawer { transform: translateX(100%); transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1); pointer-events: none; visibility: hidden; }
         #project-drawer.open { transform: translateX(0); pointer-events: auto; visibility: visible; }
 
-        /* Playground CSS */
+        /* --- 4. PHYSICS PLAYGROUND --- */
         .playground-section { position: relative; width: 100vw; height: 100vh; overflow: hidden; z-index: 20; border-top: 1px solid rgba(255,255,255,0.05); }
-        .playground-header { position: absolute; top: 10vh; left: 0; width: 100%; text-align: center; z-index: 10; pointer-events: none; }
+        .playground-header { position: absolute; top: 10vh; left: 0; width: 100%; text-align: center; z-index: 10; pointer-events: none; padding: 0 1rem; }
         .playground-header h3 { font-size: 1.5rem; font-weight: 300; color: var(--white); letter-spacing: 0.05em; text-transform: uppercase; }
         
         #playground-controls { position: absolute; bottom: 40px; left: 50%; transform: translateX(-50%); z-index: 50; display: flex; gap: 12px; }
-        #playground-interactive-zone { position: absolute; inset: 0; z-index: 25; }
-        .playground-btn { background: var(--codgray); border: 1px solid rgba(255,255,255,0.2); color: var(--white); padding: 12px 28px; border-radius: 999px; font-size: 11px; font-weight: 500; cursor: pointer; transition: all 0.3s ease; letter-spacing: 0.1em; text-transform: uppercase;}
+        #playground-interactive-zone { position: absolute; inset: 0; z-index: 25; pointer-events: auto; }
+        .playground-btn { background: var(--codgray); border: 1px solid rgba(255,255,255,0.2); color: var(--white); padding: 12px 28px; border-radius: 999px; font-size: 11px; font-weight: 500; cursor: pointer; transition: all 0.3s ease; letter-spacing: 0.1em; text-transform: uppercase; -webkit-tap-highlight-color: transparent; }
         .playground-btn:hover { border-color: var(--vermilion); color: var(--vermilion); background: rgba(252, 76, 19, 0.05); }
 
-        /* Hardcoded widths/heights inline below are crucial so physics don't spawn at 0px */
-        .physics-element { position: absolute; top: 0; left: 0; will-change: transform; transform-origin: center center; background: #262626; border: 1px solid #404040; border-radius: 8px; padding: 24px; cursor: grab; user-select: none; display: flex; flex-direction: column; gap: 12px; z-index: 30; opacity: 0; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);}
+        .physics-element { position: absolute; top: -100px; left: 0; will-change: transform; transform-origin: center center; background: #262626; border: 1px solid #404040; border-radius: 8px; padding: 24px; cursor: grab; user-select: none; display: flex; flex-direction: column; gap: 12px; z-index: 30; opacity: 0; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2); max-width: 90vw; }
         .physics-element:active { cursor: grabbing; border-color: var(--vermilion); box-shadow: 0 15px 40px rgba(252, 76, 19, 0.15);}
         .physics-element.is-pill { border-radius: 999px; padding: 16px 32px; justify-content: center; align-items: center; }
         .physics-element.is-circle { border-radius: 50%; padding: 0; justify-content: center; align-items: center; background: rgba(252, 76, 19, 0.1); border-color: rgba(252, 76, 19, 0.3); }
 
-        /* Mobile and Tablet Responsive Layout Adjustments */
+        /* Mobile Overrides */
         @media (max-width: 768px) {
-            nav {
-                padding: 1.2rem 1.5rem !important;
-            }
-            nav a {
-                font-size: 0.75rem !important;
-            }
-            .hero-title {
-                font-size: 2.8rem !important;
-                line-height: 1.2 !important;
-            }
-            .hero-subtitle {
-                font-size: 0.95rem !important;
-                padding: 0 1rem;
-            }
-            .cta-container {
-                flex-direction: column;
-                gap: 0.75rem;
-                width: 80%;
-                align-items: center;
-                margin-top: 2rem !important;
-            }
-            .cta-primary, .cta-secondary {
-                width: 100%;
-                text-align: center;
-                padding: 10px 24px !important;
-                font-size: 0.8rem !important;
-            }
-            
-            /* Pinned About section overrides on mobile: Scale floating assets down in corners */
-            .about-assets {
-                display: block !important;
-            }
-            .about-asset {
-                border-radius: 6px !important;
-                box-shadow: 0 10px 20px rgba(0,0,0,0.3) !important;
-            }
-            .a-type {
-                top: 75% !important;
-                left: 5% !important;
-                width: 120px !important;
-                padding: 10px !important;
-                font-size: 8px !important;
-            }
-            .a-img1 {
-                top: 75% !important;
-                right: 5% !important;
-                width: 130px !important;
-                height: 170px !important;
-            }
-            .a-tag {
-                bottom: 75% !important;
-                right: 5% !important;
-                padding: 8px 20px !important;
-                font-size: 14px !important;
-            }
-            .a-img2 {
-                bottom: 75% !important;
-                left: 5% !important;
-                width: 140px !important;
-                height: 100px !important;
-            }
-            .about-step {
-                max-width: 95% !important;
-                padding: 1rem !important;
-            }
-            .journal-headline {
-                font-size: 1.8rem !important;
-                line-height: 1.2 !important;
-            }
-            .journal-paragraph {
-                font-size: 0.95rem !important;
-                margin-top: 1rem !important;
-                line-height: 1.5 !important;
-            }
-            
-            /* Selected works overrides */
-            .projects-section {
-                padding: 6rem 1.5rem !important;
-            }
-            .project-row {
-                padding: 2rem 0 !important;
-                flex-direction: column;
-                align-items: flex-start !important;
-                gap: 1rem;
-            }
-            .project-meta {
-                text-align: left !important;
-            }
-            .project-title {
-                font-size: 1.8rem !important;
-            }
-            
-            /* Playground control panel styling on mobile */
-            #playground-controls {
-                width: 90% !important;
-                bottom: 20px !important;
-                padding: 12px !important;
-                gap: 10px !important;
-            }
+            nav { padding: 1.2rem 1.5rem; }
+            nav a { font-size: 0.75rem; }
+            .projects-section { padding: 6rem 1.5rem; }
+            .project-row { padding: 2rem 0; }
         }
     </style>
 </head>
 <body>
     
     <div id="cursor-glow"></div>
-    <div id="custom-cursor"><span class="pointer-events-none select-none"></span></div>
+    <div id="custom-cursor"></div>
     <div class="film-grain"></div>
-    <div class="ambient-glow"></div>
 
-    <!-- Cinematic Entry Removed -->
+    <!-- Matte Background -->
+    <div class="matte-bg"></div>
+    
+    <!-- Global Background Grid -->
+    <div class="global-grid"></div>
 
-    <!-- Sliding Drawer Overlay -->
+    <!-- Persistent Global Metadata -->
+    <div class="fixed top-24 -left-[60px] md:top-1/3 md:left-[-70px] text-[9px] font-mono text-gray uppercase tracking-widest z-50 pointer-events-none -rotate-90 origin-right opacity-60 mix-blend-difference hidden md:block">
+        SYS.VER 4.0.1 // 2026
+    </div>
+    <div class="fixed bottom-6 left-6 md:bottom-8 md:left-10 text-[9px] font-mono text-gray uppercase tracking-widest z-50 pointer-events-none opacity-60 mix-blend-difference">
+        SYS.STATUS: <span class="text-vermilion font-bold">NOMINAL</span>
+    </div>
+    <div class="fixed bottom-6 right-6 md:bottom-8 md:right-10 text-[9px] font-mono text-gray uppercase tracking-widest z-50 pointer-events-none opacity-60 mix-blend-difference text-right leading-relaxed">
+        LOC: BLR, IN<br>
+        12.9716° N / 77.5946° E
+    </div>
+
+    <!-- Navigation -->
+    <nav id="main-nav">
+        <div class="nav-left"><a href="#" class="cursor-hover-target">Vishwas Mehta</a></div>
+        <div class="nav-right">
+            <a href="#hero-section" class="cursor-hover-target">Index</a>
+            <a href="#z-scroll-section" class="cursor-hover-target">Story</a>
+            <a href="#projects" class="cursor-hover-target">Archive</a>
+            <a href="#playground" class="cursor-hover-target">Playground</a>
+        </div>
+    </nav>
+
+    <!-- 5. SLIDING DRAWER OVERLAY -->
     <div id="project-drawer" class="fixed inset-0 z-[100] flex flex-col md:flex-row w-full h-full bg-codgray">
         <!-- Floating Close Button -->
-        <button id="close-drawer-floating" class="absolute top-6 right-6 z-[110] text-white hover:text-vermilion cursor-pointer font-sans text-xs uppercase tracking-widest border border-[#555] hover:border-vermilion px-5 py-2.5 rounded-full transition-all bg-codgray/80 backdrop-blur-sm cursor-hover-target">
+        <button id="close-drawer-floating" class="absolute top-6 right-6 z-[110] text-white hover:text-vermilion font-sans text-xs uppercase tracking-widest border border-[#555] hover:border-vermilion px-5 py-2.5 rounded-full transition-all bg-codgray/80 backdrop-blur-sm cursor-pointer" style="-webkit-tap-highlight-color: transparent;">
             [ CLOSE ]
         </button>
         <div class="w-full md:w-[45%] h-[60%] md:h-full p-6 md:p-16 flex flex-col relative overflow-y-auto border-b md:border-b-0 md:border-r border-[#333]">
@@ -319,7 +228,7 @@
                 <span id="drawer-category" class="text-vermilion text-[10px] font-bold tracking-[0.2em] uppercase mb-4 block">PRODUCT DESIGN . UX STRATEGY</span>
                 <h2 id="drawer-title" class="text-4xl md:text-5xl font-bold text-white mb-12 uppercase tracking-wide">TRAVEL PRODUCT</h2>
                 
-                <div class="flex flex-wrap gap-12 mb-12 border-b border-[#333] pb-12">
+                <div class="flex flex-wrap gap-8 md:gap-12 mb-12 border-b border-[#333] pb-12">
                     <div>
                         <h4 class="text-gray text-[10px] font-bold tracking-[0.2em] uppercase mb-2">TIMELINE</h4>
                         <p id="drawer-timeline" class="text-white text-sm font-medium">6 Weeks</p>
@@ -345,11 +254,10 @@
                 </div>
             </div>
 
-            <!-- Controls -->
             <div class="mt-auto pt-16 flex justify-between items-center w-full uppercase text-[10px] tracking-[0.2em] font-bold text-gray">
-                <span class="hover:text-white cursor-pointer cursor-hover-target transition-colors">← PREVIOUS</span>
-                <span id="close-drawer" class="text-white border border-[#555] hover:border-vermilion hover:text-vermilion transition-colors px-6 py-2 rounded-full cursor-pointer cursor-hover-target">[ CLOSE ]</span>
-                <span class="hover:text-white cursor-pointer cursor-hover-target transition-colors">NEXT →</span>
+                <span class="hidden md:inline hover:text-white cursor-pointer transition-colors">← PREVIOUS</span>
+                <span id="close-drawer" class="text-white border border-[#555] hover:border-vermilion hover:text-vermilion transition-colors px-6 py-2 rounded-full cursor-pointer mx-auto md:mx-0">[ CLOSE ]</span>
+                <span class="hidden md:inline hover:text-white cursor-pointer transition-colors">NEXT →</span>
             </div>
         </div>
         
@@ -358,81 +266,66 @@
         </div>
     </div>
 
-    <!-- Main Content Archive -->
-    <div id="main-website">
-        <nav>
-            <div class="nav-left"><a href="#" class="cursor-hover-target">Vishwas Mehta</a></div>
-            <div class="nav-right">
-                <a href="#hero-section" class="cursor-hover-target">Index</a>
-                <a href="#journal-dest" class="cursor-hover-target">Story</a>
-                <a href="#projects" class="cursor-hover-target">Archive</a>
-                <a href="#playground" class="cursor-hover-target">Playground</a>
-            </div>
-        </nav>
+    <div id="main-website" class="relative z-10">
 
+        <!-- 1. HERO SECTION -->
         <section class="hero-section" id="hero-section">
-            <h1 class="hero-title">Strategic Designer.</h1>
-            <p class="hero-subtitle mt-6">
-                Brand Identity, AI/Experience & Product Design. <br>
-                Translating complex systems into memorable digital experiences.
-            </p>
-        </section>
-
-        <!-- Pinned Scrollytelling About Section -->
-        <section class="pinned-about-section" id="journal-dest">
             
-            <!-- Floating Parallax Assets -->
-            <div class="about-assets">
-                <!-- Typography Specimen Card -->
-                <div class="about-asset a-type">
-                    <div class="flex justify-between items-start mb-6 text-[10px] text-gray uppercase tracking-widest font-mono">
-                        <span>Inter</span>
-                        <span>Space Mono</span>
-                    </div>
-                    <h2 class="text-6xl font-medium text-white tracking-tighter">Aa</h2>
-                </div>
-                <!-- Abstract Images -->
-                <div class="about-asset a-img1">
-                    <img src="https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=2000&auto=format&fit=crop" alt="Abstract conceptual design">
-                </div>
-                <!-- Brand Pill -->
-                <div class="about-asset a-tag">STRATEGY</div>
-                <!-- Secondary Image -->
-                <div class="about-asset a-img2">
-                    <img src="https://images.unsplash.com/photo-1550684848-fac1c5b4e853?q=80&w=2000&auto=format&fit=crop" alt="Abstract UI shape">
-                </div>
-            </div>
+            <!-- Grid Intersections -->
+            <div class="absolute top-[145px] left-[295px] text-white opacity-40 font-mono text-[10px] pointer-events-none z-10 hidden md:block">+</div>
+            <div class="absolute top-[145px] right-[295px] text-white opacity-40 font-mono text-[10px] pointer-events-none z-10 hidden md:block">+</div>
+            <div class="absolute bottom-[145px] left-[295px] text-white opacity-40 font-mono text-[10px] pointer-events-none z-10 hidden md:block">+</div>
+            <div class="absolute bottom-[145px] right-[295px] text-white opacity-40 font-mono text-[10px] pointer-events-none z-10 hidden md:block">+</div>
 
-            <!-- Scroll Copy Chapters -->
-            <div class="about-copy-container">
-                <div class="about-step step-1">
-                    <h2 class="journal-headline">Curiosity led me to design. <br><span style="color: var(--gray);">Systems made me stay.</span></h2>
-                    <p class="journal-paragraph">I started in computer science, where I learned to think in systems before I ever designed an interface. Every visual decision is backed by structural logic.</p>
-                </div>
+            <!-- Content -->
+            <div class="relative z-10 flex flex-col items-center justify-center text-center h-full px-4 pt-16">
                 
-                <div class="about-step step-2">
-                    <h2 class="journal-headline"><span style="color: var(--gray);">I observe the</span> <br>human gap.</h2>
-                    <p class="journal-paragraph">People often say one thing and do another. Understanding that gap is where meaningful, behavior-driven design begins.</p>
-                </div>
+                <h1 class="hero-title text-white flicker-text" id="hero-headline" data-text="& Design Engineer.">
+                </h1>
                 
-                <div class="about-step step-3">
-                    <h2 class="journal-headline">I'm less interested in adding features than <span class="vermilion-highlight">removing friction.</span></h2>
-                    <p class="journal-paragraph">I design complete experiences, not isolated deliverables. Make it feel inevitable.</p>
-                </div>
-            </div>
-
-            <div class="about-progress">
-                <div class="progress-bar" id="about-progress-bar"></div>
+                <p class="mt-4 text-gray text-lg max-w-xl mx-auto leading-relaxed flicker-text" id="hero-sub" data-text="Brand Identity, AI/Experience & Product Design.">
+                </p>
             </div>
         </section>
 
-        <!-- Selected Works (Editorial List + Drawer Triggers) -->
+        <!-- 2. Z-AXIS ABOUT SECTION -->
+        <section id="z-scroll-section" class="z-scroll-section">
+            <div class="z-perspective-wrapper">
+                <div id="z-world">
+                    
+                    <div class="z-item" data-z="-1500">
+                        <h2 class="z-headline">Curiosity led me to design. <br><span class="text-gray">Systems made me stay.</span></h2>
+                        <p class="z-paragraph">I started in computer science, learning to think in structures before interfaces.</p>
+                    </div>
+
+                    <div class="z-item z-asset hidden md:block" data-z="-3500" style="width: 250px; height: 350px; margin-left: 30vw;">
+                        <img src="https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=2000&auto=format&fit=crop" alt="Abstract structure">
+                    </div>
+
+                    <div class="z-item" data-z="-5500">
+                        <h2 class="z-headline"><span class="text-gray">I observe the</span> <br>human gap.</h2>
+                        <p class="z-paragraph">People often say one thing and do another. Understanding that gap is where behavior-driven design begins.</p>
+                    </div>
+
+                    <div class="z-item z-asset hidden md:block" data-z="-7000" style="width: 220px; height: 180px; margin-left: -35vw; padding: 24px; background: rgba(252,76,19,0.8); border:none;">
+                        <div class="flex justify-between items-start text-[10px] text-white uppercase tracking-widest font-mono"><span>Inter</span></div>
+                        <h2 class="text-7xl font-medium text-white tracking-tighter mt-4 select-none">Aa</h2>
+                    </div>
+
+                    <div class="z-item" data-z="-9000">
+                        <h2 class="z-headline">Less features. <br><span class="text-vermilion">Less friction.</span></h2>
+                        <p class="z-paragraph">I design complete experiences, not isolated deliverables. Make it feel inevitable.</p>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
+        <!-- 3. EDITORIAL PROJECTS ARCHIVE -->
         <section class="projects-section" id="projects">
             <div class="projects-header">Selected Works // 01 - 03</div>
             
             <div class="projects-list">
-                
-                <!-- Project 1 -->
                 <div class="project-row" 
                      data-image="assets/whole_fruit.jpg"
                      data-cat="BRAND STRATEGY . PACKAGING"
@@ -449,7 +342,6 @@
                     </div>
                 </div>
 
-                <!-- Project 2 -->
                 <div class="project-row" 
                      data-image="assets/travel_itinerary.jpg"
                      data-cat="UX/UI . AI INTEGRATION"
@@ -466,7 +358,6 @@
                     </div>
                 </div>
 
-                <!-- Project 3 -->
                 <div class="project-row" 
                      data-image="assets/systems_architecture.jpg"
                      data-cat="ENGINEERING . PRODUCT"
@@ -484,271 +375,260 @@
                 </div>
             </div>
 
-            <!-- Floating Image Preview -->
             <div id="project-preview-container">
                 <img id="project-preview-img" src="" alt="Project Preview">
             </div>
         </section>
 
-        <!-- Physics Sandbox -->
+        <!-- 4. PHYSICS PLAYGROUND -->
         <section class="playground-section" id="playground">
             <div class="playground-header">
                 <h3>Physics Sandbox</h3>
-                <p class="text-xs text-gray mt-2 font-mono uppercase tracking-widest">Interact / Throw / Disrupt</p>
+                <p class="text-[10px] text-gray mt-2 font-mono uppercase tracking-widest">Interact / Throw / Disrupt</p>
             </div>
 
+            <!-- Controls sit above interactive zone -->
             <div id="playground-controls" class="flex flex-col md:flex-row items-center gap-4 bg-black/60 backdrop-blur-md p-4 rounded-2xl border border-white/10 max-w-[90%] md:max-w-none">
                 <div class="flex items-center gap-4 flex-wrap justify-center">
-                    <button class="playground-btn cursor-hover-target" id="btn-zero-g">Zero Gravity</button>
-                    <button class="playground-btn cursor-hover-target" id="btn-explode">Explode</button>
-                    
+                    <button class="playground-btn" id="btn-zero-g">Zero Gravity</button>
+                    <button class="playground-btn" id="btn-explode">Explode</button>
                     <div class="flex items-center gap-2 font-mono text-[10px] text-gray select-none">
                         <span>GRAVITY:</span>
-                        <input type="range" id="gravity-slider" min="-1.5" max="2.5" step="0.1" value="1.0" class="w-20 md:w-24 accent-vermilion cursor-hover-target">
+                        <input type="range" id="gravity-slider" min="-1.5" max="2.5" step="0.1" value="1.0" class="w-20 md:w-24 accent-vermilion">
                         <span id="gravity-val" class="min-w-[30px]">1.0G</span>
                     </div>
                 </div>
-                
                 <div class="flex items-center gap-2 border-t md:border-t-0 md:border-l border-white/10 pt-3 md:pt-0 md:pl-4 w-full md:w-auto justify-center">
-                    <input type="text" id="node-text" placeholder="Type custom node..." class="bg-[#262626] border border-white/10 text-white rounded-full px-4 py-2 text-[11px] focus:outline-none focus:border-vermilion w-36 md:w-40 cursor-hover-target">
-                    <select id="node-type" class="bg-[#262626] border border-white/10 text-white rounded-full px-3 py-2 text-[11px] focus:outline-none focus:border-vermilion cursor-hover-target">
+                    <input type="text" id="node-text" placeholder="Type custom node..." class="bg-[#262626] border border-white/10 text-white rounded-full px-4 py-2 text-[11px] focus:outline-none focus:border-vermilion w-36 md:w-40">
+                    <select id="node-type" class="bg-[#262626] border border-white/10 text-white rounded-full px-3 py-2 text-[11px] focus:outline-none focus:border-vermilion">
                         <option value="box">Box</option>
                         <option value="pill">Pill</option>
                         <option value="circle">Circle</option>
                     </select>
-                    <button class="playground-btn cursor-hover-target !bg-vermilion !text-white !border-none hover:!scale-105 active:!scale-95 transition-transform" id="btn-spawn">Spawn</button>
+                    <button class="playground-btn !bg-vermilion !text-white !border-none" id="btn-spawn">Spawn</button>
                 </div>
             </div>
 
-            <!-- Isolated interactive zone for Matter.js physics interaction -->
-            <div id="playground-interactive-zone" style="position: absolute; inset: 0; z-index: 25;">
-                <!-- Inline width/height ensures Matter.js ALWAYS knows the size -->
+            <!-- Physics interactive zone -->
+            <div id="playground-interactive-zone">
                 <div class="physics-element" style="width: 280px; height: 120px;">
-                <h3 class="text-lg font-medium text-white">Whole Fruit</h3>
-                <p class="text-xs text-gray">Brand Strategy & Packaging.</p>
-                <div class="flex gap-2 mt-2">
-                    <span class="text-[10px] uppercase tracking-wider font-semibold border border-gray text-gray px-2 py-1 rounded">Branding</span>
+                    <h3 class="text-lg font-medium text-white">Whole Fruit</h3>
+                    <p class="text-xs text-gray">Brand Strategy & Packaging.</p>
+                    <div class="flex gap-2 mt-2">
+                        <span class="text-[10px] uppercase tracking-wider font-semibold border border-gray text-gray px-2 py-1 rounded">Branding</span>
+                    </div>
                 </div>
-            </div>
 
-            <div class="physics-element" style="width: 280px; height: 120px;">
-                <h3 class="text-lg font-medium text-white">Travel Itinerary</h3>
-                <p class="text-xs text-gray">AI-assisted travel experience.</p>
-                <div class="flex gap-2 mt-2">
-                    <span class="text-[10px] uppercase tracking-wider font-semibold border border-vermilion text-vermilion px-2 py-1 rounded">UX/UI</span>
+                <div class="physics-element" style="width: 280px; height: 120px;">
+                    <h3 class="text-lg font-medium text-white">Travel Itinerary</h3>
+                    <p class="text-xs text-gray">AI-assisted travel experience.</p>
+                    <div class="flex gap-2 mt-2">
+                        <span class="text-[10px] uppercase tracking-wider font-semibold border border-vermilion text-vermilion px-2 py-1 rounded">UX/UI</span>
+                    </div>
                 </div>
-            </div>
 
-            <div class="physics-element" style="width: 240px; height: 120px;">
-                <h3 class="text-sm font-light text-gray uppercase tracking-widest mb-2">Core Toolkit</h3>
-                <div class="flex flex-wrap gap-2">
-                    <span class="text-xs border border-gray bg-transparent px-2 py-1 rounded text-white">Figma</span>
-                    <span class="text-xs border border-gray bg-transparent px-2 py-1 rounded text-white">Photoshop</span>
-                    <span class="text-xs border border-gray bg-transparent px-2 py-1 rounded text-white">DaVinci</span>
+                <div class="physics-element" style="width: 240px; height: 120px;">
+                    <h3 class="text-sm font-light text-gray uppercase tracking-widest mb-2">Core Toolkit</h3>
+                    <div class="flex flex-wrap gap-2">
+                        <span class="text-xs border border-gray bg-transparent px-2 py-1 rounded text-white">Figma</span>
+                        <span class="text-xs border border-gray bg-transparent px-2 py-1 rounded text-white">Photoshop</span>
+                        <span class="text-xs border border-gray bg-transparent px-2 py-1 rounded text-white">DaVinci</span>
+                    </div>
                 </div>
-            </div>
 
-            <div class="physics-element is-pill" style="width: 180px; height: 50px; border-color: var(--gray);">
-                <span class="text-sm font-medium text-white tracking-wider">Let's Connect 👋</span>
-            </div>
+                <div class="physics-element is-pill" style="width: 180px; height: 50px; border-color: var(--gray);">
+                    <span class="text-sm font-medium text-white tracking-wider">Let's Connect 👋</span>
+                </div>
 
-            <div class="physics-element is-circle" style="width: 100px; height: 100px;">
-                <span class="text-3xl text-vermilion">✦</span>
-            </div>
-            
-            <div class="physics-element is-circle" style="width: 80px; height: 80px; background: transparent; border: 1px solid var(--gray);">
-                <span class="text-xs font-mono text-gray">SYS</span>
-            </div> 
-            <div class="physics-element is-circle" style="width: 80px; height: 80px; background: transparent; border: 1px solid var(--gray);">
-                <span class="text-xs font-mono text-gray">threat level midnight</span>
-            </div>
+                <div class="physics-element is-circle" style="width: 100px; height: 100px;">
+                    <span class="text-3xl text-vermilion">✦</span>
+                </div>
+                
+                <div class="physics-element is-circle" style="width: 80px; height: 80px; background: transparent; border: 1px solid var(--gray);">
+                    <span class="text-xs font-mono text-gray">SYS</span>
+                </div>
             </div>
         </section>
     </div>
 
+    <!-- LOGIC & SCRIPTS -->
     <script>
-        // --- 1. Global Setup (Cursor, Scroll) ---
-        // Force scroll to top on page reload
-        if (history.scrollRestoration) {
-            history.scrollRestoration = 'manual';
-        }
-        window.scrollTo(0, 0);
-        window.addEventListener('load', () => {
-            window.scrollTo(0, 0);
-        });
-        if (window.location.hash) {
-            history.replaceState("", document.title, window.location.pathname + window.location.search);
-        }
+        // ── Environment ──────────────────────────────────────────────────────────
+        const isMobile = window.matchMedia("(max-width: 768px)").matches || window.matchMedia("(pointer: coarse)").matches;
+        gsap.registerPlugin(ScrollTrigger);
+        ScrollTrigger.config({ ignoreMobileResize: true });
 
+        // Native scroll helpers (for drawer lock)
+        function stopScroll() { document.body.style.overflow = 'hidden'; document.documentElement.style.overflow = 'hidden'; }
+        function startScroll() { document.body.style.overflow = ''; document.documentElement.style.overflow = ''; }
+
+        // Scroll to top on load
+        if (history.scrollRestoration) history.scrollRestoration = 'manual';
+        window.addEventListener('load', () => window.scrollTo(0, 0));
+        if (window.location.hash) history.replaceState('', document.title, window.location.pathname + window.location.search);
+
+        // ── Custom Cursor ─────────────────────────────────────────────────────────
         const cursor = document.getElementById('custom-cursor');
-        const cursorSpan = cursor.querySelector('span');
         const cursorGlow = document.getElementById('cursor-glow');
         
-        window.addEventListener('mousemove', (e) => {
-            cursor.style.left = e.clientX + 'px';
-            cursor.style.top = e.clientY + 'px';
-            cursorGlow.style.left = e.clientX + 'px';
-            cursorGlow.style.top = e.clientY + 'px';
-        });
+        if (!isMobile) {
+            window.addEventListener('mousemove', (e) => {
+                cursor.style.left = e.clientX + 'px';
+                cursor.style.top = e.clientY + 'px';
+                cursorGlow.style.left = e.clientX + 'px';
+                cursorGlow.style.top = e.clientY + 'px';
+            });
 
-        // Initialize general cursor hovers
-        function initCursorHovers() {
-            document.querySelectorAll('.cursor-hover-target').forEach(el => {
+            document.querySelectorAll('.cursor-hover-target, .project-row').forEach(el => {
                 el.addEventListener('mouseenter', () => cursor.classList.add('cursor-hover'));
                 el.addEventListener('mouseleave', () => cursor.classList.remove('cursor-hover'));
             });
-
-            document.querySelectorAll('.project-row').forEach(el => {
-                el.addEventListener('mouseenter', () => {
-                    cursor.classList.add('cursor-view');
-                    cursorSpan.innerText = 'VIEW';
-                });
-                el.addEventListener('mouseleave', () => {
-                    cursor.classList.remove('cursor-view');
-                    cursorSpan.innerText = '';
-                });
-            });
-
-            document.querySelectorAll('.playground-section .physics-element').forEach(el => {
-                el.addEventListener('mouseenter', () => {
-                    cursor.classList.add('cursor-drag');
-                    cursorSpan.innerText = 'DRAG';
-                });
-                el.addEventListener('mouseleave', () => {
-                    cursor.classList.remove('cursor-drag');
-                    cursorSpan.innerText = '';
-                });
-            });
-        }
-        initCursorHovers();
-
-        const isTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
-
-        // Native scroll control functions to prevent scroll when project drawer is open
-        function stopScroll() {
-            document.body.style.overflow = 'hidden';
-            document.documentElement.style.overflow = 'hidden';
-        }
-        function startScroll() {
-            document.body.style.overflow = '';
-            document.documentElement.style.overflow = '';
         }
 
-        // Initialize scroll behaviors and refresh GSAP triggers
-        window.scrollTo(0, 0);
-        document.documentElement.style.scrollBehavior = 'smooth';
-        ScrollTrigger.refresh();
+        // ── Text Scramble ─────────────────────────────────────────────────────────
+        class TextScramble {
+            constructor(el) {
+                this.el = el;
+                this.chars = '█▓▒░/[]{}—=+*^?#_';
+                this.update = this.update.bind(this);
+            }
+            setText(newText) {
+                const oldText = this.el.innerText || '';
+                const length = Math.max(oldText.length, newText.length);
+                const promise = new Promise((resolve) => this.resolve = resolve);
+                this.queue = [];
+                for (let i = 0; i < length; i++) {
+                    const from = oldText[i] || '';
+                    const to = newText[i] || '';
+                    const start = Math.floor(Math.random() * 40);
+                    const end = start + Math.floor(Math.random() * 40);
+                    this.queue.push({ from, to, start, end });
+                }
+                cancelAnimationFrame(this.frameRequest);
+                this.frame = 0;
+                this.update();
+                return promise;
+            }
+            update() {
+                let output = '';
+                let complete = 0;
+                for (let i = 0, n = this.queue.length; i < n; i++) {
+                    let { from, to, start, end, char } = this.queue[i];
+                    if (this.frame >= end) {
+                        complete++;
+                        output += to;
+                    } else if (this.frame >= start) {
+                        if (!char || Math.random() < 0.28) {
+                            char = this.chars[Math.floor(Math.random() * this.chars.length)];
+                            this.queue[i].char = char;
+                        }
+                        output += `<span class="opacity-50 text-vermilion">${char}</span>`;
+                    } else {
+                        output += from;
+                    }
+                }
+                this.el.innerHTML = output;
+                if (complete === this.queue.length) {
+                    this.resolve();
+                } else {
+                    this.frameRequest = requestAnimationFrame(this.update);
+                    this.frame++;
+                }
+            }
+        }
 
-        // --- 2.5 Scrollytelling About Section Logic ---
-        const aboutTl = gsap.timeline({
+        window.addEventListener('DOMContentLoaded', () => {
+            const headline = document.getElementById('hero-headline');
+            const subhead = document.getElementById('hero-sub');
+            const fxHeadline = new TextScramble(headline);
+            const fxSubhead = new TextScramble(subhead);
+            fxHeadline.setText(headline.getAttribute('data-text'));
+            setTimeout(() => fxSubhead.setText(subhead.getAttribute('data-text')), 600);
+        });
+
+        // ── Z-Axis Section ────────────────────────────────────────────────────────
+        const zItems = document.querySelectorAll('.z-item');
+        zItems.forEach(item => {
+            const z = parseFloat(item.dataset.z);
+            item.style.transform = `translate(-50%, -50%) translateZ(${z}px)`;
+            item.baseZ = z;
+        });
+
+        gsap.to("#z-world", {
             scrollTrigger: {
-                trigger: "#journal-dest",
+                trigger: "#z-scroll-section",
                 start: "top top",
-                end: "+=3500", // Pins for 3500px of scrolling
+                end: "+=6000", 
                 pin: true,
-                scrub: 1, // Smoothly link animation to scrollbar
+                scrub: 1,
+                onUpdate: (self) => {
+                    const worldZ = self.progress * 11000; 
+                    zItems.forEach(item => {
+                        const effectiveZ = item.baseZ + worldZ;
+                        item.style.transform = `translate(-50%, -50%) translateZ(${effectiveZ}px)`;
+                        let blur = Math.max(0, Math.abs(effectiveZ) / 150 - 1);
+                        let opacity = Math.max(0, 1 - Math.max(0, (effectiveZ - 500) / 300));
+                        item.style.filter = `blur(${blur}px)`;
+                        item.style.opacity = opacity;
+                    });
+                }
             }
         });
 
-        // Progress Bar
-        aboutTl.to("#about-progress-bar", { width: "100%", duration: 4, ease: "none" }, 0);
-
-        // Float Assets Parallax
-        aboutTl.to(".a-type", { opacity: 1, y: -80, rotation: -4, duration: 1 }, 0.2)
-               .to(".a-img1", { opacity: 0.8, y: -120, rotation: 3, duration: 1.5 }, 0.1)
-               .to(".a-tag", { opacity: 1, y: -150, scale: 1.05, duration: 1.2 }, 0.4)
-               .to(".a-img2", { opacity: 0.6, y: -200, duration: 1.8 }, 0.3)
-               // Keep assets slowly drifting upward throughout the entire scroll
-               .to(".about-asset", { y: "-=150", duration: 3, ease: "none" }, 1);
-
-        // Sequence Chapters (Crossfading and Scaling)
-        const steps = gsap.utils.toArray('.about-step');
-        
-        // Chapter 1
-        aboutTl.to(steps[0], { opacity: 1, y: 0, scale: 1, duration: 0.5, ease: "power2.out" }, 0)
-               .to(steps[0], { opacity: 0, y: -60, scale: 1.05, duration: 0.5, ease: "power2.in" }, 1.2);
-
-        // Chapter 2
-        aboutTl.to(steps[1], { opacity: 1, y: 0, scale: 1, duration: 0.5, ease: "power2.out" }, 1.5)
-               .to(steps[1], { opacity: 0, y: -60, scale: 1.05, duration: 0.5, ease: "power2.in" }, 2.5);
-
-        // Chapter 3
-        aboutTl.to(steps[2], { opacity: 1, y: 0, scale: 1, duration: 0.5, ease: "power2.out" }, 2.8)
-               .to(steps[2], { opacity: 0, y: -60, scale: 1.05, duration: 0.5, ease: "power2.in" }, 3.8); // Fades out just before unpinning
-
-
-        // --- 3. Drawer & Hover Logic (Wired to the Project Rows) ---
+        // ── Project Drawer ────────────────────────────────────────────────────────
         const projectRows = document.querySelectorAll('.project-row');
         const previewContainer = document.getElementById('project-preview-container');
         const previewImg = document.getElementById('project-preview-img');
         const drawer = document.getElementById('project-drawer');
         const closeBtn = document.getElementById('close-drawer');
-
-        // Floating Image Logic
-        const xTo = gsap.quickTo(previewContainer, "left", {duration: 0.4, ease: "power3"});
-        const yTo = gsap.quickTo(previewContainer, "top", {duration: 0.4, ease: "power3"});
-
-        window.addEventListener("mousemove", (e) => {
-            xTo(e.clientX);
-            yTo(e.clientY);
-        });
-
-        projectRows.forEach(row => {
-            // Hover Show Image
-            row.addEventListener('mouseenter', () => {
-                const imgSrc = row.getAttribute('data-image');
-                previewImg.src = imgSrc;
-                gsap.to(previewContainer, { opacity: 1, scale: 1, duration: 0.4, ease: "power3.out" });
-                cursor.classList.add('cursor-hidden');
-            });
-            
-            // Hover Hide Image
-            row.addEventListener('mouseleave', () => {
-                gsap.to(previewContainer, { opacity: 0, scale: 0.95, duration: 0.4, ease: "power3.out" });
-                cursor.classList.remove('cursor-hidden');
-            });
-
-            // Click Open Drawer
-            row.addEventListener('click', () => {
-                // Hide floating image instantly
-                gsap.to(previewContainer, { opacity: 0, duration: 0.1 });
-                cursor.classList.remove('cursor-hidden');
-                
-                // Populate Data
-                document.getElementById('drawer-category').innerText = row.dataset.cat;
-                document.getElementById('drawer-title').innerText = row.dataset.title;
-                document.getElementById('drawer-timeline').innerText = row.dataset.time;
-                document.getElementById('drawer-role').innerText = row.dataset.role;
-                document.getElementById('drawer-team').innerText = row.dataset.team;
-                document.getElementById('drawer-summary').innerText = row.dataset.sum;
-                document.getElementById('drawer-challenge').innerText = row.dataset.chal;
-                document.getElementById('drawer-img').src = row.dataset.image;
-
-                // Slide Drawer
-                drawer.classList.add('open');
-                stopScroll(); // Lock scroll behind drawer
-
-                // Push history state to capture back button
-                history.pushState({ drawerOpen: true }, "", "#project");
-            });
-        });
-
-        // Close Drawer logic wired to History popstate
         const closeBtnFloating = document.getElementById('close-drawer-floating');
+
+        if (!isMobile && previewContainer) {
+            const xTo = gsap.quickTo(previewContainer, "left", {duration: 0.4, ease: "power3"});
+            const yTo = gsap.quickTo(previewContainer, "top", {duration: 0.4, ease: "power3"});
+            window.addEventListener("mousemove", (e) => { xTo(e.clientX); yTo(e.clientY); });
+
+            projectRows.forEach(row => {
+                row.addEventListener('mouseenter', () => {
+                    previewImg.src = row.getAttribute('data-image');
+                    gsap.to(previewContainer, { opacity: 1, scale: 1, duration: 0.4, ease: "power3.out" });
+                    cursor.classList.add('cursor-hidden');
+                });
+                row.addEventListener('mouseleave', () => {
+                    gsap.to(previewContainer, { opacity: 0, scale: 0.95, duration: 0.4, ease: "power3.out" });
+                    cursor.classList.remove('cursor-hidden');
+                });
+            });
+        }
+
+        function openDrawer(row) {
+            if (!isMobile && previewContainer) gsap.to(previewContainer, { opacity: 0, duration: 0.1 });
+            document.getElementById('drawer-category').innerText = row.dataset.cat;
+            document.getElementById('drawer-title').innerText = row.dataset.title;
+            document.getElementById('drawer-timeline').innerText = row.dataset.time;
+            document.getElementById('drawer-role').innerText = row.dataset.role;
+            document.getElementById('drawer-team').innerText = row.dataset.team;
+            document.getElementById('drawer-summary').innerText = row.dataset.sum;
+            document.getElementById('drawer-challenge').innerText = row.dataset.chal;
+            document.getElementById('drawer-img').src = row.dataset.image;
+            drawer.classList.add('open');
+            stopScroll();
+            history.pushState({ drawerOpen: true }, '', '#project');
+        }
 
         function closeDrawer() {
             if (window.location.hash === '#project') {
-                history.back(); // Will trigger popstate to close drawer cleanly
+                history.back();
             } else {
                 drawer.classList.remove('open');
                 startScroll();
             }
         }
 
+        projectRows.forEach(row => row.addEventListener('click', () => openDrawer(row)));
         if (closeBtn) closeBtn.addEventListener('click', closeDrawer);
         if (closeBtnFloating) closeBtnFloating.addEventListener('click', closeDrawer);
 
-        // Listen for browser back button / swipe back gesture
         window.addEventListener('popstate', () => {
             if (drawer.classList.contains('open')) {
                 drawer.classList.remove('open');
@@ -756,12 +636,10 @@
             }
         });
 
-
-        // --- 4. Physics Engine (Bulletproof Init) ---
-        gsap.registerPlugin(ScrollTrigger);
-        ScrollTrigger.config({ ignoreMobileResize: true });
-        const { Engine, World, Bodies, Mouse, MouseConstraint, Composite, Events, Runner } = Matter;
+        // ── Physics Playground ────────────────────────────────────────────────────
+        const { Engine, World, Bodies, Mouse, MouseConstraint, Composite, Events, Runner, Query } = Matter;
         const playground = document.getElementById('playground');
+        const interactionZone = document.getElementById('playground-interactive-zone');
         let engine, world, runner;
         let domBodies = [];
         let physicsInitialized = false;
@@ -770,7 +648,6 @@
             engine = Engine.create();
             world = engine.world;
             
-            // Get initial gravity from slider value
             const gravitySlider = document.getElementById('gravity-slider');
             engine.gravity.y = gravitySlider ? parseFloat(gravitySlider.value) : 1;
             
@@ -779,43 +656,31 @@
 
             const w = playground.clientWidth || window.innerWidth;
             const h = playground.clientHeight || window.innerHeight;
-            const thickness = 2000; 
+            const thickness = 2000;
 
             const boundOptions = { isStatic: true, render: { visible: false }, friction: 0.8, restitution: 0.5 };
-            const walls = [
-                Bodies.rectangle(w / 2, h + thickness / 2, w + 4000, thickness, boundOptions), 
-                // Moved the ceiling 1500px upwards so elements don't spawn trapped inside it
-                Bodies.rectangle(w / 2, -1500 - (thickness / 2), w + 4000, thickness, boundOptions), 
-                Bodies.rectangle(-thickness / 2, h / 2, thickness, h + 4000, boundOptions), 
-                Bodies.rectangle(w + thickness / 2, h / 2, thickness, h + 4000, boundOptions)  
-            ];
-            Composite.add(world, walls);
+            Composite.add(world, [
+                Bodies.rectangle(w / 2, h + thickness / 2, w + 4000, thickness, boundOptions),
+                Bodies.rectangle(w / 2, -1500 - thickness / 2, w + 4000, thickness, boundOptions),
+                Bodies.rectangle(-thickness / 2, h / 2, thickness, h + 4000, boundOptions),
+                Bodies.rectangle(w + thickness / 2, h / 2, thickness, h + 4000, boundOptions)
+            ]);
 
-            const elements = document.querySelectorAll('.playground-section .physics-element');
-            elements.forEach((el, index) => {
-                
-                // Parse dimensions from inline styles to guarantee it works even if DOM gets weird
+            document.querySelectorAll('#playground-interactive-zone .physics-element').forEach((el, index) => {
                 const explicitWidth = parseInt(el.style.width);
                 const explicitHeight = parseInt(el.style.height);
-                
                 const width = el.getBoundingClientRect().width || explicitWidth || 280;
                 const height = el.getBoundingClientRect().height || explicitHeight || 100;
-                
-                const startX = (w / 2) + ((Math.random() - 0.5) * (w * 0.6));
-                const startY = -200 - (index * 150); 
-                
+                const startX = w / 2 + (Math.random() - 0.5) * (isMobile ? w * 0.3 : w * 0.6);
+                const startY = -200 - index * 150;
+
                 const isCircle = el.classList.contains('is-circle');
                 const isPill = el.classList.contains('is-pill');
-
                 let body;
-                if (isCircle) {
-                    body = Bodies.circle(startX, startY, width / 2, { restitution: 0.9, friction: 0.05, density: 0.01 });
-                } else if (isPill) {
-                    body = Bodies.rectangle(startX, startY, width, height, { chamfer: { radius: height / 2 }, restitution: 0.7, friction: 0.1, density: 0.03 });
-                } else {
-                    body = Bodies.rectangle(startX, startY, width, height, { chamfer: { radius: 8 }, restitution: 0.5, friction: 0.2, density: 0.05 });
-                }
-                
+                if (isCircle) body = Bodies.circle(startX, startY, width / 2, { restitution: 0.9, friction: 0.05, density: 0.01 });
+                else if (isPill) body = Bodies.rectangle(startX, startY, width, height, { chamfer: { radius: height / 2 }, restitution: 0.7, friction: 0.1, density: 0.03 });
+                else body = Bodies.rectangle(startX, startY, width, height, { chamfer: { radius: 8 }, restitution: 0.5, friction: 0.2, density: 0.05 });
+
                 body.domElement = el;
                 body.width = width;
                 body.height = height;
@@ -826,189 +691,99 @@
             Events.on(engine, 'afterUpdate', () => {
                 domBodies.forEach(body => {
                     const el = body.domElement;
-                    const x = body.position.x - (body.width / 2);
-                    const y = body.position.y - (body.height / 2);
                     el.style.opacity = 1;
-                    el.style.transform = `translate3d(${x}px, ${y}px, 0) rotate(${body.angle}rad)`;
+                    el.style.transform = `translate3d(${body.position.x - body.width / 2}px, ${body.position.y - body.height / 2}px, 0) rotate(${body.angle}rad)`;
                 });
             });
 
-            const interactionZone = document.getElementById('playground-interactive-zone');
             const mouse = Mouse.create(interactionZone);
-            const mouseConstraint = MouseConstraint.create(engine, { mouse: mouse, constraint: { stiffness: 0.2 } });
-            
-            // Remove standard Matter.js mouse event listeners to prevent blocking native page scrolling
+            const mouseConstraint = MouseConstraint.create(engine, { mouse, constraint: { stiffness: 0.2 } });
+
+            // Remove default wheel/touch listeners that block scroll
             mouse.element.removeEventListener("mousewheel", mouse.mousewheel);
             mouse.element.removeEventListener("DOMMouseScroll", mouse.mousewheel);
             mouse.element.removeEventListener("touchstart", mouse.mousedown);
             mouse.element.removeEventListener("touchmove", mouse.mousemove);
             mouse.element.removeEventListener("touchend", mouse.mouseup);
-            
-            // Add custom touch event listeners that only block scroll when actively dragging a body
+
+            // Smart touch: only intercept if touching a physics body
             interactionZone.addEventListener('touchstart', (e) => {
                 const touch = e.touches[0];
                 const rect = interactionZone.getBoundingClientRect();
-                const mouseX = touch.clientX - rect.left;
-                const mouseY = touch.clientY - rect.top;
-                
-                const bodies = Composite.allBodies(world);
-                const clickedBody = Matter.Query.point(bodies, { x: mouseX, y: mouseY })[0];
-                
+                const clickedBody = Query.point(Composite.allBodies(world), { x: touch.clientX - rect.left, y: touch.clientY - rect.top })[0];
                 if (clickedBody && !clickedBody.isStatic) {
-                    e.preventDefault(); // Block page scroll
+                    e.preventDefault();
                     mouse.mousedown(e);
                 }
             }, { passive: false });
 
             interactionZone.addEventListener('touchmove', (e) => {
-                if (mouseConstraint.body) {
-                    e.preventDefault(); // Block page scroll only during active drag
-                    mouse.mousemove(e);
-                }
+                if (mouseConstraint.body) { e.preventDefault(); mouse.mousemove(e); }
             }, { passive: false });
 
             interactionZone.addEventListener('touchend', (e) => {
-                if (mouseConstraint.body) {
-                    mouse.mouseup(e);
-                }
+                if (mouseConstraint.body) mouse.mouseup(e);
             }, { passive: true });
 
             Composite.add(world, mouseConstraint);
-
-            // Custom touch event listeners handle scroll prevention natively on touch devices
         }
 
-        // Dynamic element spawner logic
         function spawnCustomElement(text, type) {
-            if (!physicsInitialized) {
-                // Initialize physics first if they haven't scrolled to it yet
-                initPhysics();
-                physicsInitialized = true;
-            }
-            
+            if (!physicsInitialized) { initPhysics(); physicsInitialized = true; }
             const w = playground.clientWidth || window.innerWidth;
             const el = document.createElement('div');
             el.className = 'physics-element opacity-0';
-            
+
             if (type === 'circle') {
                 el.classList.add('is-circle');
-                el.style.width = '80px';
-                el.style.height = '80px';
-                el.style.display = 'flex';
-                el.style.alignItems = 'center';
-                el.style.justifyContent = 'center';
-                el.style.background = 'rgba(252, 76, 19, 0.1)';
-                el.style.borderColor = 'rgba(252, 76, 19, 0.4)';
-                el.innerHTML = `<span class="text-xs font-mono text-center text-vermilion p-2 overflow-hidden text-ellipsis">${text}</span>`;
+                el.style.width = '80px'; el.style.height = '80px';
+                el.style.display = 'flex'; el.style.alignItems = 'center'; el.style.justifyContent = 'center';
+                el.style.background = 'rgba(252, 76, 19, 0.1)'; el.style.borderColor = 'rgba(252, 76, 19, 0.4)';
+                el.innerHTML = `<span class="text-xs font-mono text-center text-vermilion p-2">${text}</span>`;
             } else if (type === 'pill') {
                 el.classList.add('is-pill');
-                el.style.width = '180px';
-                el.style.height = '50px';
-                el.style.borderColor = 'var(--vermilion)';
-                el.innerHTML = `<span class="text-sm font-medium text-white tracking-wider text-ellipsis overflow-hidden whitespace-nowrap">${text}</span>`;
+                el.style.width = '180px'; el.style.height = '50px'; el.style.borderColor = 'var(--vermilion)';
+                el.innerHTML = `<span class="text-sm font-medium text-white tracking-wider">${text}</span>`;
             } else {
-                // Box
-                el.style.width = '240px';
-                el.style.height = '100px';
-                el.innerHTML = `
-                    <h3 class="text-md font-medium text-white text-ellipsis overflow-hidden whitespace-nowrap">${text}</h3>
-                    <p class="text-[10px] text-gray mt-1">User Generated Node</p>
-                    <div class="flex gap-2 mt-2">
-                        <span class="text-[9px] uppercase tracking-wider font-semibold border border-vermilion text-vermilion px-1.5 py-0.5 rounded">Custom</span>
-                    </div>
-                `;
+                el.style.width = '240px'; el.style.height = '100px';
+                el.innerHTML = `<h3 class="text-md font-medium text-white">${text}</h3><p class="text-[10px] text-gray mt-1">User Generated Node</p>`;
             }
-            
-            document.getElementById('playground-interactive-zone').appendChild(el);
-            
-            const width = type === 'circle' ? 80 : (type === 'pill' ? 180 : 240);
-            const height = type === 'circle' ? 80 : (type === 'pill' ? 50 : 100);
-            
-            const startX = (w / 2) + ((Math.random() - 0.5) * (w * 0.4));
-            const startY = -150;
-            
+
+            interactionZone.appendChild(el);
+            const width = type === 'circle' ? 80 : type === 'pill' ? 180 : 240;
+            const height = type === 'circle' ? 80 : type === 'pill' ? 50 : 100;
+            const startX = w / 2 + (Math.random() - 0.5) * w * 0.4;
             let body;
-            if (type === 'circle') {
-                body = Bodies.circle(startX, startY, width / 2, { restitution: 0.9, friction: 0.05, density: 0.01 });
-            } else if (type === 'pill') {
-                body = Bodies.rectangle(startX, startY, width, height, { chamfer: { radius: height / 2 }, restitution: 0.7, friction: 0.1, density: 0.03 });
-            } else {
-                body = Bodies.rectangle(startX, startY, width, height, { chamfer: { radius: 8 }, restitution: 0.5, friction: 0.2, density: 0.05 });
-            }
-            
-            body.domElement = el;
-            body.width = width;
-            body.height = height;
-            
+            if (type === 'circle') body = Bodies.circle(startX, -150, width / 2, { restitution: 0.9, friction: 0.05, density: 0.01 });
+            else if (type === 'pill') body = Bodies.rectangle(startX, -150, width, height, { chamfer: { radius: height / 2 }, restitution: 0.7, friction: 0.1, density: 0.03 });
+            else body = Bodies.rectangle(startX, -150, width, height, { chamfer: { radius: 8 }, restitution: 0.5, friction: 0.2, density: 0.05 });
+            body.domElement = el; body.width = width; body.height = height;
             domBodies.push(body);
             Composite.add(world, body);
-            
-            // Re-bind cursor hovers for the newly created element
-            initCursorHovers();
-            
-            // Apply a slight impulse to make it look dynamic when spawning
             Matter.Body.applyForce(body, body.position, { x: (Math.random() - 0.5) * 0.02, y: 0.05 });
         }
 
-        // Setup Spawning Form Interactions
-        document.getElementById('btn-spawn').addEventListener('click', () => {
-            const input = document.getElementById('node-text');
-            const select = document.getElementById('node-type');
-            const text = input.value.trim() || "Creative Idea";
-            const type = select.value;
-            spawnCustomElement(text, type);
-            input.value = "";
-        });
-
-        // Trigger spawn on pressing Enter in input field
-        document.getElementById('node-text').addEventListener('keydown', (e) => {
-            if (e.key === 'Enter') {
-                document.getElementById('btn-spawn').click();
-            }
-        });
-
-        // Gravity/Explode Buttons
+        // Gravity slider
         const gravitySlider = document.getElementById('gravity-slider');
         const gravityValText = document.getElementById('gravity-val');
-
         if (gravitySlider) {
             gravitySlider.addEventListener('input', function() {
                 const val = parseFloat(this.value);
                 if (engine) engine.gravity.y = val;
                 gravityValText.innerText = val.toFixed(1) + 'G';
-                
-                const zeroGBtn = document.getElementById('btn-zero-g');
-                if (val === 0) {
-                    zeroGBtn.innerText = "Restore Gravity";
-                    zeroGBtn.style.background = "rgba(252, 76, 19, 0.1)";
-                    zeroGBtn.style.color = "var(--vermilion)";
-                    zeroGBtn.style.borderColor = "var(--vermilion)";
-                } else {
-                    zeroGBtn.innerText = "Zero Gravity";
-                    zeroGBtn.style.background = "var(--codgray)";
-                    zeroGBtn.style.color = "var(--white)";
-                    zeroGBtn.style.borderColor = "rgba(255,255,255,0.2)";
-                }
             });
         }
 
         document.getElementById('btn-zero-g').addEventListener('click', function() {
-            if (!physicsInitialized) {
-                initPhysics();
-                physicsInitialized = true;
-            }
+            if (!physicsInitialized) { initPhysics(); physicsInitialized = true; }
             if (engine.gravity.y === 0) {
-                engine.gravity.y = 1; 
-                gravitySlider.value = 1.0;
-                gravityValText.innerText = "1.0G";
+                engine.gravity.y = 1;
+                if (gravitySlider) { gravitySlider.value = 1; gravityValText.innerText = '1.0G'; }
                 this.innerText = "Zero Gravity";
-                this.style.background = "var(--codgray)";
-                this.style.color = "var(--white)";
-                this.style.borderColor = "rgba(255,255,255,0.2)";
+                this.style.cssText = '';
             } else {
-                engine.gravity.y = 0; 
-                gravitySlider.value = 0.0;
-                gravityValText.innerText = "0.0G";
+                engine.gravity.y = 0;
+                if (gravitySlider) { gravitySlider.value = 0; gravityValText.innerText = '0.0G'; }
                 this.innerText = "Restore Gravity";
                 this.style.background = "rgba(252, 76, 19, 0.1)";
                 this.style.color = "var(--vermilion)";
@@ -1018,33 +793,29 @@
         });
 
         document.getElementById('btn-explode').addEventListener('click', function() {
-            if (!physicsInitialized) {
-                initPhysics();
-                physicsInitialized = true;
-                return;
-            }
+            if (!physicsInitialized) { initPhysics(); physicsInitialized = true; return; }
             domBodies.forEach(body => {
-                const forceMagnitude = body.mass * (0.3 + Math.random() * 0.2); 
-                const forceX = (Math.random() - 0.5) * forceMagnitude; 
-                const forceY = -forceMagnitude - (Math.random() * forceMagnitude * 0.5); 
-                Matter.Body.applyForce(body, body.position, { x: forceX, y: forceY });
+                const f = body.mass * (0.3 + Math.random() * 0.2);
+                Matter.Body.applyForce(body, body.position, { x: (Math.random() - 0.5) * f, y: -f - Math.random() * f * 0.5 });
             });
         });
 
-        // Initialize Physics only when scrolling to it
-        ScrollTrigger.create({ 
-            trigger: "#playground", 
-            start: "top 60%", 
-            onEnter: () => { 
-                if (!physicsInitialized) { 
-                    initPhysics(); 
-                    physicsInitialized = true; 
-                } 
-            } 
+        document.getElementById('btn-spawn').addEventListener('click', () => {
+            const input = document.getElementById('node-text');
+            const select = document.getElementById('node-type');
+            spawnCustomElement(input.value.trim() || "Creative Idea", select.value);
+            input.value = '';
         });
 
-        // Matter.js standard touch listeners are already removed, and custom touch handlers automatically bypass the controls panel.
+        document.getElementById('node-text').addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') document.getElementById('btn-spawn').click();
+        });
+
+        ScrollTrigger.create({
+            trigger: "#playground",
+            start: "top 60%",
+            onEnter: () => { if (!physicsInitialized) { initPhysics(); physicsInitialized = true; } }
+        });
     </script>
-    <!-- Auto-sync active -->
 </body>
 </html>
