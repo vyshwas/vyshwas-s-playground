@@ -60,6 +60,16 @@
 
 
 
+        /* Dark Water Caustics Background */
+        .caustics-bg {
+            position: fixed; inset: 0; width: 100vw; height: 100vh;
+            pointer-events: none; z-index: 0;
+            background-image: url('assets/bg_caustics.jpg');
+            background-size: cover;
+            background-position: center;
+            opacity: 0.25;
+        }
+
         /* Film Grain */
         .film-grain { 
             position: fixed; inset: 0; width: 100vw; height: 100vh; pointer-events: none; z-index: 9990; 
@@ -179,6 +189,9 @@
     <div id="cursor-glow"></div>
     <div id="custom-cursor"></div>
     <div class="film-grain"></div>
+
+    <!-- Dark Water Caustics Background -->
+    <div class="caustics-bg"></div>
 
 
     
