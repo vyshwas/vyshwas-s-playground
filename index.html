@@ -224,9 +224,38 @@
                 font-size: 0.8rem !important;
             }
             
-            /* Pinned About section overrides on mobile: Hide floating assets and resize text to prevent overflow */
+            /* Pinned About section overrides on mobile: Scale floating assets down in corners */
             .about-assets {
-                display: none !important;
+                display: block !important;
+            }
+            .about-asset {
+                border-radius: 6px !important;
+                box-shadow: 0 10px 20px rgba(0,0,0,0.3) !important;
+            }
+            .a-type {
+                top: 75% !important;
+                left: 5% !important;
+                width: 120px !important;
+                padding: 10px !important;
+                font-size: 8px !important;
+            }
+            .a-img1 {
+                top: 75% !important;
+                right: 5% !important;
+                width: 130px !important;
+                height: 170px !important;
+            }
+            .a-tag {
+                bottom: 75% !important;
+                right: 5% !important;
+                padding: 8px 20px !important;
+                font-size: 14px !important;
+            }
+            .a-img2 {
+                bottom: 75% !important;
+                left: 5% !important;
+                width: 140px !important;
+                height: 100px !important;
             }
             .about-step {
                 max-width: 95% !important;
@@ -989,14 +1018,7 @@
             } 
         });
 
-        // Prevent touch/mouse events inside control panel from bubbling up to the physics simulation container
-        const controls = document.getElementById('playground-controls');
-        if (controls) {
-            const stopPropagation = (e) => e.stopPropagation();
-            ['touchstart', 'touchmove', 'touchend', 'mousedown', 'mousemove', 'mouseup', 'click'].forEach(evt => {
-                controls.addEventListener(evt, stopPropagation, { passive: evt.includes('touch') });
-            });
-        }
+        // Matter.js standard touch listeners are already removed, and custom touch handlers automatically bypass the controls panel.
     </script>
     <!-- Auto-sync active -->
 </body>
