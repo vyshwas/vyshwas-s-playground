@@ -125,27 +125,8 @@
         }
         .project-row:hover ~ #project-preview-container #project-preview-img { transform: scale(1); }
 
-        /* Intro Sequence */
-        #intro-sequence {
-            position: fixed; inset: 0; z-index: 50000; background: #000000;
-            display: flex; flex-direction: column; align-items: center; justify-content: center;
-            overflow: hidden;
-        }
-        .intro-text-mono { font-family: 'JetBrains Mono', monospace; text-transform: uppercase; letter-spacing: 0.1em; color: var(--gray); }
-        #white-dot { width: 4px; height: 4px; background: var(--white); border-radius: 50%; opacity: 0; box-shadow: 0 0 10px rgba(255,255,255,0.5); }
-        #scanline { position: absolute; top: 0; left: 0; width: 100%; height: 1px; background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent); opacity: 0; }
-        
-        #metadata-hud { position: absolute; inset: 60px; pointer-events: none; opacity: 0; display: flex; justify-content: space-between; align-items: flex-start; font-size: 11px; }
-        .meta-col { display: flex; flex-direction: column; gap: 6px; }
-        .meta-val { color: var(--white); font-weight: 400; }
-        .meta-label { color: var(--gray); font-weight: 300; }
-        #authenticating-text { font-size: 14px; opacity: 0; font-weight: 300; letter-spacing: 0.2em; position: absolute; color: var(--white); }
-        #access-granted { font-size: clamp(1.2rem, 3vw, 2rem); font-weight: 300; letter-spacing: 0.3em; opacity: 0; color: var(--white); position: absolute; }
-        .intro-particle { position: absolute; width: 3px; height: 3px; background: var(--white); border-radius: 50%; opacity: 0; pointer-events: none; }
-        .intro-particle.vermilion { background: var(--vermilion); box-shadow: 0 0 10px rgba(252, 76, 19, 0.5); }
-
         /* Main Website */
-        #main-website { opacity: 0; pointer-events: none; transition: opacity 1s ease; position: relative; z-index: 10; }
+        #main-website { opacity: 1; pointer-events: auto; position: relative; z-index: 10; }
         
         nav { position: fixed; top: 0; left: 0; width: 100%; padding: 2rem 3rem; display: flex; justify-content: space-between; align-items: flex-start; z-index: 80; mix-blend-mode: difference; pointer-events: none; }
         .nav-left, .nav-right { pointer-events: auto; }
@@ -222,23 +203,7 @@
     <div class="film-grain"></div>
     <div class="ambient-glow"></div>
 
-    <!-- Interaction 01: Cinematic Entry -->
-    <div id="intro-sequence">
-        <div id="white-dot"></div>
-        <div id="scanline"></div>
-        
-        <div id="metadata-hud" class="intro-text-mono">
-            <div class="meta-col"><span class="meta-label">STATUS</span><span class="meta-val text-vermilion">Presence Detected</span></div>
-            <div class="meta-col"><span class="meta-label">DEVICE</span><span class="meta-val" id="meta-device">Calculating...</span></div>
-            <div class="meta-col text-center"><span class="meta-label">SESSION</span><span class="meta-val">Initialized</span></div>
-            <div class="meta-col text-right"><span class="meta-label">NETWORK</span><span class="meta-val">Stable</span></div>
-            <div class="meta-col text-right"><span class="meta-label">RESOLUTION</span><span class="meta-val" id="meta-display">...</span></div>
-        </div>
-
-        <div id="authenticating-text" class="intro-text-mono">AUTHENTICATING</div>
-        <div id="access-granted" class="intro-text-mono">ACCESS GRANTED</div>
-        <div id="particle-container" style="position: absolute; inset: 0; pointer-events: none; overflow: hidden; display: flex; align-items: center; justify-content: center;"></div>
-    </div>
+    <!-- Cinematic Entry Removed -->
 
     <!-- Sliding Drawer Overlay -->
     <div id="project-drawer" class="fixed inset-0 z-[100] flex w-full h-full bg-codgray">
@@ -562,7 +527,6 @@
             lenis.scrollTo(0, { immediate: true });
             function raf(time) { lenis.raf(time); requestAnimationFrame(raf); }
             requestAnimationFrame(raf);
-            stopScroll(); // Stop scroll during cinematic intro
         } else {
             // Restore native touch scroll contexts
             document.documentElement.style.overflowY = 'auto';
@@ -570,53 +534,7 @@
             document.documentElement.style.scrollBehavior = 'smooth';
             window.scrollTo(0, 0);
         }
-
-        // --- 2. Cinematic Entry (Interaction 01) ---
-        document.getElementById('meta-display').innerText = `${window.screen.width}x${window.screen.height}`;
-        document.getElementById('meta-device').innerText = window.innerWidth > 768 ? "Desktop" : "Mobile";
-
-        const tl = gsap.timeline({ defaults: { ease: "power2.out" } });
-        
-        tl.to("#white-dot", { opacity: 1, scale: 1.5, duration: 1.5, ease: "sine.inOut", yoyo: true, repeat: 1, delay: 0.5 })
-          .to("#white-dot", { scale: 0, opacity: 0, duration: 0.5 });
-          
-        tl.to("#scanline", { opacity: 1, top: "100%", duration: 2.5, ease: "power1.inOut" }, "-=0.5")
-          .to("#metadata-hud", { opacity: 1, duration: 1 }, "-=2")
-          .to(["#scanline", "#metadata-hud"], { opacity: 0, duration: 1, delay: 0.5 });
-
-        tl.fromTo("#authenticating-text", 
-            { opacity: 0, letterSpacing: "0.1em" }, 
-            { opacity: 1, letterSpacing: "0.3em", duration: 1.5, ease: "power2.out" }
-        )
-        .to("#authenticating-text", { opacity: 0, duration: 0.5, delay: 0.5 });
-
-        tl.to("#intro-sequence", { backgroundColor: "#000000", duration: 0.5 })
-          .to("#access-granted", { opacity: 1, scale: 1.02, duration: 1, ease: "power1.out" })
-          .to("#access-granted", { opacity: 0, duration: 0.2, delay: 0.5 }); 
-
-        tl.call(() => {
-            const partContainer = document.getElementById('particle-container');
-            for(let i=0; i<80; i++) {
-                const p = document.createElement('div');
-                p.className = 'intro-particle' + (Math.random() > 0.8 ? ' vermilion' : '');
-                partContainer.appendChild(p);
-                gsap.fromTo(p, 
-                    { x: 0, y: 0, opacity: 1, scale: Math.random() * 2 },
-                    { x: (Math.random() - 0.5) * window.innerWidth * 1.5, y: (Math.random() - 0.5) * window.innerHeight * 1.5, opacity: 0, duration: 1.5 + Math.random(), ease: "power4.out" }
-                );
-            }
-        });
-
-        tl.to("#intro-sequence", { backgroundColor: "transparent", duration: 1.5 }, "-=1.5")
-          .call(() => {
-              const mainWeb = document.getElementById('main-website');
-              mainWeb.style.opacity = 1;
-              mainWeb.style.pointerEvents = 'auto';
-              document.getElementById('intro-sequence').style.display = 'none';
-              
-              startScroll(); // Enable scrolling!
-              ScrollTrigger.refresh();
-          });
+        ScrollTrigger.refresh();
 
         // --- 2.5 Scrollytelling About Section Logic ---
         const aboutTl = gsap.timeline({
