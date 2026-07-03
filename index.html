@@ -60,16 +60,6 @@
 
 
 
-        /* Dark Water Caustics Background */
-        .caustics-bg {
-            position: fixed; inset: 0; width: 100vw; height: 100vh;
-            pointer-events: none; z-index: 0;
-            background-image: url('assets/bg_caustics.jpg');
-            background-size: cover;
-            background-position: center;
-            opacity: 0.25;
-        }
-
         /* Film Grain */
         .film-grain { 
             position: fixed; inset: 0; width: 100vw; height: 100vh; pointer-events: none; z-index: 9990; 
@@ -138,7 +128,7 @@
         .z-asset img { width: 100%; height: 100%; object-fit: cover; opacity: 0.9; }
 
         /* --- 3. ARCHIVE / PROJECTS --- */
-        .projects-section { position: relative; padding: 10rem 2rem; background: var(--codgray); }
+        .projects-section { position: relative; padding: 10rem 2rem; background: linear-gradient(to right, var(--codgray), var(--vermilion)); }
         .projects-header { max-width: 1200px; margin: 0 auto 4rem auto; font-family: 'JetBrains Mono', monospace; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--gray); }
         .projects-list { max-width: 1200px; margin: 0 auto; display: flex; flex-direction: column; }
         .project-row { display: flex; flex-direction: column; align-items: flex-start; padding: 3rem 0; border-bottom: 1px solid rgba(255,255,255,0.1); cursor: pointer; transition: all 0.4s ease; }
@@ -189,9 +179,6 @@
     <div id="cursor-glow"></div>
     <div id="custom-cursor"></div>
     <div class="film-grain"></div>
-
-    <!-- Dark Water Caustics Background -->
-    <div class="caustics-bg"></div>
 
 
     
