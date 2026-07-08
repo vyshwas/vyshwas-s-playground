@@ -153,14 +153,19 @@
         .projects-header { max-width: 1200px; margin: 0 auto 4rem auto; font-family: 'Orbitron', sans-serif; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.2em; display: flex; flex-direction: column; gap: 0.5rem; color: var(--vermilion);}
         
         .projects-list { max-width: 1200px; margin: 0 auto; display: flex; flex-direction: column; }
-        .project-row { display: flex; flex-direction: column; align-items: flex-start; padding: 3rem 0; border-bottom: 1px solid rgba(252,76,19,0.3); cursor: pointer; transition: all 0.4s ease; }
-        @media (min-width: 768px) { .project-row { flex-direction: row; justify-content: space-between; align-items: flex-end; } }
-        .project-row:hover { padding-left: 2rem; padding-right: 2rem; border-bottom-color: var(--lemon); background: rgba(254,250,205,0.02); }
+        .project-row { position: relative; overflow: hidden; display: flex; flex-direction: column; align-items: flex-start; padding: 3rem 0; border-bottom: 1px solid rgba(252,76,19,0.3); cursor: pointer; transition: all 0.4s ease; z-index: 1; }
+        .project-row::after { content: ''; position: absolute; top: 0; right: 0; bottom: 0; width: 70%; background: url('assets/project_hover_texture.jpg') right center / cover no-repeat; opacity: 0; transform: translateX(100%); transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.6s ease; z-index: -1; -webkit-mask-image: linear-gradient(to left, black 20%, transparent 100%); mask-image: linear-gradient(to left, black 20%, transparent 100%); mix-blend-mode: screen; }
+        .project-row:hover::after { opacity: 0.8; transform: translateX(0); }
+        .project-row > div { position: relative; z-index: 10; }
+        @media (min-width: 768px) { .project-row { flex-direction: row; justify-content: space-between; align-items: center; } }
+        .project-row:hover { padding-left: 2rem; padding-right: 2rem; border-bottom-color: var(--lemon); background: rgba(0,0,0,0.2); }
         
         .project-index { font-family: 'Orbitron', sans-serif; font-size: 0.75rem; margin-bottom: 1rem; display: block; text-transform: uppercase; letter-spacing: 0.2em; color: var(--vermilion); }
         .project-title { font-family: 'Orbitron', sans-serif; font-size: clamp(2rem, 4vw, 3.5rem); font-weight: 700; text-transform: uppercase; margin: 0; transition: color 0.4s ease; line-height: 1; color: var(--lemon); letter-spacing: 0.05em;}
         .project-tags { display: flex; gap: 0.5rem; flex-wrap: wrap; margin-top: 1.5rem; pointer-events: none; }
-        .project-tag { font-family: 'Orbitron', sans-serif; font-size: 0.7rem; font-weight: 500; text-transform: uppercase; letter-spacing: 0.15em; padding: 6px 16px; border: 1px solid rgba(252,76,19,0.5); border-radius: 999px; color: var(--vermilion); }
+        @media (min-width: 768px) { .project-tags { justify-content: flex-end; margin-top: 0; text-align: right; } }
+        .project-tag { font-family: 'Orbitron', sans-serif; font-size: 0.7rem; font-weight: 500; text-transform: uppercase; letter-spacing: 0.15em; padding: 6px 16px; border: 1px solid rgba(252,76,19,0.5); border-radius: 999px; color: var(--vermilion); transition: all 0.3s ease; }
+        .project-row:hover .project-tag { color: var(--deepblack); background: var(--lemon); border-color: var(--lemon); }
 
         #project-preview-container {
             position: fixed; top: 0; left: 0; width: 400px; height: 300px; pointer-events: none; z-index: 90; opacity: 0; 
@@ -328,11 +333,11 @@
                     <div>
                         <span class="project-index">Project 01 of 02</span>
                         <h2 class="project-title">Personalised Travel Platform</h2>
-                        <div class="project-tags">
-                            <span class="project-tag">Product Design</span>
-                            <span class="project-tag">UX Research</span>
-                            <span class="project-tag">Systems Thinking</span>
-                        </div>
+                    </div>
+                    <div class="project-tags">
+                        <span class="project-tag">Product Design</span>
+                        <span class="project-tag">UX Research</span>
+                        <span class="project-tag">Systems Thinking</span>
                     </div>
                 </div>
 
@@ -349,11 +354,11 @@
                     <div>
                         <span class="project-index">Project 02 of 02</span>
                         <h2 class="project-title">The Whole Fruit</h2>
-                        <div class="project-tags">
-                            <span class="project-tag">Brand Strategy</span>
-                            <span class="project-tag">Packaging</span>
-                            <span class="project-tag">Identity</span>
-                        </div>
+                    </div>
+                    <div class="project-tags">
+                        <span class="project-tag">Brand Strategy</span>
+                        <span class="project-tag">Packaging</span>
+                        <span class="project-tag">Identity</span>
                     </div>
                 </div>
 
