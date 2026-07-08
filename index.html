@@ -109,38 +109,33 @@
         .hero-title:hover { opacity: 0.8; }
         .scroll-hint { position: absolute; bottom: 40px; font-family: 'Orbitron', sans-serif; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.3em; color: var(--vermilion); }
 
-        /* --- S-Shaped Vermilion Bento Tiles --- */
         .bento-section { 
-            position: relative; width: 100%; min-height: 100vh; display: flex; align-items: center; justify-content: center; overflow: hidden;
-            background: transparent; border-top: 1px solid rgba(252,76,19,0.2); border-bottom: 1px solid rgba(252,76,19,0.2); padding: 6rem 0;
+            position: relative; z-index: 20; 
+            background: transparent; border-top: 1px solid rgba(252,76,19,0.2); border-bottom: 1px solid rgba(252,76,19,0.2); padding: 8rem 2rem;
         }
 
-        .triangle-grid {
-            width: 100%; max-width: 600px; padding: 2rem;
-            display: flex; flex-direction: column; align-items: stretch; margin: 0 auto;
+        .bento-grid {
+            width: 100%; max-width: 1200px; margin: 0 auto;
+            display: grid; gap: 1.5rem;
+            grid-template-columns: 1fr;
+        }
+        @media (min-width: 768px) {
+            .bento-grid { grid-template-columns: repeat(2, 1fr); }
         }
 
-        .triangle-tile {
-            position: relative; border: none; box-shadow: none; background: transparent;
-            padding: 5rem 4rem; min-height: 280px; will-change: transform, opacity;
-            display: flex; flex-direction: column; justify-content: center;
+        .bento-tile {
+            position: relative; overflow: hidden; border-radius: 1.5rem;
+            background: rgba(20,20,20,0.4); backdrop-filter: blur(8px);
+            border: 1px solid rgba(252,76,19,0.2);
+            padding: 4rem 3rem;
+            display: flex; flex-direction: column; justify-content: flex-start; gap: 2rem;
+            transition: transform 0.4s ease, border-color 0.4s ease, background 0.4s ease;
         }
-        
-        /* Negative margin pulls the bottom shape up to close the diagonal gap */
-        .triangle-tile-2 { margin-top: -3.5rem; } 
-
-        .tile-wrapper { position: absolute; inset: 0; filter: url('#corner-rounding'); }
-        
-        .tile-bg {
-            position: absolute; inset: 0;
-            background: linear-gradient(135deg, var(--vermilion) 0%, #ff8a00 100%);
+        .bento-tile:hover {
+            transform: translateY(-5px);
+            border-color: rgba(252,76,19,0.6);
+            background: rgba(252,76,19,0.05);
         }
-
-        /* Top Shape: Expands to the right (Matches Reference) */
-        .triangle-tile-1 .tile-bg { clip-path: polygon(0 20%, 100% 0, 100% 100%, 0 80%); }
-        
-        /* Bottom Shape: Tapers to the right (Matches Reference) */
-        .triangle-tile-2 .tile-bg { clip-path: polygon(0 0, 100% 20%, 100% 80%, 0 100%); }
 
         .bento-content { position: relative; z-index: 10; }
         .bento-tag { font-family: 'Orbitron', sans-serif; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.2em; margin-bottom: 15px; display: block; font-weight: 700; color: var(--deepblack); opacity: 0.8;}
@@ -287,28 +282,22 @@
             <span class="scroll-hint">(Scroll)</span>
         </section>
 
-        <!-- S-Shaped Vermilion About Section -->
+        <!-- Bento About Section -->
         <section id="about" class="bento-section">
-            <div class="triangle-grid">
+            <div class="bento-grid">
                 
-                <!-- Tile 1 (Expands Right) -->
-                <div class="triangle-tile triangle-tile-1">
-                    <div class="tile-wrapper"><div class="tile-bg"></div></div>
-                    <div class="bento-content">
-                        <span class="bento-tag">About 01</span>
-                        <p class="bento-text">I didn't start in design. I started in computer science, spent four years thinking in systems and code, then moved into a two-year M.Des program. That shift taught me something important: the best design thinking comes from understanding how things actually work underneath.</p>
-                    </div>
+                <!-- Tile 1 -->
+                <div class="bento-tile">
+                    <span class="bento-tag">About 01</span>
+                    <p class="bento-text">I didn't start in design. I started in computer science, spent four years thinking in systems and code, then moved into a two-year M.Des program. That shift taught me something important: the best design thinking comes from understanding how things actually work underneath.</p>
                 </div>
 
-                <!-- Tile 2 (Tapers Right) -->
-                <div class="triangle-tile triangle-tile-2">
-                    <div class="tile-wrapper"><div class="tile-bg"></div></div>
-                    <div class="bento-content">
-                        <span class="bento-tag">About 02</span>
-                        <p class="bento-text">Today, I work across brand and product because I'm interested in the part of design that influences how people understand something, trust it, and make decisions.</p>
-                    </div>
+                <!-- Tile 2 -->
+                <div class="bento-tile">
+                    <span class="bento-tag">About 02</span>
+                    <p class="bento-text">Today, I work across brand and product because I'm interested in the part of design that influences how people understand something, trust it, and make decisions.</p>
                 </div>
-
+                
             </div>
         </section>
 
