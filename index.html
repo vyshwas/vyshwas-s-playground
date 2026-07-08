@@ -88,9 +88,12 @@
 
         #content-wrapper { position: relative; z-index: 10; overflow-x: clip; width: 100%; }
 
-        nav { position: fixed; top: 0; left: 0; width: 100%; padding: 2rem 3rem; display: flex; justify-content: space-between; align-items: flex-start; z-index: 80; mix-blend-mode: difference; }
+        nav { position: fixed; top: 0; left: 0; width: 100%; padding: 2rem 3rem; display: flex; justify-content: space-between; align-items: flex-start; z-index: 80; }
         nav a { font-family: 'Orbitron', sans-serif; color: var(--lemon); text-decoration: none; font-size: 0.75rem; font-weight: 700; letter-spacing: 0.15em; text-transform: uppercase; opacity: 0.6; transition: opacity 0.3s ease; }
+        .nav-right a { mix-blend-mode: difference; }
         nav a:hover { opacity: 1; }
+        .logo-img { height: 32px; width: auto; object-fit: contain; opacity: 1 !important; transition: transform 0.3s ease; }
+        .logo-img:hover { transform: scale(1.05); }
         .nav-right { display: flex; flex-direction: column; gap: 0.5rem; text-align: right; }
 
         .hero-section { 
@@ -257,7 +260,11 @@
 
     <div id="content-wrapper">
         <nav>
-            <div class="nav-left"><a href="#">Vishwas Mehta</a></div>
+            <div class="nav-left">
+                <a href="#" style="opacity: 1; display: block;">
+                    <img src="assets/logo.png" alt="Logo" class="logo-img">
+                </a>
+            </div>
             <div class="nav-right">
                 <a href="#work">Work</a>
                 <a href="#about">About</a>
