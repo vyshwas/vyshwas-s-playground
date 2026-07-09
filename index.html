@@ -109,37 +109,34 @@
         .hero-title:hover { opacity: 0.8; }
         .scroll-hint { position: absolute; bottom: 40px; font-family: 'Orbitron', sans-serif; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.3em; color: var(--vermilion); }
 
-        .bento-section { 
-            position: relative; z-index: 20; 
+        .about-section {
+            position: relative; z-index: 20;
             background: transparent; border-top: 1px solid rgba(252,76,19,0.2); border-bottom: 1px solid rgba(252,76,19,0.2); padding: 8rem 2rem;
         }
 
-        .bento-grid {
+        .about-grid {
             width: 100%; max-width: 1200px; margin: 0 auto;
-            display: grid; gap: 1.5rem;
+            display: grid; gap: 3.5rem;
             grid-template-columns: 1fr;
         }
-        @media (min-width: 768px) {
-            .bento-grid { grid-template-columns: repeat(2, 1fr); }
+        @media (min-width: 900px) {
+            .about-grid { grid-template-columns: 1.6fr 1fr; }
         }
 
-        .bento-tile {
-            position: relative; overflow: hidden; border-radius: 1.5rem;
-            background: rgba(20,20,20,0.4); backdrop-filter: blur(8px);
-            border: 1px solid rgba(252,76,19,0.2);
-            padding: 4rem 3rem;
-            display: flex; flex-direction: column; justify-content: flex-start; gap: 2rem;
-            transition: transform 0.4s ease, border-color 0.4s ease, background 0.4s ease;
+        .about-statement {
+            font-size: clamp(1.5rem, 3vw, 2.5rem);
+            font-weight: 500; line-height: 1.5; color: var(--lemon);
+            letter-spacing: -0.01em;
         }
-        .bento-tile:hover {
-            transform: translateY(-5px);
-            border-color: rgba(252,76,19,0.6);
-            background: rgba(252,76,19,0.05);
-        }
+        .about-statement .hl { color: var(--vermilion); font-style: italic; font-weight: 600; }
 
-        .bento-content { position: relative; z-index: 10; }
-        .bento-tag { font-family: 'Orbitron', sans-serif; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.2em; margin-bottom: 15px; display: block; font-weight: 700; color: var(--vermilion); opacity: 0.8;}
-        .bento-text { font-size: clamp(1rem, 2vw, 1.4rem); font-weight: 500; line-height: 1.6; color: var(--lemon); text-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+        .about-facts {
+            display: flex; flex-direction: column; gap: 2.25rem;
+            border-left: 1px solid rgba(252,76,19,0.25); padding-left: 2rem;
+        }
+        .about-fact { display: flex; flex-direction: column; gap: 0.6rem; }
+        .about-fact-label { font-family: 'Orbitron', sans-serif; font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.2em; font-weight: 700; color: var(--vermilion); opacity: 0.8; }
+        .about-fact-value { font-family: 'JetBrains Mono', monospace; font-size: 1.05rem; color: var(--lemon); opacity: 0.9; }
 
         /* --- Projects --- */
         .projects-section { 
