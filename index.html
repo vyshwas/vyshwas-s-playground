@@ -664,9 +664,14 @@
         function openDrawer(index) {
             const row = projectRowsArray[index];
             currentProjectIndex = index;
-            
-            history.pushState({ drawerOpen: true }, "", "#project-" + (index + 1));
-            
+
+            const projectUrl = "#project-" + (index + 1);
+            if (drawerContainer.classList.contains('drawer-open')) {
+                history.replaceState({ drawerOpen: true }, "", projectUrl);
+            } else {
+                history.pushState({ drawerOpen: true }, "", projectUrl);
+            }
+
             document.getElementById('drawer-index').innerText = row.dataset.index;
             document.getElementById('drawer-title').innerText = row.dataset.title;
             document.getElementById('drawer-desc').innerText = row.dataset.desc;
