@@ -868,12 +868,21 @@
             });
         }
 
-        ScrollTrigger.create({ 
-            trigger: "#sandbox", 
-            start: "top 60%", 
-            onEnter: () => { 
-                if (!physicsInitialized) { initPhysics(); physicsInitialized = true; } 
-            } 
+        ScrollTrigger.create({
+            trigger: "#sandbox",
+            start: "top 60%",
+            onEnter: () => {
+                if (!physicsInitialized) { initPhysics(); physicsInitialized = true; }
+            }
+        });
+
+        gsap.from(".about-statement", {
+            scrollTrigger: { trigger: "#about", start: "top 75%" },
+            opacity: 0, y: 30, duration: 1, ease: "power3.out"
+        });
+        gsap.from(".about-fact", {
+            scrollTrigger: { trigger: "#about", start: "top 70%" },
+            opacity: 0, y: 20, duration: 0.7, stagger: 0.12, ease: "power3.out", delay: 0.2
         });
     </script>
 </body>
