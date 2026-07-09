@@ -1549,7 +1549,7 @@ const ITINERARY = {
 
 /* ============ state ============ */
 const state = {
-  screen: 'welcome',
+  screen: '',
   day: 0,          // itinerary day
   mday: 0,         // manual builder day
   path: 'ai',      // create fork
@@ -1963,9 +1963,10 @@ document.addEventListener('keydown', e => {
 
 /* ============ fit phone to viewport ============ */
 function fit() {
-  const pad = 56;
+  const isMobile = innerWidth <= 600;
+  const pad = isMobile ? 0 : 56;
   const railW = innerWidth >= 1000 ? 280 : 0;
-  const s = Math.min(1, (innerHeight - pad) / 864, (innerWidth - railW - pad) / 410);
+  const s = isMobile ? Math.min((innerHeight - pad) / 864, (innerWidth - railW - pad) / 410) : Math.min(1, (innerHeight - pad) / 864, (innerWidth - railW - pad) / 410);
   $('#phoneScale').style.transform = `scale(${s})`;
 }
 addEventListener('resize', fit);
