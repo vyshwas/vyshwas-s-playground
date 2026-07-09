@@ -353,6 +353,7 @@
 
                 <div class="project-row"
                      data-image="assets/project_nocturne.png"
+                     data-proto="assets/nocturne-prototype.html"
                      data-index="Project 03 of 03"
                      data-title="Nocturne"
                      data-desc="A self-initiated quick-commerce checkout concept, and the design follow-on to a cart abandonment audit I ran at Katalyse.ai: the audit found where trust breaks, and this is where I tried to rebuild it. I optimised the returning-user path into a single slide-over drawer and treated the real problem as a tension, not a funnel. Going faster cuts friction-driven abandonment but can raise trust-driven abandonment, so the work was navigating that trade, not just deleting steps. Benchmarked against Zepto, Blinkit, and Instamart; not user-tested."
@@ -672,7 +673,19 @@
             document.getElementById('drawer-appr').innerText = row.dataset.appr;
             document.getElementById('drawer-sys').innerText = row.dataset.sys;
             document.getElementById('drawer-learn').innerText = row.dataset.learn;
-            document.getElementById('drawer-img').src = row.dataset.image;
+            const drawerImg = document.getElementById('drawer-img');
+            const drawerProto = document.getElementById('drawer-proto');
+            if (row.dataset.proto) {
+                drawerProto.src = row.dataset.proto;
+                drawerProto.style.display = 'block';
+                drawerImg.style.display = 'none';
+                drawerImg.src = '';
+            } else {
+                drawerProto.style.display = 'none';
+                drawerProto.src = '';
+                drawerImg.style.display = 'block';
+                drawerImg.src = row.dataset.image;
+            }
             document.getElementById('drawer-behance').href = row.dataset.behance || "#";
             
             document.querySelector('.drawer-content-scroll').scrollTop = 0;
