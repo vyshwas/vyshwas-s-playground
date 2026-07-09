@@ -710,7 +710,10 @@
 
         function closeDrawerAction() {
             if (drawerContainer.classList.contains('drawer-open')) {
-                history.back();
+                drawerContainer.classList.remove('drawer-open');
+                if (lenis) lenis.start();
+                document.body.style.overflow = '';
+                history.replaceState({}, "", location.pathname + location.search);
             }
         }
         
