@@ -124,11 +124,16 @@
         }
 
         .about-statement {
-            font-size: clamp(1.5rem, 3vw, 2.5rem);
-            font-weight: 500; line-height: 1.5; color: var(--lemon);
-            letter-spacing: -0.01em;
+            font-size: clamp(1.15rem, 1.6vw, 1.5rem);
+            font-weight: 450; line-height: 1.6; color: var(--lemon);
+            letter-spacing: -0.005em; opacity: 0.88;
         }
-        .about-statement .hl { color: var(--vermilion); font-style: italic; font-weight: 600; }
+        .about-statement .hl { color: var(--vermilion); font-style: italic; font-weight: 600; opacity: 1; }
+        .about-lede {
+            display: block; font-size: clamp(2.4rem, 5.2vw, 4.25rem);
+            font-weight: 700; line-height: 1.05; letter-spacing: -0.025em;
+            color: var(--lemon); margin-bottom: 1.75rem;
+        }
 
         .about-facts {
             display: flex; flex-direction: column; gap: 2.25rem;
