@@ -68,20 +68,21 @@
 }
 
   :root{
-    --board:#10211A;          /* page backdrop: merchant's blackboard green */
-    --board-hi:#F0E9DA;
-    --board-lo:#7E8F86;
-    --paper:#F5F0E6;          /* app background: ledger paper */
-    --page:#FBF8F1;           /* cards: fresh page */
-    --ink:#201A14;
-    --ink-lo:#7A7060;
-    --rule:#D8CDB8;           /* khaki ledger rule lines */
-    --red:#9E2B25;            /* bahi lac red: binding, alerts, refusals */
-    --red-soft:#F3E3DE;
-    --green:#1E5C46;          /* rupee green: actions, trust */
-    --green-soft:#E4EBE2;
-    --amber:#B97E22;          /* supervised state */
-    --amber-soft:#F4EAD5;
+    --board:#0F1F18;
+    --board-hi:#EDE7D8;
+    --board-lo:#75857B;
+    --paper:#F6F2E8;
+    --page:#FCFAF3;
+    --ink:#1D1812;
+    --ink-mid:#57503F;
+    --ink-lo:#8A8171;
+    --rule:#E2D9C6;
+    --rule-dark:#C9BEA6;
+    --red:#9E2B25;
+    --red-soft:#F6E7E2;
+    --green:#1E5C46;
+    --green-deep:#174A38;
+    --amber:#8A6116;
     --mono:'IBM Plex Mono',ui-monospace,"Cascadia Mono",Consolas,monospace;
     --sans:'Outfit','IBM Plex Mono',system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
     --serif:'Fraunces','IBM Plex Mono',Georgia,"Times New Roman",serif;
@@ -94,206 +95,219 @@
   .mn-page{
     min-height:100vh;background:var(--board);color:var(--board-hi);
     font-family:var(--sans);display:flex;flex-direction:column;align-items:center;
-    padding:36px 16px 40px;overflow-x:hidden;
+    padding:30px 16px 36px;overflow-x:hidden;
   }
-  .mn-head{text-align:center;margin-bottom:20px}
-  .mn-wordmark{font-family:var(--mono);font-weight:600;font-size:24px;letter-spacing:.34em;text-indent:.34em}
-  .mn-wordmark .dev{font-family:"Nirmala UI",var(--sans);font-weight:400;letter-spacing:.08em;text-indent:0;font-size:15px;color:var(--board-lo);margin-left:10px}
-  .mn-sub{margin-top:8px;font-size:13px;color:var(--board-lo);max-width:420px}
-  .mn-sub em{font-family:var(--serif);font-style:italic;color:var(--board-hi)}
-  .mn-footnote{margin-top:18px;font-size:11px;color:#5d6d64;text-align:center;max-width:460px;line-height:1.6}
+  .mn-head{width:min(390px,100%);display:flex;align-items:baseline;justify-content:space-between;margin-bottom:16px;gap:12px}
+  .mn-wordmark{font-family:var(--mono);font-weight:600;font-size:15px;letter-spacing:.3em}
+  .mn-wordmark .dev{font-family:"Nirmala UI",var(--sans);font-weight:400;letter-spacing:.04em;font-size:12px;color:var(--board-lo);margin-left:8px}
+  .mn-head-note{font-size:11px;color:var(--board-lo);text-align:right;line-height:1.45}
+  .mn-head-note em{font-family:var(--serif);font-style:italic;color:var(--board-hi)}
+  .mn-footnote{margin-top:16px;font-size:10.5px;color:#586A5F;text-align:center;max-width:440px;line-height:1.65}
+  .mn-footnote b{color:#7d907f;font-weight:600;letter-spacing:.12em;font-family:var(--mono);font-size:9px}
 
   .mn-phone{
-    width:min(390px,100%);height:800px;flex:none;border-radius:54px;
-    background:var(--paper);border:1px solid #2c3d33;
-    box-shadow:0 0 0 6px rgba(16,33,26,.6), 0 30px 80px rgba(0,0,0,.5);
+    width:min(390px,100%);height:800px;flex:none;border-radius:48px;
+    background:var(--paper);
+    box-shadow:0 0 0 1px #33453a, 0 0 0 7px rgba(13,26,20,.65), 0 34px 90px rgba(0,0,0,.55);
     position:relative;overflow:hidden;
   }
   .mn-app{position:absolute;inset:0;display:flex;flex-direction:column;overflow:hidden;color:var(--ink)}
-  /* bahi binding: the red cloth spine along the top */
-  .mn-bind{flex:none;height:6px;background:var(--red)}
+  .mn-bind{flex:none;height:5px;background:var(--red)}
 
   .ic{width:1em;height:1em;display:inline-block;vertical-align:-0.15em;fill:currentColor;flex:none}
 
-  .st-bar{flex:none;display:flex;align-items:center;justify-content:space-between;padding:14px 26px 4px;color:var(--ink-lo);font-size:12px;font-weight:600;font-family:var(--mono)}
+  .st-bar{flex:none;display:flex;align-items:center;justify-content:space-between;padding:13px 26px 2px;color:var(--ink-lo);font-size:11.5px;font-weight:500;font-family:var(--mono)}
   .st-glyphs{display:flex;align-items:center;gap:6px}
   .st-glyphs svg{display:block;fill:var(--ink-lo)}
 
   .mn-body{flex:1;display:flex;flex-direction:column;min-height:0;position:relative}
-  .mn-scroll{flex:1;overflow-y:auto;min-height:0;padding:8px 18px 96px;scrollbar-width:none}
+  .mn-scroll{flex:1;overflow-y:auto;min-height:0;padding:6px 22px 92px;scrollbar-width:none}
   .mn-scroll::-webkit-scrollbar{display:none}
 
-  /* app header */
-  .app-head{display:flex;align-items:center;justify-content:space-between;padding:8px 2px 12px}
-  .app-brand{font-family:var(--mono);font-weight:600;font-size:17px;letter-spacing:.26em;text-indent:.26em;display:flex;align-items:center}
-  .app-brand i{width:8px;height:8px;border-radius:50%;background:var(--red);margin-right:10px;flex:none}
-  .chip-concept{font-family:var(--mono);font-size:9px;letter-spacing:.18em;color:var(--ink-lo);border:1px dashed var(--ink-lo);border-radius:4px;padding:3px 7px;transform:rotate(2deg)}
+  /* top strip inside app: brand small, quiet */
+  .app-top{display:flex;align-items:center;justify-content:space-between;padding:10px 0 4px}
+  .app-brand{font-family:var(--mono);font-weight:600;font-size:12px;letter-spacing:.3em;color:var(--ink-mid);display:flex;align-items:center}
+  .app-brand i{width:7px;height:7px;border-radius:50%;background:var(--red);margin-right:9px;flex:none}
+  .paused-tag{font-family:var(--mono);font-size:9px;letter-spacing:.14em;color:var(--amber);display:inline-flex;align-items:center;gap:5px}
 
-  .back-row{display:flex;align-items:center;gap:8px;padding:8px 2px 12px;font-size:13px;font-weight:600;color:var(--ink-lo)}
-  .back-row .ic{width:1.1em;height:1.1em}
+  .back-row{display:flex;align-items:center;gap:7px;padding:10px 0 6px;font-size:12.5px;font-weight:600;color:var(--ink-lo)}
+  .back-row .ic{width:1em;height:1em}
 
-  /* stamps */
-  .stamp{display:inline-block;font-family:var(--mono);font-size:8.5px;font-weight:600;letter-spacing:.14em;border:1.2px dashed currentColor;border-radius:4px;padding:2.5px 6px;transform:rotate(-2deg);white-space:nowrap}
-  .stamp.green{color:var(--green)}
+  /* ---------- hero (home) ---------- */
+  .hero{padding:18px 0 4px}
+  .eyebrow{font-family:var(--mono);font-size:9.5px;font-weight:600;letter-spacing:.22em;color:var(--ink-lo)}
+  .hero-amt{font-family:var(--mono);font-weight:600;font-size:42px;line-height:1.05;letter-spacing:-.01em;margin-top:8px;font-variant-numeric:tabular-nums}
+  .hero-of{font-family:var(--mono);font-size:12.5px;font-weight:400;color:var(--ink-lo);margin-top:5px;font-variant-numeric:tabular-nums}
+  .hero-track{height:2px;background:var(--rule);margin-top:14px;position:relative}
+  .hero-track i{position:absolute;left:0;top:0;bottom:0;background:var(--green)}
+  .hero-track em{position:absolute;top:-3px;width:8px;height:8px;border-radius:50%;background:var(--green);transform:translateX(-4px)}
+  .hero-sub{font-size:11px;color:var(--ink-lo);margin-top:10px}
+
+  /* section labels: sparse, quiet */
+  .sec{font-family:var(--mono);font-size:9.5px;font-weight:600;letter-spacing:.22em;color:var(--ink-mid);margin:26px 0 0}
+  .sec small{color:var(--ink-lo);font-weight:400;letter-spacing:.1em}
+
+  /* needs-you queue: one grouped surface */
+  .queue{background:var(--page);border:1px solid var(--rule);border-radius:16px;margin-top:10px;overflow:hidden;box-shadow:0 1px 0 rgba(29,24,18,.03)}
+  .q-row{width:100%;display:flex;align-items:center;gap:12px;padding:14px 15px;border-bottom:1px solid var(--rule)}
+  .q-row:last-child{border-bottom:none}
+  .q-row:hover{background:#f8f4e9}
+  .q-mark{flex:none;width:4px;align-self:stretch;border-radius:2px;background:var(--green);margin:2px 0}
+  .q-mark.held{background:var(--amber)}
+  .q-main{flex:1;min-width:0}
+  .q-merchant{font-size:13.5px;font-weight:700;letter-spacing:.01em}
+  .q-line{font-size:12px;color:var(--ink-mid);margin-top:3px;line-height:1.45;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+  .q-amt{flex:none;text-align:right}
+  .q-amt b{display:block;font-family:var(--mono);font-weight:600;font-size:14.5px;font-variant-numeric:tabular-nums}
+  .q-amt span{display:block;font-family:var(--mono);font-size:9px;letter-spacing:.12em;margin-top:4px;color:var(--ink-lo)}
+  .q-amt span.held{color:var(--amber)}
+
+  /* the hold strip */
+  .hold-strip{margin-top:10px;background:var(--page);border:1px solid var(--rule);border-radius:16px;overflow:hidden;position:relative}
+  .hold-strip-in{width:100%;display:flex;align-items:center;gap:12px;padding:13px 92px 15px 15px}
+  .hold-strip-in:hover{background:#f8f4e9}
+  .hold-txt{flex:1;min-width:0}
+  .hold-txt b{font-size:13.5px;font-weight:700}
+  .hold-txt span{display:block;font-size:11.5px;color:var(--ink-mid);margin-top:2px}
+  .hold-clock{flex:none;font-family:var(--mono);font-weight:600;font-size:16px;color:var(--red);font-variant-numeric:tabular-nums}
+  .hold-cancel{flex:none;font-size:11.5px;font-weight:700;color:var(--red);border:1px solid var(--red);border-radius:99px;padding:7px 13px}
+  .hold-cancel:hover{background:var(--red-soft)}
+  .hold-drain{position:absolute;left:0;bottom:0;height:3px;background:var(--red);transition:width 1s linear}
+
+  /* passbook ledger: flat ruled table */
+  .khata{margin-top:8px;border-top:1px solid var(--rule-dark)}
+  .k-row{width:100%;display:flex;gap:12px;padding:12px 2px;border-bottom:1px solid var(--rule);align-items:baseline}
+  .k-date{flex:none;width:42px;font-family:var(--mono);font-size:9px;color:var(--ink-lo);letter-spacing:.06em;text-transform:uppercase}
+  .k-main{flex:1;min-width:0}
+  .k-merchant{font-size:13px;font-weight:600;display:flex;align-items:baseline;gap:8px;flex-wrap:wrap}
+  .k-note{font-size:11.5px;color:var(--ink-lo);line-height:1.5;margin-top:2px}
+  .k-amt{flex:none;font-family:var(--mono);font-size:13px;font-weight:500;font-variant-numeric:tabular-nums}
+  .k-amt.out{color:var(--ink-lo);text-decoration:line-through;text-decoration-thickness:1px}
+  .k-split{display:flex;justify-content:space-between;padding:11px 2px;font-family:var(--mono);font-size:10px;color:var(--ink-lo);letter-spacing:.06em;font-variant-numeric:tabular-nums}
+
+  /* stamps: terminal states only */
+  .stamp{display:inline-block;font-family:var(--mono);font-size:8px;font-weight:600;letter-spacing:.16em;border:1.1px solid currentColor;border-radius:3px;padding:2px 5px;transform:rotate(-1.5deg);white-space:nowrap}
   .stamp.red{color:var(--red)}
-  .stamp.amber{color:var(--amber)}
-  .stamp.ink{color:var(--ink-lo)}
+  .stamp.green{color:var(--green)}
 
-  /* meter card */
-  .meter{background:var(--page);border:1px solid var(--rule);border-radius:14px;padding:14px 16px 15px;margin-bottom:16px}
-  .meter-label{font-family:var(--mono);font-size:10px;letter-spacing:.16em;color:var(--ink-lo);display:flex;justify-content:space-between;align-items:center}
-  .meter-big{font-family:var(--mono);font-size:21px;font-weight:600;margin-top:7px;font-variant-numeric:tabular-nums}
-  .meter-big small{font-size:13px;font-weight:400;color:var(--ink-lo)}
-  .meter-bar{height:5px;border-radius:99px;background:var(--rule);margin-top:10px;overflow:hidden}
-  .meter-bar i{display:block;height:100%;background:var(--green);border-radius:99px;transition:width .5s ease}
-  .meter-sub{font-size:11px;color:var(--ink-lo);margin-top:8px}
-
-  .paused-banner{display:flex;align-items:center;gap:8px;background:var(--amber-soft);border:1px solid var(--amber);color:#7a5314;border-radius:12px;padding:10px 12px;font-size:12.5px;font-weight:600;margin-bottom:14px}
-
-  .sec-label{font-family:var(--mono);font-size:10px;font-weight:600;letter-spacing:.18em;color:var(--red);margin:6px 2px 10px;display:flex;align-items:center;gap:8px}
-  .sec-label::after{content:"";flex:1;height:1px;background:var(--rule)}
-
-  /* ask cards */
-  .ask-card{width:100%;background:var(--page);border:1px solid var(--rule);border-left:3px solid var(--green);border-radius:12px;padding:13px 14px;margin-bottom:10px;display:block}
-  .ask-card.held{border-left-color:var(--amber)}
-  .ask-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}
-  .ask-merchant{font-size:12.5px;font-weight:700}
-  .voice{font-family:var(--serif);font-style:italic;font-size:14px;line-height:1.5;color:var(--ink)}
-  .ask-foot{display:flex;align-items:center;justify-content:space-between;margin-top:10px}
-  .ask-amt{font-family:var(--mono);font-weight:600;font-size:15px;font-variant-numeric:tabular-nums}
-  .ask-cta{font-size:11.5px;font-weight:700;color:var(--green);display:inline-flex;align-items:center;gap:3px}
-  .ask-card.held .ask-cta{color:var(--amber)}
-
-  /* hold card */
-  .hold-card{background:var(--page);border:1px solid var(--rule);border-left:3px solid var(--red);border-radius:12px;padding:13px 14px;margin-bottom:10px;display:flex;gap:13px;align-items:center}
-  .hold-ring{position:relative;width:56px;height:56px;flex:none}
-  .hold-ring svg{transform:rotate(-90deg);display:block}
-  .hold-ring .t{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-size:11px;font-weight:600;font-variant-numeric:tabular-nums}
-  .hold-info{flex:1;min-width:0}
-  .hold-title{font-size:12.5px;font-weight:700;margin-bottom:3px}
-  .hold-sub{font-size:11.5px;color:var(--ink-lo);line-height:1.45}
-  .hold-actions{display:flex;flex-direction:column;gap:6px;flex:none}
-  .btn-mini{font-size:11px;font-weight:700;border:1px solid var(--rule);border-radius:8px;padding:6px 10px;text-align:center}
-  .btn-mini.red{color:var(--red);border-color:var(--red)}
-
-  /* passbook ledger */
-  .book{background:var(--page);border:1px solid var(--rule);border-radius:14px;overflow:hidden}
-  .book-row{width:100%;display:flex;gap:11px;padding:11px 13px;border-bottom:1px solid var(--rule);align-items:flex-start;position:relative}
-  .book-row:last-child{border-bottom:none}
-  .book-date{flex:none;width:44px;font-family:var(--mono);font-size:9.5px;color:var(--ink-lo);letter-spacing:.04em;padding-top:2px;text-transform:uppercase}
-  .book-main{flex:1;min-width:0}
-  .book-merchant{font-size:12.5px;font-weight:700;display:flex;align-items:center;gap:7px;flex-wrap:wrap}
-  .book-note{font-family:var(--serif);font-style:italic;font-size:12px;color:var(--ink-lo);line-height:1.45;margin-top:3px}
-  .book-amt{flex:none;font-family:var(--mono);font-size:13px;font-weight:600;font-variant-numeric:tabular-nums;padding-top:1px}
-  .book-amt.red{color:var(--red);text-decoration:line-through;text-decoration-thickness:1px}
+  /* expected next */
+  .next-row{display:flex;justify-content:space-between;align-items:baseline;padding:10px 2px;border-bottom:1px solid var(--rule);font-size:12px;color:var(--ink-mid)}
+  .next-row b{font-family:var(--mono);font-weight:500;font-size:12px;color:var(--ink-lo);font-variant-numeric:tabular-nums}
+  .next-wrap{margin-top:8px;border-top:1px solid var(--rule)}
 
   /* footer nav */
-  .nav{position:absolute;left:14px;right:14px;bottom:14px;display:flex;background:var(--ink);border-radius:16px;padding:6px;box-shadow:0 12px 30px rgba(32,26,20,.35);z-index:5}
-  .nav button{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;padding:8px 4px 7px;border-radius:11px;color:#9d9383;font-size:9.5px;font-weight:600;letter-spacing:.1em;font-family:var(--mono);text-align:center}
-  .nav button .ic{width:17px;height:17px}
+  .nav{position:absolute;left:16px;right:16px;bottom:14px;display:flex;background:var(--ink);border-radius:15px;padding:5px;box-shadow:0 14px 34px rgba(29,24,18,.35);z-index:5}
+  .nav button{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;padding:8px 4px 7px;border-radius:11px;color:#a49a88;font-size:9px;font-weight:600;letter-spacing:.12em;font-family:var(--mono);text-align:center}
+  .nav button .ic{width:16px;height:16px}
   .nav button.on{background:var(--paper);color:var(--ink)}
 
-  /* detail screens */
-  .detail-merchant{font-size:13px;font-weight:700;color:var(--ink-lo);margin-bottom:8px;display:flex;align-items:center;gap:8px}
-  .detail-voice{font-family:var(--serif);font-style:italic;font-size:19px;line-height:1.5;margin-bottom:18px}
-  .fact-table{background:var(--page);border:1px solid var(--rule);border-radius:14px;overflow:hidden;margin-bottom:16px}
-  .fact-row{display:flex;justify-content:space-between;gap:12px;padding:11px 14px;border-bottom:1px solid var(--rule);font-size:12.5px}
-  .fact-row:last-child{border-bottom:none}
-  .fact-row b{font-family:var(--mono);font-weight:600;font-variant-numeric:tabular-nums;text-align:right}
-  .fact-row span{color:var(--ink-lo)}
-  .fact-row .pos{color:var(--green)}
-  .fact-row .neg{color:var(--red)}
+  /* ---------- detail screens ---------- */
+  .d-merchant{font-family:var(--mono);font-size:9.5px;font-weight:600;letter-spacing:.22em;color:var(--ink-lo);margin:14px 0 12px;text-transform:uppercase}
+  .d-voice{font-family:var(--serif);font-style:italic;font-size:21px;line-height:1.45;color:var(--ink);letter-spacing:.002em}
+  .d-amt{font-family:var(--mono);font-weight:600;font-size:40px;margin:22px 0 2px;font-variant-numeric:tabular-nums}
+  .d-amt small{font-size:13px;font-weight:400;color:var(--ink-lo)}
+  .facts{margin:16px 0 22px;border-top:1px solid var(--rule-dark)}
+  .f-row{display:flex;justify-content:space-between;gap:12px;padding:11px 2px;border-bottom:1px solid var(--rule);font-size:12.5px;align-items:baseline}
+  .f-row span{color:var(--ink-lo)}
+  .f-row b{font-family:var(--mono);font-weight:500;font-variant-numeric:tabular-nums;text-align:right;font-size:12.5px}
+  .f-row b.pos{color:var(--green)}
+  .f-row b.neg{color:var(--red)}
 
-  .btn{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;border-radius:13px;padding:14px;font-size:14px;font-weight:700;margin-bottom:9px;text-align:center}
-  .btn-green{background:var(--green);color:#F2EFE4}
-  .btn-green:hover{background:#174a38}
-  .btn-ghost{border:1px solid var(--rule);color:var(--ink)}
-  .btn-red-ghost{border:1px solid var(--red);color:var(--red)}
-  .btn-link{width:100%;text-align:center;font-size:12px;color:var(--ink-lo);text-decoration:underline;text-underline-offset:3px;padding:8px}
+  .btn{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;border-radius:14px;padding:15px;font-size:14px;font-weight:700}
+  .btn-green{background:var(--green);color:#F3F0E5}
+  .btn-green:hover{background:var(--green-deep)}
+  .btn-red{background:var(--red);color:#F6EFE9}
+  .btn-red:hover{background:#872017}
+  .btn-links{display:flex;justify-content:center;gap:26px;margin-top:14px}
+  .btn-links button{font-size:12px;font-weight:600;color:var(--ink-mid);text-decoration:underline;text-underline-offset:3px;padding:6px 2px}
+  .btn-links button.quiet{color:var(--ink-lo);font-weight:400}
 
-  .note-line{display:flex;gap:8px;align-items:flex-start;font-size:11.5px;color:var(--ink-lo);line-height:1.5;margin:2px 2px 14px}
-  .note-line .ic{margin-top:2px;flex:none}
+  .foot-note{font-size:11px;color:var(--ink-lo);line-height:1.55;margin-top:18px;padding-top:12px;border-top:1px solid var(--rule)}
 
-  /* trust screen */
-  .trust-row{width:100%;background:var(--page);border:1px solid var(--rule);border-radius:12px;padding:12px 13px;margin-bottom:9px;display:flex;align-items:center;gap:12px}
-  .trust-ic{flex:none;width:36px;height:36px;border-radius:10px;display:flex;align-items:center;justify-content:center;background:var(--green-soft);color:var(--green)}
-  .trust-ic.sup{background:var(--amber-soft);color:var(--amber)}
-  .trust-ic .ic{width:19px;height:19px}
-  .trust-main{flex:1;min-width:0}
-  .trust-name{font-size:13px;font-weight:700;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
-  .trust-sub{font-size:11.5px;color:var(--ink-lo);margin-top:2px}
-  .dots{display:inline-flex;gap:4px;margin-left:2px}
-  .dots i{width:7px;height:7px;border-radius:50%;border:1.2px solid var(--amber);display:inline-block}
+  /* trust screen: ruled groups */
+  .t-row{width:100%;display:flex;align-items:baseline;gap:12px;padding:13px 2px;border-bottom:1px solid var(--rule)}
+  .t-main{flex:1;min-width:0}
+  .t-name{display:block;font-size:13.5px;font-weight:600}
+  .t-sub{display:block;font-size:11.5px;color:var(--ink-lo);margin-top:3px}
+  .t-cap{flex:none;font-family:var(--mono);font-size:11.5px;font-weight:500;color:var(--ink-mid);font-variant-numeric:tabular-nums;text-align:right}
+  .t-cap small{display:block;font-size:9px;letter-spacing:.1em;color:var(--ink-lo);margin-top:3px}
+  .t-wrap{border-top:1px solid var(--rule-dark);margin-top:10px}
+  .dots{display:inline-flex;gap:4px;vertical-align:1px;margin-left:6px}
+  .dots i{width:6px;height:6px;border-radius:50%;border:1.1px solid var(--amber);display:inline-block}
   .dots i.f{background:var(--amber)}
 
-  /* mandate screen */
-  .mandate-card{background:var(--page);border:1px solid var(--rule);border-radius:14px;padding:4px 14px;margin-bottom:16px}
-  .set-row{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px 0;border-bottom:1px solid var(--rule)}
-  .set-row:last-child{border-bottom:none}
-  .set-name{font-size:13px;font-weight:600}
-  .set-sub{font-size:11px;color:var(--ink-lo);margin-top:2px;line-height:1.45}
-  .toggle{flex:none;width:42px;height:24px;border-radius:99px;background:var(--rule);position:relative;transition:background .2s}
-  .toggle::after{content:"";position:absolute;top:3px;left:3px;width:18px;height:18px;border-radius:50%;background:var(--page);box-shadow:0 1px 3px rgba(32,26,20,.3);transition:left .2s}
+  /* mandate: ruled settings */
+  .m-row{display:flex;align-items:center;justify-content:space-between;gap:14px;padding:14px 2px;border-bottom:1px solid var(--rule)}
+  .m-wrap{border-top:1px solid var(--rule-dark);margin-top:10px}
+  .m-name{font-size:13.5px;font-weight:600}
+  .m-sub{font-size:11.5px;color:var(--ink-lo);margin-top:3px;line-height:1.5;max-width:220px}
+  .toggle{flex:none;width:42px;height:24px;border-radius:99px;background:var(--rule-dark);position:relative;transition:background .2s}
+  .toggle::after{content:"";position:absolute;top:3px;left:3px;width:18px;height:18px;border-radius:50%;background:var(--page);box-shadow:0 1px 3px rgba(29,24,18,.3);transition:left .2s}
   .toggle.on{background:var(--green)}
   .toggle.on::after{left:21px}
-  .toggle.red-on{background:var(--amber)}
-  .stepper{display:inline-flex;align-items:center;border:1px solid var(--rule);border-radius:99px;background:var(--page);overflow:hidden;flex:none}
+  .stepper{display:inline-flex;align-items:center;border:1px solid var(--rule-dark);border-radius:99px;background:var(--page);overflow:hidden;flex:none}
   .stepper button{width:30px;height:30px;display:flex;align-items:center;justify-content:center;color:var(--green)}
-  .stepper button:disabled{color:var(--rule)}
-  .stepper .q{min-width:64px;text-align:center;font-family:var(--mono);font-size:12.5px;font-weight:600;font-variant-numeric:tabular-nums}
-  .seg{display:inline-flex;border:1px solid var(--rule);border-radius:10px;overflow:hidden;flex:none}
-  .seg button{padding:7px 10px;font-size:11px;font-weight:700;color:var(--ink-lo);border-right:1px solid var(--rule)}
+  .stepper button:disabled{color:var(--rule-dark)}
+  .stepper .q{min-width:62px;text-align:center;font-family:var(--mono);font-size:12px;font-weight:600;font-variant-numeric:tabular-nums}
+  .seg{display:inline-flex;border:1px solid var(--rule-dark);border-radius:10px;overflow:hidden;flex:none}
+  .seg button{padding:7px 10px;font-size:11px;font-weight:700;color:var(--ink-lo);border-right:1px solid var(--rule-dark)}
   .seg button:last-child{border-right:none}
   .seg button.on{background:var(--ink);color:var(--paper)}
+  .m-lock{font-family:var(--mono);font-size:12px;font-weight:500;color:var(--ink-mid);display:inline-flex;align-items:center;gap:6px}
+  .revoke-btn{color:var(--red);font-size:13px;font-weight:700}
+  .revoke-btn:hover{text-decoration:underline;text-underline-offset:3px}
 
   /* pin sheet */
-  .sheet-veil{position:absolute;inset:0;background:rgba(32,26,20,.45);z-index:20;display:flex;align-items:flex-end}
-  .sheet{width:100%;background:var(--page);border-radius:26px 26px 0 0;padding:20px 22px 26px;animation:up .25s ease}
+  .sheet-veil{position:absolute;inset:0;background:rgba(29,24,18,.45);z-index:20;display:flex;align-items:flex-end}
+  .sheet{width:100%;background:var(--page);border-radius:24px 24px 0 0;padding:20px 22px 24px;animation:up .25s ease}
   @keyframes up{from{transform:translateY(40px);opacity:0}to{transform:none;opacity:1}}
-  .sheet-title{font-family:var(--mono);font-size:11px;letter-spacing:.18em;color:var(--ink-lo);text-align:center}
-  .sheet-amt{font-family:var(--mono);font-size:24px;font-weight:600;text-align:center;margin-top:8px;font-variant-numeric:tabular-nums}
-  .pin-dots{display:flex;justify-content:center;gap:14px;margin:18px 0 6px}
-  .pin-dots i{width:13px;height:13px;border-radius:50%;border:1.5px solid var(--ink);display:inline-block}
+  .sheet-bank{display:flex;justify-content:space-between;align-items:baseline;font-size:12px;color:var(--ink-mid);padding-bottom:12px;border-bottom:1px solid var(--rule)}
+  .sheet-bank b{font-family:var(--mono);font-size:11.5px;font-weight:500}
+  .sheet-title{font-family:var(--mono);font-size:10px;letter-spacing:.22em;color:var(--ink-lo);text-align:center;margin-top:16px}
+  .sheet-amt{font-family:var(--mono);font-size:26px;font-weight:600;text-align:center;margin-top:6px;font-variant-numeric:tabular-nums}
+  .pin-dots{display:flex;justify-content:center;gap:14px;margin:16px 0 6px}
+  .pin-dots i{width:12px;height:12px;border-radius:50%;border:1.5px solid var(--ink);display:inline-block}
   .pin-dots i.f{background:var(--ink)}
   .pin-note{font-size:11px;color:var(--ink-lo);text-align:center;margin-bottom:14px}
   .pad{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
-  .pad button{height:52px;border-radius:12px;border:1px solid var(--rule);font-family:var(--mono);font-size:18px;font-weight:600;display:flex;align-items:center;justify-content:center}
+  .pad button{height:50px;border-radius:12px;border:1px solid var(--rule);font-family:var(--mono);font-size:18px;font-weight:600;display:flex;align-items:center;justify-content:center}
   .pad button:hover{background:var(--paper)}
   .pad .blank{border:none;pointer-events:none}
 
-  /* paid overlay stamp */
+  /* stamp overlay */
   .stamp-veil{position:absolute;inset:0;z-index:30;display:flex;align-items:center;justify-content:center;pointer-events:none}
-  .stamp-big{font-family:var(--mono);font-size:34px;font-weight:700;letter-spacing:.22em;text-indent:.22em;color:var(--green);border:3px dashed var(--green);border-radius:12px;padding:14px 26px;transform:rotate(-8deg);background:rgba(251,248,241,.88);animation:slam .45s cubic-bezier(.2,1.4,.4,1)}
+  .stamp-big{font-family:var(--mono);font-size:32px;font-weight:700;letter-spacing:.22em;text-indent:.22em;color:var(--green);border:3px dashed var(--green);border-radius:12px;padding:14px 26px;transform:rotate(-8deg);background:rgba(252,250,243,.9);animation:slam .45s cubic-bezier(.2,1.4,.4,1)}
   .stamp-big.red{color:var(--red);border-color:var(--red)}
   @keyframes slam{0%{transform:rotate(-8deg) scale(2.1);opacity:0}60%{transform:rotate(-8deg) scale(.96);opacity:1}100%{transform:rotate(-8deg) scale(1)}}
 
-  .toast{position:absolute;left:24px;right:24px;bottom:88px;z-index:25;background:var(--ink);color:var(--paper);border-radius:12px;padding:11px 14px;font-size:12px;line-height:1.5;box-shadow:0 12px 30px rgba(32,26,20,.4);animation:up .25s ease}
+  .toast{position:absolute;left:24px;right:24px;bottom:86px;z-index:25;background:var(--ink);color:var(--paper);border-radius:12px;padding:11px 14px;font-size:12px;line-height:1.5;box-shadow:0 12px 30px rgba(29,24,18,.4);animation:up .25s ease}
 
-  /* revoked full screen */
-  .revoked{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:0 34px;gap:16px}
-  .revoked .stamp-big{position:static;animation:none;font-size:20px;padding:12px 18px}
-  .revoked p{font-size:13px;color:var(--ink-lo);line-height:1.6}
-  .revoked .btn{width:auto;padding:12px 22px}
+  .revoked{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:0 36px;gap:18px}
+  .revoked .stamp-big{position:static;animation:none;font-size:19px;padding:12px 18px}
+  .revoked p{font-size:13px;color:var(--ink-mid);line-height:1.65}
+  .revoked .voice{font-family:var(--serif);font-style:italic;font-size:16px;color:var(--ink);line-height:1.5}
+  .revoked .btn{width:auto;padding:13px 24px}
 
-  .big-ring{position:relative;width:150px;height:150px;margin:6px auto 18px}
+  .big-ring{position:relative;width:150px;height:150px;margin:14px auto 20px}
   .big-ring svg{transform:rotate(-90deg);display:block}
   .big-ring .t{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;font-family:var(--mono);font-weight:600;font-variant-numeric:tabular-nums}
   .big-ring .t b{font-size:26px}
-  .big-ring .t small{font-size:9.5px;letter-spacing:.16em;color:var(--ink-lo);margin-top:3px}
+  .big-ring .t small{font-size:9px;letter-spacing:.18em;color:var(--ink-lo);margin-top:4px}
 </style>
 
 <div class="mn-page">
   <header class="mn-head">
     <div class="mn-wordmark">MUNIM<span class="dev">मुनीम</span></div>
-    <div class="mn-sub">A concept for delegated UPI payments. <em>What should the interface look like when an AI can spend your money?</em></div>
+    <div class="mn-head-note">Delegated UPI payments, a concept.<br><em>What happens when an AI can spend your money?</em></div>
   </header>
 
   <div class="mn-phone"><div class="mn-app" id="app"></div></div>
 
   <footer class="mn-footnote">
-    Speculative concept, July 2026, responding to NPCI's proposed Unified Agent Protocol for
-    agentic UPI payments. Built on UPI Circle's shipped delegation rails (₹5,000 per payment,
-    ₹15,000 monthly ceiling). Not affiliated with NPCI. All merchants and amounts illustrative.
+    <b>SPECULATIVE CONCEPT · JULY 2026</b><br>
+    Responds to NPCI's proposed Unified Agent Protocol for agentic UPI payments. Built on UPI
+    Circle's shipped delegation rails (₹5,000 per payment, ₹15,000 monthly ceiling).
+    Not affiliated with NPCI. All merchants and amounts illustrative.
   </footer>
 </div>
 
@@ -307,17 +321,10 @@
     "seal-check": '<path d="M225.86,102.82c-3.77-3.94-7.67-8-9.14-11.57-1.36-3.27-1.44-8.69-1.52-13.94-.15-9.76-.31-20.82-8-28.51s-18.75-7.85-28.51-8c-5.25-.08-10.67-.16-13.94-1.52-3.56-1.47-7.63-5.37-11.57-9.14C146.28,23.51,138.44,16,128,16s-18.27,7.51-25.18,14.14c-3.94,3.77-8,7.67-11.57,9.14C88,40.64,82.56,40.72,77.31,40.8c-9.76.15-20.82.31-28.51,8S41,67.55,40.8,77.31c-.08,5.25-.16,10.67-1.52,13.94-1.47,3.56-5.37,7.63-9.14,11.57C23.51,109.72,16,117.56,16,128s7.51,18.27,14.14,25.18c3.77,3.94,7.67,8,9.14,11.57,1.36,3.27,1.44,8.69,1.52,13.94.15,9.76.31,20.82,8,28.51s18.75,7.85,28.51,8c5.25.08,10.67.16,13.94,1.52,3.56,1.47,7.63,5.37,11.57,9.14C109.72,232.49,117.56,240,128,240s18.27-7.51,25.18-14.14c3.94-3.77,8-7.67,11.57-9.14,3.27-1.36,8.69-1.44,13.94-1.52,9.76-.15,20.82-.31,28.51-8s7.85-18.75,8-28.51c.08-5.25.16-10.67,1.52-13.94,1.47-3.56,5.37-7.63,9.14-11.57C232.49,146.28,240,138.44,240,128S232.49,109.73,225.86,102.82Zm-11.55,39.29c-4.79,5-9.75,10.17-12.38,16.52-2.52,6.1-2.63,13.07-2.73,19.82-.1,7-.21,14.33-3.32,17.43s-10.39,3.22-17.43,3.32c-6.75.1-13.72.21-19.82,2.73-6.35,2.63-11.52,7.59-16.52,12.38S132,224,128,224s-9.15-4.92-14.11-9.69-10.17-9.75-16.52-12.38c-6.1-2.52-13.07-2.63-19.82-2.73-7-.1-14.33-.21-17.43-3.32s-3.22-10.39-3.32-17.43c-.1-6.75-.21-13.72-2.73-19.82-2.63-6.35-7.59-11.52-12.38-16.52S32,132,32,128s4.92-9.15,9.69-14.11,9.75-10.17,12.38-16.52c2.52-6.1,2.63-13.07,2.73-19.82.1-7,.21-14.33,3.32-17.43S70.51,56.9,77.55,56.8c6.75-.1,13.72-.21,19.82-2.73,6.35-2.63,11.52-7.59,16.52-12.38S124,32,128,32s9.15,4.92,14.11,9.69,10.17,9.75,16.52,12.38c6.1,2.52,13.07,2.63,19.82,2.73,7,.1,14.33.21,17.43,3.32s3.22,10.39,3.32,17.43c.1,6.75.21,13.72,2.73,19.82,2.63,6.35,7.59,11.52,12.38,16.52S224,124,224,128,219.08,137.15,214.31,142.11ZM173.66,98.34a8,8,0,0,1,0,11.32l-56,56a8,8,0,0,1-11.32,0l-24-24a8,8,0,0,1,11.32-11.32L112,148.69l50.34-50.35A8,8,0,0,1,173.66,98.34Z"/>',
     scroll: '<path d="M96,104a8,8,0,0,1,8-8h64a8,8,0,0,1,0,16H104A8,8,0,0,1,96,104Zm8,40h64a8,8,0,0,0,0-16H104a8,8,0,0,0,0,16Zm128,48a32,32,0,0,1-32,32H88a32,32,0,0,1-32-32V64a16,16,0,0,0-32,0c0,5.74,4.83,9.62,4.88,9.66h0A8,8,0,0,1,24,88a7.89,7.89,0,0,1-4.79-1.61h0C18.05,85.54,8,77.61,8,64A32,32,0,0,1,40,32H176a32,32,0,0,1,32,32V168h8a8,8,0,0,1,4.8,1.6C222,170.46,232,178.39,232,192ZM96.26,173.48A8.07,8.07,0,0,1,104,168h88V64a16,16,0,0,0-16-16H67.69A31.71,31.71,0,0,1,72,64V192a16,16,0,0,0,32,0c0-5.74-4.83-9.62-4.88-9.66A7.82,7.82,0,0,1,96.26,173.48ZM216,192a12.58,12.58,0,0,0-3.23-8h-94a26.92,26.92,0,0,1,1.21,8,31.82,31.82,0,0,1-4.29,16H200A16,16,0,0,0,216,192Z"/>',
     "caret-left": '<path d="M165.66,202.34a8,8,0,0,1-11.32,11.32l-80-80a8,8,0,0,1,0-11.32l80-80a8,8,0,0,1,11.32,11.32L91.31,128Z"/>',
-    "caret-right": '<path d="M181.66,133.66l-80,80a8,8,0,0,1-11.32-11.32L164.69,128,90.34,53.66a8,8,0,0,1,11.32-11.32l80,80A8,8,0,0,1,181.66,133.66Z"/>',
     timer: '<path d="M128,40a96,96,0,1,0,96,96A96.11,96.11,0,0,0,128,40Zm0,176a80,80,0,1,1,80-80A80.09,80.09,0,0,1,128,216ZM173.66,90.34a8,8,0,0,1,0,11.32l-40,40a8,8,0,0,1-11.32-11.32l40-40A8,8,0,0,1,173.66,90.34ZM96,16a8,8,0,0,1,8-8h48a8,8,0,0,1,0,16H104A8,8,0,0,1,96,16Z"/>',
-    warning: '<path d="M236.8,188.09,149.35,36.22h0a24.76,24.76,0,0,0-42.7,0L19.2,188.09a23.51,23.51,0,0,0,0,23.72A24.35,24.35,0,0,0,40.55,224h174.9a24.35,24.35,0,0,0,21.33-12.19A23.51,23.51,0,0,0,236.8,188.09ZM222.93,203.8a8.5,8.5,0,0,1-7.48,4.2H40.55a8.5,8.5,0,0,1-7.48-4.2,7.59,7.59,0,0,1,0-7.72L120.52,44.21a8.75,8.75,0,0,1,15,0l87.45,151.87A7.59,7.59,0,0,1,222.93,203.8ZM120,144V104a8,8,0,0,1,16,0v40a8,8,0,0,1-16,0Zm20,36a12,12,0,1,1-12-12A12,12,0,0,1,140,180Z"/>',
     prohibit: '<path d="M128,24A104,104,0,1,0,232,128,104.11,104.11,0,0,0,128,24Zm88,104a87.56,87.56,0,0,1-20.41,56.28L71.72,60.4A88,88,0,0,1,216,128ZM40,128A87.56,87.56,0,0,1,60.41,71.72L184.28,195.6A88,88,0,0,1,40,128Z"/>',
-    "shield-check": '<path d="M208,40H48A16,16,0,0,0,32,56v56c0,52.72,25.52,84.67,46.93,102.19,23.06,18.86,46,25.26,47,25.53a8,8,0,0,0,4.2,0c1-.27,23.91-6.67,47-25.53C198.48,196.67,224,164.72,224,112V56A16,16,0,0,0,208,40Zm0,72c0,37.07-13.66,67.16-40.6,89.42A129.3,129.3,0,0,1,128,223.62a128.25,128.25,0,0,1-38.92-21.81C61.82,179.51,48,149.3,48,112l0-56,160,0ZM82.34,141.66a8,8,0,0,1,11.32-11.32L112,148.69l50.34-50.35a8,8,0,0,1,11.32,11.32l-56,56a8,8,0,0,1-11.32,0Z"/>',
-    storefront: '<path d="M232,96a7.89,7.89,0,0,0-.3-2.2L217.35,43.6A16.07,16.07,0,0,0,202,32H54A16.07,16.07,0,0,0,38.65,43.6L24.31,93.8A7.89,7.89,0,0,0,24,96h0v16a40,40,0,0,0,16,32v72a8,8,0,0,0,8,8H208a8,8,0,0,0,8-8V144a40,40,0,0,0,16-32V96ZM54,48H202l11.42,40H42.61Zm50,56h48v8a24,24,0,0,1-48,0Zm-16,0v8a24,24,0,0,1-35.12,21.26,7.88,7.88,0,0,0-1.82-1.06A24,24,0,0,1,40,112v-8ZM200,208H56V151.2a40.57,40.57,0,0,0,8,.8,40,40,0,0,0,32-16,40,40,0,0,0,64,0,40,40,0,0,0,32,16,40.57,40.57,0,0,0,8-.8Zm4.93-75.8a8.08,8.08,0,0,0-1.8,1.05A24,24,0,0,1,168,112v-8h48v8A24,24,0,0,1,204.93,132.2Z"/>',
-    bank: '<path d="M24,104H48v64H32a8,8,0,0,0,0,16H224a8,8,0,0,0,0-16H208V104h24a8,8,0,0,0,4.19-14.81l-104-64a8,8,0,0,0-8.38,0l-104,64A8,8,0,0,0,24,104Zm40,0H96v64H64Zm80,0v64H112V104Zm48,64H160V104h32ZM128,41.39,203.74,88H52.26ZM248,208a8,8,0,0,1-8,8H16a8,8,0,0,1,0-16H240A8,8,0,0,1,248,208Z"/>',
-    "lock-key": '<path d="M128,112a28,28,0,0,0-8,54.83V184a8,8,0,0,0,16,0V166.83A28,28,0,0,0,128,112Zm0,40a12,12,0,1,1,12-12A12,12,0,0,1,128,152Zm80-72H176V56a48,48,0,0,0-96,0V80H48A16,16,0,0,0,32,96V208a16,16,0,0,0,16,16H208a16,16,0,0,0,16-16V96A16,16,0,0,0,208,80ZM96,56a32,32,0,0,1,64,0V80H96ZM208,208H48V96H208V208Z"/>',
     "pause-circle": '<path d="M128,24A104,104,0,1,0,232,128,104.11,104.11,0,0,0,128,24Zm0,192a88,88,0,1,1,88-88A88.1,88.1,0,0,1,128,216ZM112,96v64a8,8,0,0,1-16,0V96a8,8,0,0,1,16,0Zm48,0v64a8,8,0,0,1-16,0V96a8,8,0,0,1,16,0Z"/>',
-    "hand-palm": '<path d="M188,88a27.75,27.75,0,0,0-12,2.71V60a28,28,0,0,0-41.36-24.6A28,28,0,0,0,80,44v6.71A27.75,27.75,0,0,0,68,48,28,28,0,0,0,40,76v76a88,88,0,0,0,176,0V116A28,28,0,0,0,188,88Zm12,64a72,72,0,0,1-144,0V76a12,12,0,0,1,24,0v44a8,8,0,0,0,16,0V44a12,12,0,0,1,24,0v68a8,8,0,0,0,16,0V60a12,12,0,0,1,24,0v68.67A48.08,48.08,0,0,0,120,176a8,8,0,0,0,16,0,32,32,0,0,1,32-32,8,8,0,0,0,8-8V116a12,12,0,0,1,24,0Z"/>',
-    info: '<path d="M128,24A104,104,0,1,0,232,128,104.11,104.11,0,0,0,128,24Zm0,192a88,88,0,1,1,88-88A88.1,88.1,0,0,1,128,216Zm16-40a8,8,0,0,1-8,8,16,16,0,0,1-16-16V128a8,8,0,0,1,0-16,16,16,0,0,1,16,16v40A8,8,0,0,1,144,176ZM112,84a12,12,0,1,1,12,12A12,12,0,0,1,112,84Z"/>',
+    "lock-key": '<path d="M128,112a28,28,0,0,0-8,54.83V184a8,8,0,0,0,16,0V166.83A28,28,0,0,0,128,112Zm0,40a12,12,0,1,1,12-12A12,12,0,0,1,128,152Zm80-72H176V56a48,48,0,0,0-96,0V80H48A16,16,0,0,0,32,96V208a16,16,0,0,0,16,16H208a16,16,0,0,0,16-16V96A16,16,0,0,0,208,80ZM96,56a32,32,0,0,1,64,0V80H96ZM208,208H48V96H208V208Z"/>',
     plus: '<path d="M224,128a8,8,0,0,1-8,8H136v80a8,8,0,0,1-16,0V136H40a8,8,0,0,1,0-16h80V40a8,8,0,0,1,16,0v80h80A8,8,0,0,1,224,128Z"/>',
     minus: '<path d="M224,128a8,8,0,0,1-8,8H40a8,8,0,0,1,0-16H216A8,8,0,0,1,224,128Z"/>',
     backspace: '<path d="M216,40H68.53a16.08,16.08,0,0,0-13.72,7.77L9.14,123.88a8,8,0,0,0,0,8.24l45.67,76.11A16.08,16.08,0,0,0,68.53,216H216a16,16,0,0,0,16-16V56A16,16,0,0,0,216,40ZM61.67,204.12,68.53,200h0ZM216,200H68.53l-43.2-72,43.2-72H216ZM106.34,146.34,124.69,128l-18.35-18.34a8,8,0,0,1,11.32-11.32L136,116.69l18.34-18.35a8,8,0,0,1,11.32,11.32L147.31,128l18.35,18.34a8,8,0,0,1-11.32,11.32L136,139.31l-18.34,18.35a8,8,0,0,1-11.32-11.32Z"/>'
@@ -326,15 +333,16 @@
 
   /* ---------- state ---------- */
   var CEILING = 15000;
+  var BANK = "HDFC Bank ··4321";
   var initial = function () {
     return {
-      screen: "",              /* empty so the first go() always renders */
+      screen: "",
       tab: "home",
       paused: false,
       revoked: false,
       paid: 3187,
-      jio: "waiting",          /* waiting | paid | dismissed */
-      bb: "held",              /* held | paid | skipped */
+      jio: "waiting",
+      bb: "held",
       hold: { status: "counting", secs: 503, amt: 517 },
       amazonTrusted: false,
       amazonCap: 800,
@@ -350,6 +358,7 @@
 
   function fmt(n) { return "₹" + n.toLocaleString("en-IN"); }
   function esc(s) { return String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;"); }
+  function clock(s) { var m = Math.floor(s / 60), r = s % 60; return (m < 10 ? "0" : "") + m + ":" + (r < 10 ? "0" : "") + r; }
 
   /* ---------- shared chrome ---------- */
   function statusBar() {
@@ -359,16 +368,15 @@
       '<svg width="22" height="11" viewBox="0 0 22 11"><rect x="0.5" y="0.5" width="18" height="10" rx="2.5" fill="none" stroke="currentColor" stroke-opacity="0.5"/><rect x="2" y="2" width="12" height="7" rx="1.4"/><rect x="20" y="3.4" width="2" height="4.2" rx="1"/></svg>' +
       "</span></div>";
   }
-
   function navBar() {
     function b(tab, icon, label) {
       return '<button data-nav="' + tab + '" class="' + (S.tab === tab ? "on" : "") + '">' + ic(icon) + label + "</button>";
     }
     return '<div class="nav">' + b("home", "book-open", "KHATA") + b("trust", "seal-check", "TRUST") + b("mandate", "scroll", "MANDATE") + "</div>";
   }
-
-  function appHead() {
-    return '<div class="app-head"><div class="app-brand"><i></i>MUNIM</div><span class="chip-concept">CONCEPT</span></div>';
+  function appTop() {
+    return '<div class="app-top"><div class="app-brand"><i></i>MUNIM</div>' +
+      (S.paused ? '<span class="paused-tag">' + ic("pause-circle") + "PAUSED · ASK-FIRST</span>" : "") + "</div>";
   }
   function backRow(label) {
     return '<button class="back-row" data-act="back">' + ic("caret-left") + esc(label) + "</button>";
@@ -377,111 +385,109 @@
   /* ---------- ledger data ---------- */
   function ledgerRows() {
     var rows = [];
-    if (S.jio === "paid") rows.push({ d: "Jul 20", m: "Jio Prepaid", amt: 299, stamp: ["green", "PAID · YOU APPROVED"], note: "Recharged just now, before the 11:59 expiry." });
-    if (S.bb === "paid") rows.push({ d: "Jul 20", m: "BigBasket", amt: 1120, stamp: ["green", "PAID · YOU APPROVED"], note: "You paid the higher price after I flagged it." });
-    if (S.bb === "skipped") rows.push({ d: "Jul 20", m: "BigBasket", amt: 1120, stamp: ["ink", "SKIPPED"], note: "Skipped this week on your call. Nothing was paid.", struck: true });
+    if (S.jio === "paid") rows.push({ d: "Jul 20", m: "Jio Prepaid", amt: 299, note: "Recharged just now, before the 11:59 expiry. You approved." });
+    if (S.bb === "paid") rows.push({ d: "Jul 20", m: "BigBasket", amt: 1120, note: "You paid the higher price after Munim flagged it." });
+    if (S.bb === "skipped") rows.push({ d: "Jul 20", m: "BigBasket", amt: 1120, stamp: "SKIPPED", note: "Skipped this week on your call. Nothing was paid.", struck: true });
     S.extraLedger.forEach(function (r) { rows.push(r); });
     rows.push(
-      { d: "Jul 19", m: "Airtel Postpaid", amt: 239, stamp: ["green", "PAID AUTO"], note: "Bill due Jul 21. Same amount as every month." },
-      { d: "Jul 18", m: "BESCOM Electricity", amt: 1430, stamp: ["green", "PAID AUTO"], note: "₹126 less than June. The monsoon helped." },
-      { d: "Jul 17", m: "Payment link via WhatsApp", amt: 2999, stamp: ["red", "REFUSED"], note: "This came from a link, not a merchant I know. I did not pay.", struck: true },
-      { d: "Jul 16", m: "BigBasket", amt: 818, stamp: ["green", "PAID AUTO"], note: "Weekly order, within the usual range." },
-      { d: "Jul 14", m: "Amazon", amt: 649, stamp: ["ink", "YOU APPROVED"], note: "Over the ₹500 Amazon cap at the time. You raised it to ₹800 after." }
+      { d: "Jul 19", m: "Airtel Postpaid", amt: 239, note: "Auto. Bill due Jul 21, same amount as every month." },
+      { d: "Jul 18", m: "BESCOM Electricity", amt: 1430, note: "Auto. ₹126 less than June, the monsoon helped." },
+      { d: "Jul 17", m: "Payment link via WhatsApp", amt: 2999, stamp: "REFUSED", note: "Came from a link, not a merchant Munim knows. Not paid.", struck: true },
+      { d: "Jul 16", m: "BigBasket", amt: 818, note: "Auto. Weekly order, within the usual range." },
+      { d: "Jul 14", m: "Amazon", amt: 649, note: "You approved. Over the ₹500 cap then; you raised it to ₹800 after." }
     );
     return rows;
   }
 
   /* ---------- screens ---------- */
   function renderHome() {
-    var waiting = [];
+    var pct = Math.min(100, (S.paid / CEILING) * 100);
+
+    var queue = [];
     if (S.jio === "waiting") {
-      waiting.push('<button class="ask-card" data-act="ask">' +
-        '<div class="ask-top"><span class="ask-merchant">Jio Prepaid</span><span class="stamp green">ASK</span></div>' +
-        '<div class="voice">Your Jio recharge expires tonight at 11:59. Same ₹299 plan you have used for six months. Shall I pay?</div>' +
-        '<div class="ask-foot"><span class="ask-amt">₹299</span><span class="ask-cta">Review ' + ic("caret-right") + "</span></div></button>");
+      queue.push('<button class="q-row" data-act="ask"><span class="q-mark"></span>' +
+        '<span class="q-main"><span class="q-merchant">Jio Prepaid</span>' +
+        '<span class="q-line">Recharge expires tonight. Same ₹299 plan, six months running.</span></span>' +
+        '<span class="q-amt"><b>₹299</b><span>ASKING</span></span></button>');
     }
     if (S.bb === "held") {
-      waiting.push('<button class="ask-card held" data-act="anomaly">' +
-        '<div class="ask-top"><span class="ask-merchant">BigBasket</span><span class="stamp amber">HELD · PRICE UP</span></div>' +
-        '<div class="voice">Your weekly order came to ₹1,120 today, ₹280 above your usual ₹840. I have held it for you.</div>' +
-        '<div class="ask-foot"><span class="ask-amt">₹1,120</span><span class="ask-cta">Review ' + ic("caret-right") + "</span></div></button>");
+      queue.push('<button class="q-row" data-act="anomaly"><span class="q-mark held"></span>' +
+        '<span class="q-main"><span class="q-merchant">BigBasket</span>' +
+        '<span class="q-line">Weekly order is ₹280 above your usual. Held for you.</span></span>' +
+        '<span class="q-amt"><b>₹1,120</b><span class="held">HELD</span></span></button>');
     }
 
-    var holdCard = "";
+    var holdStrip = "";
     if (S.hold.status === "counting") {
-      holdCard = '<div class="hold-card">' +
-        ringSvg(56, 24, 3, S.hold.secs / 600) +
-        '<div class="hold-info"><div class="hold-title">Paying Amazon · ₹517</div>' +
-        '<div class="hold-sub">Atomic Habits, your reorder. Auto-approved: Amazon is under your ₹800 cap.' + (S.paused ? " Paused with Munim." : "") + "</div></div>" +
-        '<div class="hold-actions"><button class="btn-mini red" data-act="cancel-hold">Cancel</button><button class="btn-mini" data-act="hold">Details</button></div></div>';
+      var drainPct = (S.hold.secs / 600) * 100;
+      holdStrip = '<div class="hold-strip"><button class="hold-strip-in" data-act="hold">' +
+        '<span class="hold-clock hold-count">' + clock(S.hold.secs) + "</span>" +
+        '<span class="hold-txt"><b>Paying Amazon ₹517</b><span>Auto-approved under your cap.' + (S.paused ? " Frozen while paused." : " Cancel any time.") + "</span></span>" +
+        "</button>" +
+        '<button class="hold-cancel" data-act="cancel-hold" style="position:absolute;right:13px;top:50%;transform:translateY(-50%)">Cancel</button>' +
+        '<i class="hold-drain" style="width:' + drainPct.toFixed(1) + '%"></i></div>';
     }
-
-    var waitCount = waiting.length + (S.hold.status === "counting" ? 1 : 0);
 
     var rows = ledgerRows().map(function (r) {
-      return '<div class="book-row"><span class="book-date">' + esc(r.d) + '</span>' +
-        '<div class="book-main"><div class="book-merchant">' + esc(r.m) + ' <span class="stamp ' + r.stamp[0] + '">' + esc(r.stamp[1]) + "</span></div>" +
-        '<div class="book-note">' + esc(r.note) + "</div></div>" +
-        '<span class="book-amt' + (r.struck ? " red" : "") + '">' + fmt(r.amt) + "</span></div>";
+      return '<div class="k-row"><span class="k-date">' + esc(r.d) + "</span>" +
+        '<span class="k-main"><span class="k-merchant">' + esc(r.m) +
+        (r.stamp ? ' <span class="stamp red">' + esc(r.stamp) + "</span>" : "") + "</span>" +
+        '<span class="k-note">' + esc(r.note) + "</span></span>" +
+        '<span class="k-amt' + (r.struck ? " out" : "") + '">' + fmt(r.amt) + "</span></div>";
     }).join("");
 
-    var pct = Math.min(100, Math.round((S.paid / CEILING) * 100));
+    var needsCount = queue.length;
 
-    return '<div class="mn-scroll">' + appHead() +
-      (S.paused ? '<div class="paused-banner">' + ic("pause-circle") + "Munim is paused. Everything becomes an ask. Nothing pays on its own.</div>" : "") +
-      '<div class="meter"><div class="meter-label"><span>JULY KHATA</span><span>' + pct + '% USED</span></div>' +
-      '<div class="meter-big">' + fmt(S.paid) + " <small>of " + fmt(CEILING) + "</small></div>" +
-      '<div class="meter-bar"><i style="width:' + pct + '%"></i></div>' +
-      '<div class="meter-sub">Monthly delegation ceiling, set by NPCI rules. Resets Aug 1.</div></div>' +
-      '<div class="sec-label">WAITING FOR YOU (' + waitCount + ")</div>" +
-      waiting.join("") + holdCard +
-      (waitCount === 0 ? '<div class="note-line">' + ic("info") + "Nothing needs you right now. Munim will ask when something does.</div>" : "") +
-      '<div class="sec-label" style="margin-top:16px">THIS WEEK</div>' +
-      '<div class="book">' + rows + "</div>" +
-      '<div class="note-line" style="margin-top:12px">' + ic("book-open") + "Every entry says why. An unexplained debit is indistinguishable from fraud, so Munim explains or it does not pay.</div>" +
+    return '<div class="mn-scroll">' + appTop() +
+      '<div class="hero"><span class="eyebrow">JULY · MUNIM HAS SPENT</span>' +
+      '<div class="hero-amt">' + fmt(S.paid) + "</div>" +
+      '<div class="hero-of">of the ' + fmt(CEILING) + " ceiling · resets Aug 1</div>" +
+      '<div class="hero-track"><i style="width:' + pct.toFixed(1) + '%"></i><em style="left:' + pct.toFixed(1) + '%"></em></div>' +
+      '<div class="hero-sub">Ceiling fixed by NPCI delegation rules. Munim cannot raise it.</div></div>' +
+      (needsCount ? '<div class="sec">NEEDS YOU <small>· ' + needsCount + "</small></div>" +
+        '<div class="queue">' + queue.join("") + "</div>" : "") +
+      holdStrip +
+      '<div class="sec">THE KHATA <small>· THIS WEEK</small></div>' +
+      '<div class="khata">' + rows +
+      '<div class="k-split"><span>BILLS ₹1,669</span><span>GROCERIES ₹1,518</span><span>OTHER ₹649</span></div></div>' +
+      '<div class="sec">EXPECTED NEXT</div>' +
+      '<div class="next-wrap">' +
+      '<div class="next-row"><span>BESCOM Electricity, around Aug 18</span><b>~₹1,400</b></div>' +
+      '<div class="next-row"><span>Airtel Postpaid, around Aug 19</span><b>₹239</b></div>' +
+      "</div>" +
       "</div>" + navBar();
   }
 
-  function ringSvg(size, r, w, frac) {
-    var c = 2 * Math.PI * r;
-    var off = c * (1 - Math.max(0, Math.min(1, frac)));
-    return '<div class="hold-ring"><svg width="' + size + '" height="' + size + '">' +
-      '<circle cx="' + size / 2 + '" cy="' + size / 2 + '" r="' + r + '" fill="none" stroke="#E9E2D1" stroke-width="' + w + '"/>' +
-      '<circle class="ring-arc" cx="' + size / 2 + '" cy="' + size / 2 + '" r="' + r + '" fill="none" stroke="#9E2B25" stroke-width="' + w + '" stroke-linecap="round" stroke-dasharray="' + c.toFixed(1) + '" stroke-dashoffset="' + off.toFixed(1) + '"/></svg>' +
-      '<span class="t hold-count">' + clock(S.hold.secs) + "</span></div>";
-  }
-  function clock(s) { var m = Math.floor(s / 60), r = s % 60; return (m < 10 ? "0" : "") + m + ":" + (r < 10 ? "0" : "") + r; }
-
   function renderAsk() {
     return '<div class="mn-scroll">' + backRow("Khata") +
-      '<div class="detail-merchant">' + ic("storefront") + "Jio Prepaid · UPI mandate</div>" +
-      '<div class="detail-voice">Your Jio recharge expires tonight at 11:59. Same ₹299 plan you have used for six months. Shall I pay?</div>' +
-      '<div class="fact-table">' +
-      '<div class="fact-row"><span>Amount</span><b>₹299</b></div>' +
-      '<div class="fact-row"><span>Against your usual</span><b class="pos">Same, 6 months running</b></div>' +
-      '<div class="fact-row"><span>July khata after paying</span><b>' + fmt(S.paid + 299) + " of " + fmt(CEILING) + "</b></div>" +
-      '<div class="fact-row"><span>Why Munim asked</span><b>Jio is supervised</b></div>' +
+      '<div class="d-merchant">Jio Prepaid · UPI mandate</div>' +
+      '<div class="d-voice">Your recharge expires tonight at 11:59. Same plan you have used for six months. Shall I pay?</div>' +
+      '<div class="d-amt">₹299</div>' +
+      '<div class="facts">' +
+      '<div class="f-row"><span>Against your usual</span><b class="pos">Same, 6 months running</b></div>' +
+      '<div class="f-row"><span>Paying from</span><b>' + BANK + "</b></div>" +
+      '<div class="f-row"><span>July ceiling after this</span><b>' + fmt(S.paid + 299) + " of " + fmt(CEILING) + "</b></div>" +
+      '<div class="f-row"><span>Why Munim asked</span><b>Jio is supervised</b></div>' +
       "</div>" +
       '<button class="btn btn-green" data-act="pin-jio">' + ic("lock-key") + "Pay ₹299 with UPI PIN</button>" +
-      '<button class="btn btn-ghost" data-act="back">Not now</button>' +
-      '<button class="btn-link" data-act="never-jio">Never ask about Jio recharges again</button>' +
+      '<div class="btn-links"><button data-act="back">Not now</button><button class="quiet" data-act="never-jio">Never ask about this</button></div>' +
       "</div>";
   }
 
   function renderAnomaly() {
     return '<div class="mn-scroll">' + backRow("Khata") +
-      '<div class="detail-merchant">' + ic("warning") + "BigBasket · weekly reorder</div>" +
-      '<div class="detail-voice">Your usual order is ₹1,120 today, ₹280 above your nine week average of ₹840. Tomatoes are at ₹58 a kilo, they were ₹32. I have held it.</div>' +
-      '<div class="fact-table">' +
-      '<div class="fact-row"><span>Today</span><b class="neg">₹1,120</b></div>' +
-      '<div class="fact-row"><span>Your average, 9 weeks</span><b>₹840</b></div>' +
-      '<div class="fact-row"><span>Difference</span><b class="neg">+₹280 (33%)</b></div>' +
-      '<div class="fact-row"><span>BigBasket status</span><b class="pos">Trusted</b></div>' +
+      '<div class="d-merchant">BigBasket · weekly reorder · held</div>' +
+      '<div class="d-voice">Today’s order is ₹280 above your nine week average. Tomatoes are at ₹58 a kilo, they were ₹32. I have held it.</div>' +
+      '<div class="d-amt">₹1,120 <small>usually ₹840</small></div>' +
+      '<div class="facts">' +
+      '<div class="f-row"><span>Difference</span><b class="neg">+₹280 · 33%</b></div>' +
+      '<div class="f-row"><span>Paying from</span><b>' + BANK + "</b></div>" +
+      '<div class="f-row"><span>BigBasket status</span><b class="pos">Trusted</b></div>' +
+      '<div class="f-row"><span>Why it was held</span><b>Jumps over 25% always ask</b></div>' +
       "</div>" +
-      '<div class="note-line">' + ic("hand-palm") + "BigBasket is trusted, but a jump over 25 percent always becomes an ask. Anomaly beats trust.</div>" +
       '<button class="btn btn-green" data-act="pin-bb">' + ic("lock-key") + "Pay ₹1,120 with UPI PIN</button>" +
-      '<button class="btn btn-ghost" data-act="edit-order">Edit the order first</button>' +
-      '<button class="btn-link" data-act="skip-bb">Skip this week</button>' +
+      '<div class="btn-links"><button data-act="edit-order">Edit the order</button><button class="quiet" data-act="skip-bb">Skip this week</button></div>' +
+      '<div class="foot-note">A trusted merchant does not mean a blank cheque. Anomaly beats trust, every time.</div>' +
       "</div>";
   }
 
@@ -489,71 +495,75 @@
     var body;
     if (S.hold.status === "counting") {
       body = '<div class="big-ring">' + bigRing() + "</div>" +
-        '<div class="detail-voice" style="text-align:center">Atomic Habits, ₹517, your usual reorder for Maa. Amazon is trusted under ₹800, so I approved it. It pays when the timer runs out.</div>' +
-        '<div class="note-line">' + ic("info") + "UPI payments cannot be reversed. The hold is your undo button. You chose a 10 minute window, change it in the mandate.</div>" +
-        '<button class="btn btn-red-ghost" data-act="cancel-hold">' + ic("prohibit") + "Cancel this payment</button>" +
-        '<button class="btn btn-ghost" data-act="paynow-hold">Let it go now</button>';
+        '<div class="d-voice" style="text-align:center">Atomic Habits, your usual reorder. Amazon is trusted under ₹800, so I approved it. It pays when the timer runs out.</div>' +
+        '<div class="facts" style="margin-top:22px">' +
+        '<div class="f-row"><span>Paying from</span><b>' + BANK + "</b></div>" +
+        '<div class="f-row"><span>Why it can wait</span><b>UPI cannot be reversed</b></div>' +
+        "</div>" +
+        '<button class="btn btn-red" data-act="cancel-hold">' + ic("prohibit") + "Cancel this payment</button>" +
+        '<div class="btn-links"><button data-act="paynow-hold">Let it go now</button></div>';
     } else if (S.hold.status === "cancelled") {
-      body = '<div style="text-align:center;margin:34px 0 18px"><span class="stamp red" style="font-size:15px;padding:9px 14px">CANCELLED</span></div>' +
-        '<div class="detail-voice" style="text-align:center">Cancelled. Nothing was paid. I will ask before retrying this order.</div>' +
-        '<button class="btn btn-ghost" data-act="back">Back to the khata</button>';
+      body = '<div style="text-align:center;margin:40px 0 20px"><span class="stamp red" style="font-size:14px;padding:8px 13px;letter-spacing:.2em">CANCELLED</span></div>' +
+        '<div class="d-voice" style="text-align:center">Cancelled. Nothing was paid. I will ask before retrying this order.</div>' +
+        '<div class="btn-links" style="margin-top:26px"><button data-act="back">Back to the khata</button></div>';
     } else {
-      body = '<div style="text-align:center;margin:34px 0 18px"><span class="stamp green" style="font-size:15px;padding:9px 14px">PAID</span></div>' +
-        '<div class="detail-voice" style="text-align:center">Paid, ₹517 to Amazon. It is written in the khata.</div>' +
-        '<button class="btn btn-ghost" data-act="back">Back to the khata</button>';
+      body = '<div style="text-align:center;margin:40px 0 20px"><span class="stamp green" style="font-size:14px;padding:8px 13px;letter-spacing:.2em">PAID</span></div>' +
+        '<div class="d-voice" style="text-align:center">Paid, ₹517 to Amazon. It is written in the khata.</div>' +
+        '<div class="btn-links" style="margin-top:26px"><button data-act="back">Back to the khata</button></div>';
     }
     return '<div class="mn-scroll">' + backRow("Khata") +
-      '<div class="detail-merchant">' + ic("timer") + "Amazon · in the hold window</div>" + body + "</div>";
+      '<div class="d-merchant">Amazon · ₹517 · in the hold window</div>' + body + "</div>";
   }
   function bigRing() {
     var r = 66, c = 2 * Math.PI * r, off = c * (1 - S.hold.secs / 600);
     return '<svg width="150" height="150">' +
-      '<circle cx="75" cy="75" r="' + r + '" fill="none" stroke="#E9E2D1" stroke-width="7"/>' +
-      '<circle class="ring-arc" cx="75" cy="75" r="' + r + '" fill="none" stroke="#9E2B25" stroke-width="7" stroke-linecap="round" stroke-dasharray="' + c.toFixed(1) + '" stroke-dashoffset="' + off.toFixed(1) + '"/></svg>' +
+      '<circle cx="75" cy="75" r="' + r + '" fill="none" stroke="#E8E0CC" stroke-width="6"/>' +
+      '<circle class="ring-arc" cx="75" cy="75" r="' + r + '" fill="none" stroke="#9E2B25" stroke-width="6" stroke-linecap="round" stroke-dasharray="' + c.toFixed(1) + '" stroke-dashoffset="' + off.toFixed(1) + '"/></svg>' +
       '<span class="t"><b class="hold-count">' + clock(S.hold.secs) + "</b><small>UNTIL IT PAYS</small></span>";
   }
 
   function renderTrust() {
-    function row(icls, icon, name, stampCls, stampTxt, sub, act) {
-      return '<button class="trust-row"' + (act ? ' data-act="' + act + '"' : "") + '>' +
-        '<span class="trust-ic ' + icls + '">' + ic(icon) + "</span>" +
-        '<span class="trust-main"><span class="trust-name">' + esc(name) + ' <span class="stamp ' + stampCls + '">' + esc(stampTxt) + "</span></span>" +
-        '<span class="trust-sub">' + sub + "</span></span>" +
-        (act ? ic("caret-right") : "") + "</button>";
+    function row(name, sub, cap, capSub, act, dots) {
+      return '<button class="t-row"' + (act ? ' data-act="' + act + '"' : "") + '>' +
+        '<span class="t-main"><span class="t-name">' + esc(name) + (dots || "") + "</span>" +
+        '<span class="t-sub">' + esc(sub) + "</span></span>" +
+        '<span class="t-cap">' + cap + (capSub ? "<small>" + esc(capSub) + "</small>" : "") + "</span></button>";
     }
     var amazon = S.amazonTrusted
-      ? row("", "storefront", "Amazon", "green", "TRUSTED", "Auto under " + fmt(S.amazonCap) + " · trusted on your call", "amazon")
-      : row("sup", "storefront", "Amazon", "amber", "SUPERVISED", 'Asks every time · 2 of 3 approvals <span class="dots"><i class="f"></i><i class="f"></i><i></i></span>', "amazon");
-    return '<div class="mn-scroll">' + appHead() +
-      '<div class="sec-label">WHO MUNIM MAY PAY</div>' +
-      row("", "shield-check", "Jio Prepaid", "green", "TRUSTED", "Auto under ₹500 · 4 approvals, no declines") +
-      row("", "bank", "BESCOM Electricity", "green", "TRUSTED", "Auto under ₹2,000 · your only utility biller") +
-      row("", "storefront", "BigBasket", "green", "TRUSTED", "Auto under ₹1,200 · anomaly checks stay on") +
-      row("", "shield-check", "Airtel Postpaid", "green", "TRUSTED", "Auto under ₹500 · 5 approvals") +
-      amazon +
-      '<div class="note-line" style="margin-top:12px">' + ic("seal-check") + "New merchants always start supervised. Munim proposes trust after three approved payments, and you can take it back any time. Trust is per merchant, never blanket.</div>" +
+      ? row("Amazon", "Trusted on your call, ahead of the ladder", "auto &lt; " + fmt(S.amazonCap), "TAP TO MANAGE", "amazon")
+      : row("Amazon", "2 of 3 approvals to earn trust", "asks", "EVERY TIME", "amazon",
+          '<span class="dots"><i class="f"></i><i class="f"></i><i></i></span>');
+    return '<div class="mn-scroll">' + appTop() +
+      '<div class="hero"><span class="eyebrow">WHO MUNIM MAY PAY</span>' +
+      '<div class="d-voice" style="margin-top:12px">Trust is per merchant, never blanket. New names start supervised; three approvals and I will propose trust. You can take it back any time.</div></div>' +
+      '<div class="sec">TRUSTED <small>· AUTO UNDER A CAP</small></div>' +
+      '<div class="t-wrap">' +
+      row("Jio Prepaid", "4 approvals, no declines", "auto &lt; ₹500") +
+      row("BESCOM Electricity", "Your only utility biller", "auto &lt; ₹2,000") +
+      row("BigBasket", "Anomaly checks stay on", "auto &lt; ₹1,200") +
+      row("Airtel Postpaid", "5 approvals", "auto &lt; ₹500") +
+      "</div>" +
+      '<div class="sec">SUPERVISED <small>· ASKS EVERY TIME</small></div>' +
+      '<div class="t-wrap">' + amazon + "</div>" +
       "</div>" + navBar();
   }
 
   function renderAmazon() {
-    var ladder = S.amazonTrusted
-      ? '<div class="fact-row"><span>Status</span><b class="pos">Trusted, on your call</b></div>'
-      : '<div class="fact-row"><span>Trust ladder</span><b>2 of 3 approvals</b></div>';
     return '<div class="mn-scroll">' + backRow("Trust") +
-      '<div class="detail-merchant">' + ic("storefront") + "Amazon</div>" +
-      '<div class="detail-voice">' + (S.amazonTrusted
+      '<div class="d-merchant">Amazon · ' + (S.amazonTrusted ? "trusted" : "supervised") + "</div>" +
+      '<div class="d-voice">' + (S.amazonTrusted
         ? "You trusted Amazon early. I will pay on my own under the cap, and hold anything above it."
-        : "Two payments approved, one more and I will propose trusting Amazon. Until then I ask every time.") + "</div>" +
-      '<div class="fact-table">' + ladder +
-      '<div class="fact-row"><span>Jul 14 · ₹649</span><b class="pos">You approved</b></div>' +
-      '<div class="fact-row"><span>Jul 2 · ₹517</span><b class="pos">You approved</b></div>' +
-      '<div class="fact-row"><span>Cap once trusted</span><b>' + fmt(S.amazonCap) + "</b></div>" +
+        : "Two payments approved. One more and I will propose trusting Amazon. Until then I ask every time.") + "</div>" +
+      '<div class="facts" style="margin-top:22px">' +
+      '<div class="f-row"><span>Jul 14 · ₹649</span><b class="pos">You approved</b></div>' +
+      '<div class="f-row"><span>Jul 2 · ₹517</span><b class="pos">You approved</b></div>' +
+      '<div class="f-row"><span>Cap once trusted</span><b>' + fmt(S.amazonCap) + "</b></div>" +
       "</div>" +
       (S.amazonTrusted
-        ? '<button class="btn btn-ghost" data-act="untrust-amazon">Back to supervised</button>'
+        ? '<div class="btn-links"><button data-act="untrust-amazon">Back to supervised</button></div>'
         : '<button class="btn btn-green" data-act="trust-amazon">' + ic("seal-check") + "Trust Amazon now anyway</button>" +
-          '<button class="btn btn-ghost" data-act="back">Keep it supervised</button>') +
-      '<div class="note-line" style="margin-top:4px">' + ic("info") + "Munim never auto-pays a merchant you have not approved three times, unless you trust them yourself, like this.</div>" +
+          '<div class="btn-links"><button data-act="back">Keep it supervised</button></div>') +
+      '<div class="foot-note">Munim never auto-pays a merchant you have not approved three times, unless you grant trust yourself, like this.</div>' +
       "</div>";
   }
 
@@ -562,29 +572,30 @@
     var segs = ["Instant", "10 min", "1 hour"].map(function (o) {
       return '<button data-act="hold-choice" data-v="' + o + '" class="' + (S.holdChoice === o ? "on" : "") + '">' + o + "</button>";
     }).join("");
-    return '<div class="mn-scroll">' + appHead() +
-      '<div class="sec-label">THE MANDATE</div>' +
-      '<div class="note-line">' + ic("scroll") + "Signed Jul 2, 2026 with your UPI PIN. This page is the whole agreement, there is no fine print anywhere else.</div>" +
-      '<div class="mandate-card">' +
-      '<div class="set-row"><div><div class="set-name">Bills and recharges</div><div class="set-sub">Electricity, mobile, broadband. The boring ones.</div></div>' + tg(S.duties.bills, "duty-bills") + "</div>" +
-      '<div class="set-row"><div><div class="set-name">Grocery reorders</div><div class="set-sub">Repeats of orders you have made before.</div></div>' + tg(S.duties.grocery, "duty-grocery") + "</div>" +
-      '<div class="set-row"><div><div class="set-name">Price-watch purchases</div><div class="set-sub">Off. Munim watches prices but never buys on a watch.</div></div>' + tg(S.duties.watch, "duty-watch") + "</div>" +
+    return '<div class="mn-scroll">' + appTop() +
+      '<div class="hero"><span class="eyebrow">THE MANDATE · SIGNED JUL 2, 2026</span>' +
+      '<div class="d-voice" style="margin-top:12px">Signed with your UPI PIN. This page is the whole agreement, there is no fine print anywhere else.</div></div>' +
+      '<div class="sec">DUTIES</div>' +
+      '<div class="m-wrap">' +
+      '<div class="m-row"><div><div class="m-name">Bills and recharges</div><div class="m-sub">Electricity, mobile, broadband. The boring ones.</div></div>' + tg(S.duties.bills, "duty-bills") + "</div>" +
+      '<div class="m-row"><div><div class="m-name">Grocery reorders</div><div class="m-sub">Repeats of orders you have made before.</div></div>' + tg(S.duties.grocery, "duty-grocery") + "</div>" +
+      '<div class="m-row"><div><div class="m-name">Price-watch purchases</div><div class="m-sub">Munim watches prices but never buys on a watch.</div></div>' + tg(S.duties.watch, "duty-watch") + "</div>" +
       "</div>" +
-      '<div class="sec-label">LIMITS</div>' +
-      '<div class="mandate-card">' +
-      '<div class="set-row"><div><div class="set-name">Per payment, new merchants</div><div class="set-sub">NPCI allows up to ₹5,000 per delegated payment.</div></div>' +
+      '<div class="sec">LIMITS</div>' +
+      '<div class="m-wrap">' +
+      '<div class="m-row"><div><div class="m-name">Per payment, new merchants</div><div class="m-sub">NPCI allows up to ₹5,000 per delegated payment.</div></div>' +
       '<span class="stepper"><button data-act="cap-minus"' + (S.perPayCap <= 100 ? " disabled" : "") + '>' + ic("minus") + '</button><span class="q">' + fmt(S.perPayCap) + '</span><button data-act="cap-plus"' + (S.perPayCap >= 5000 ? " disabled" : "") + '>' + ic("plus") + "</button></span></div>" +
-      '<div class="set-row"><div><div class="set-name">Monthly ceiling</div><div class="set-sub">Fixed by NPCI delegation rules. Munim cannot raise it, and neither can a bug.</div></div>' +
-      '<b style="font-family:var(--mono);font-size:13px">' + ic("lock-key") + " " + fmt(CEILING) + "</b></div>" +
+      '<div class="m-row"><div><div class="m-name">Monthly ceiling</div><div class="m-sub">Fixed by NPCI delegation rules. Munim cannot raise it, and neither can a bug.</div></div>' +
+      '<span class="m-lock">' + ic("lock-key") + fmt(CEILING) + "</span></div>" +
       "</div>" +
-      '<div class="sec-label">THE HOLD</div>' +
-      '<div class="mandate-card"><div class="set-row"><div><div class="set-name">Wait before auto-payments</div><div class="set-sub">UPI payments cannot be reversed. The hold is your undo button.</div></div>' +
+      '<div class="sec">THE HOLD</div>' +
+      '<div class="m-wrap"><div class="m-row"><div><div class="m-name">Wait before auto-payments</div><div class="m-sub">UPI payments cannot be reversed. The hold is your undo button.</div></div>' +
       '<span class="seg">' + segs + "</span></div></div>" +
-      '<div class="sec-label">CONTROLS</div>' +
-      '<div class="mandate-card">' +
-      '<div class="set-row"><div><div class="set-name">Pause Munim</div><div class="set-sub">Everything becomes ask-first, immediately. Holds freeze.</div></div>' + tg(S.paused, "pause") + "</div>" +
-      '<div class="set-row"><div><div class="set-name" style="color:var(--red)">Revoke the mandate</div><div class="set-sub">Ends delegation. Queued payments are cancelled. Munim keeps no access.</div></div>' +
-      '<button class="btn-mini red" data-act="revoke">Revoke</button></div>' +
+      '<div class="sec">CONTROLS</div>' +
+      '<div class="m-wrap">' +
+      '<div class="m-row"><div><div class="m-name">Pause Munim</div><div class="m-sub">Everything becomes ask-first, immediately. Holds freeze.</div></div>' + tg(S.paused, "pause") + "</div>" +
+      '<div class="m-row"><div><div class="m-name">Revoke the mandate</div><div class="m-sub">Ends delegation. Queued payments are cancelled. Munim keeps no access.</div></div>' +
+      '<button class="revoke-btn" data-act="revoke">Revoke</button></div>' +
       "</div>" +
       "</div>" + navBar();
   }
@@ -598,7 +609,7 @@
       "</div>";
   }
 
-  /* ---------- pin sheet / overlays ---------- */
+  /* ---------- overlays ---------- */
   var overlay = { pin: null, toastTimer: null };
 
   function openPin(amount, onDone) {
@@ -618,8 +629,10 @@
     }).join("");
     var veil = document.createElement("div");
     veil.className = "sheet-veil";
-    veil.innerHTML = '<div class="sheet"><div class="sheet-title">UPI PIN</div>' +
-      '<div class="sheet-amt">' + fmt(overlay.pin.amt) + '</div>' +
+    veil.innerHTML = '<div class="sheet">' +
+      '<div class="sheet-bank"><span>Paying from</span><b>' + BANK + "</b></div>" +
+      '<div class="sheet-title">ENTER UPI PIN</div>' +
+      '<div class="sheet-amt">' + fmt(overlay.pin.amt) + "</div>" +
       '<div class="pin-dots">' + dots + "</div>" +
       '<div class="pin-note">Munim never sees your PIN. It goes to your bank.</div>' +
       '<div class="pad">' + keys + "</div></div>";
@@ -651,25 +664,23 @@
     if (S.hold.secs <= 0) {
       S.hold.status = "paid";
       S.paid += S.hold.amt;
-      S.extraLedger.unshift({ d: "Jul 20", m: "Amazon", amt: 517, stamp: ["green", "PAID AUTO"], note: "Atomic Habits reorder. Held 10 minutes, you let it pass." });
+      S.extraLedger.unshift({ d: "Jul 20", m: "Amazon", amt: 517, note: "Auto. Atomic Habits reorder, held 10 minutes, you let it pass." });
       if (S.screen === "home" || S.screen === "hold") render();
       return;
     }
     var els = app.querySelectorAll(".hold-count");
-    for (var i = 0; i < els.length; i++) {
-      var el = els[i];
-      if (el.querySelector && el.querySelector("b")) el = el.querySelector("b");
-      el.textContent = clock(S.hold.secs);
-    }
+    for (var i = 0; i < els.length; i++) els[i].textContent = clock(S.hold.secs);
     var arcs = app.querySelectorAll(".ring-arc");
     for (var j = 0; j < arcs.length; j++) {
       var a = arcs[j];
       var c = parseFloat(a.getAttribute("stroke-dasharray"));
       a.setAttribute("stroke-dashoffset", (c * (1 - S.hold.secs / 600)).toFixed(1));
     }
+    var drain = app.querySelector(".hold-drain");
+    if (drain) drain.style.width = ((S.hold.secs / 600) * 100).toFixed(1) + "%";
   }, 1000);
 
-  /* ---------- routing (no early-return guard: go always renders) ---------- */
+  /* ---------- routing: go() always renders, no early-return guard ---------- */
   function go(name) {
     S.screen = name;
     if (name === "home" || name === "trust" || name === "mandate") S.tab = name;
@@ -706,7 +717,7 @@
     if (e.target.closest(".sheet-veil") && !e.target.closest(".sheet")) { overlay.pin = null; drawOverlays(); return; }
 
     var nav = e.target.closest("[data-nav]");
-    if (nav) { go(nav.getAttribute("data-nav") === "home" ? "home" : nav.getAttribute("data-nav")); return; }
+    if (nav) { go(nav.getAttribute("data-nav")); return; }
 
     var btn = e.target.closest("[data-act]");
     if (!btn) return;
@@ -738,14 +749,14 @@
 
     if (act === "cancel-hold") {
       S.hold.status = "cancelled";
-      S.extraLedger.unshift({ d: "Jul 20", m: "Amazon", amt: 517, stamp: ["red", "CANCELLED"], note: "You cancelled inside the hold window. I will ask before retrying.", struck: true });
+      S.extraLedger.unshift({ d: "Jul 20", m: "Amazon", amt: 517, stamp: "CANCELLED", note: "You cancelled inside the hold window. Munim will ask before retrying.", struck: true });
       stampBig("CANCELLED", true);
       setTimeout(function () { go(S.screen === "hold" ? "hold" : "home"); }, 750);
       return;
     }
     if (act === "paynow-hold") {
       S.hold.status = "paid"; S.paid += S.hold.amt;
-      S.extraLedger.unshift({ d: "Jul 20", m: "Amazon", amt: 517, stamp: ["green", "PAID AUTO"], note: "Atomic Habits reorder. You released the hold early." });
+      S.extraLedger.unshift({ d: "Jul 20", m: "Amazon", amt: 517, note: "Auto. Atomic Habits reorder, you released the hold early." });
       stampBig("PAID");
       setTimeout(function () { go("hold"); }, 750);
       return;
