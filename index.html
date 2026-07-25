@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Vishwas Mehta — Strategic Designer & Design Engineer</title>
+    <link rel="icon" type="image/jpeg" href="favicon.jpg">
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@200;300;400;500;600;700&family=Orbitron:wght@400;500;700;900&family=Bebas+Neue&family=Bodoni+Moda:ital@0;1&family=Caveat:wght@700&family=JetBrains+Mono:wght@400;700&family=Playfair+Display:ital,wght@1,700&family=Space+Grotesk:wght@500&display=swap" rel="stylesheet">
@@ -335,14 +336,34 @@
             font-size: 9px; color: var(--wa-text-dim); letter-spacing: 0.1em;
         }
 
-        /* Spotify Embed Container */
-        #wa-spotify-embed {
-            margin: 8px;
-            border-radius: 4px;
-            overflow: hidden;
+        /* YouTube Embed Hidden Container */
+        #wa-youtube-embed {
+            position: absolute;
+            width: 1px !important;
+            height: 1px !important;
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        /* Player Controls */
+        .wa-controls {
+            display: flex; gap: 8px; justify-content: center; margin: 4px 8px;
+        }
+        .wa-control-btn {
+            background: var(--wa-bg-dark);
+            color: var(--wa-accent);
             border: 1px solid var(--wa-border);
-            height: 152px;
-            background: #000;
+            border-radius: 3px;
+            padding: 4px 16px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.2s;
+            flex: 1;
+        }
+        .wa-control-btn:hover {
+            background: var(--wa-accent);
+            color: var(--wa-bg-dark);
+            box-shadow: 0 0 8px var(--wa-accent-dim);
         }
 
         /* EQ Bars */
@@ -1043,7 +1064,7 @@
     </script>
 
     <!-- ===== WINAMP WIDGET ===== -->
-    <div id="winamp-widget">
+    <div id="winamp-widget" class="wa-hidden">
         <div class="wa-titlebar" id="wa-titlebar">
             <span class="wa-title">♪ WINAMP-V</span>
             <div class="wa-titlebar-btns">
@@ -1063,7 +1084,11 @@
                 </div>
             </div>
 
-            <div id="wa-spotify-embed"></div>
+            <div id="wa-youtube-embed"></div>
+
+            <div class="wa-controls">
+                <button id="wa-play-toggle-btn" class="wa-control-btn" title="Play/Pause">▶ Play</button>
+            </div>
 
             <div class="wa-eq" id="wa-eq">
                 <!-- 16 EQ bars with varied heights and animation delays -->
@@ -1072,10 +1097,10 @@
     </div>
 
     <!-- Reopen Button (shown when widget is closed) -->
-    <button id="winamp-reopen" title="Open Music Player">♪</button>
+    <button id="winamp-reopen" title="Open Music Player" style="display: flex;">♪</button>
 
-    <!-- Spotify iFrame API -->
-    <script src="https://open.spotify.com/embed/iframe-api/v1" async></script>
+    <!-- YouTube iFrame API -->
+    <script src="https://www.youtube.com/iframe_api"></script>
 
     <script>
     (function() {
@@ -1085,15 +1110,14 @@
         // Replace with your own Spotify URI (playlist, album, or track)
         const SPOTIFY_URI = 'spotify:playlist:37i9dQZF1EJEuBy6qaERuw';
 
-        // ── Skin Definitions ──
         const SKINS = [
             {
-                name: 'Classic',
+                name: 'Purple & Silver',
                 vars: {
-                    '--wa-bg': '#2B2B2B', '--wa-bg-dark': '#1E1E1E',
-                    '--wa-accent': '#00FF00', '--wa-accent-dim': 'rgba(0,255,0,0.3)',
-                    '--wa-text': '#00FF00', '--wa-text-dim': 'rgba(0,255,0,0.5)',
-                    '--wa-border': '#3A3A3A', '--wa-highlight': '#4A4A4A'
+                    '--wa-bg': '#E2E4E9', '--wa-bg-dark': '#C9CDD6',
+                    '--wa-accent': '#8B5CF6', '--wa-accent-dim': 'rgba(139,92,246,0.3)',
+                    '--wa-text': '#8B5CF6', '--wa-text-dim': 'rgba(139,92,246,0.7)',
+                    '--wa-border': '#A5AAB5', '--wa-highlight': '#F5F6F8'
                 }
             },
             {
@@ -1176,9 +1200,17 @@
             reopenBtn.style.display = 'flex';
         });
 
-        reopenBtn.addEventListener('click', () => {
+        reopenBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
             widget.classList.remove('wa-hidden');
             reopenBtn.style.display = 'none';
+        });
+
+        document.addEventListener('click', (e) => {
+            if (!widget.classList.contains('wa-hidden') && !widget.contains(e.target) && !reopenBtn.contains(e.target)) {
+                widget.classList.add('wa-hidden');
+                reopenBtn.style.display = 'flex';
+            }
         });
 
         // ── Dragging ──
@@ -1256,48 +1288,64 @@
             }
         }
 
-        // ── Spotify iFrame API Integration ──
-        window.onSpotifyIframeApiReady = (IFrameAPI) => {
-            const embedEl = document.getElementById('wa-spotify-embed');
-            const options = {
-                uri: 'spotify:playlist:4I1Hjje8DdVz6oTBMlXjWm',
-                width: '100%',
+        // ── YouTube iFrame API Integration ──
+        let ytPlayer;
+        window.onYouTubeIframeAPIReady = function() {
+            ytPlayer = new YT.Player('wa-youtube-embed', {
                 height: '152',
-                theme: '0'
-            };
-
-            const callback = (controller) => {
-                spotifyController = controller;
-                ticker.textContent = '♪ Ready — Select a track below ♫';
-
-                controller.addListener('playback_update', (e) => {
-                    const data = e.data;
-                    if (data.isPaused !== undefined) {
-                        setPlayState(!data.isPaused);
-                    }
-                    if (data.duration && data.position !== undefined) {
-                        timeCurrent.textContent = formatTime(data.position);
-                        timeTotal.textContent = formatTime(data.duration);
-                        
-                        // If it's playing, maybe show a little message
-                        if (!data.isPaused && data.position < 2000) {
-                            ticker.textContent = '♪ Playing via Spotify ♫';
-                        }
-                    }
-                });
-
-                controller.addListener('ready', () => {
-                    ticker.textContent = '♪ Spotify Ready — Click Play below ♫';
-                });
-            };
-
-            IFrameAPI.createController(embedEl, options, callback);
+                width: '100%',
+                videoId: 'h4WlZvx9_0o', // User requested mix
+                playerVars: {
+                    'listType': 'playlist',
+                    'list': 'RDh4WlZvx9_0o',
+                    'playsinline': 1,
+                    'controls': 1
+                },
+                events: {
+                    'onReady': onPlayerReady,
+                    'onStateChange': onPlayerStateChange
+                }
+            });
         };
 
-        // Fallback: if Spotify API doesn't load within 5 seconds
+        function onPlayerReady(event) {
+            ticker.textContent = '♪ YouTube Ready — Click Play ♫';
+            
+            // Start updating time
+            setInterval(() => {
+                if (isPlaying && ytPlayer && ytPlayer.getCurrentTime) {
+                    timeCurrent.textContent = formatTime(ytPlayer.getCurrentTime() * 1000);
+                    timeTotal.textContent = formatTime(ytPlayer.getDuration() * 1000);
+                }
+            }, 1000);
+
+            // Bind UI Buttons
+            document.getElementById('wa-play-toggle-btn').addEventListener('click', () => {
+                if (!ytPlayer) return;
+                if (isPlaying) {
+                    if (ytPlayer.pauseVideo) ytPlayer.pauseVideo();
+                } else {
+                    if (ytPlayer.playVideo) ytPlayer.playVideo();
+                }
+            });
+        }
+
+        function onPlayerStateChange(event) {
+            const toggleBtn = document.getElementById('wa-play-toggle-btn');
+            if (event.data == YT.PlayerState.PLAYING) {
+                setPlayState(true);
+                ticker.textContent = '♪ Playing via YouTube ♫';
+                if (toggleBtn) toggleBtn.textContent = '⏸ Pause';
+            } else {
+                setPlayState(false);
+                if (toggleBtn) toggleBtn.textContent = '▶ Play';
+            }
+        }
+
+        // Fallback: if YouTube API doesn't load
         setTimeout(() => {
-            if (!spotifyController) {
-                ticker.textContent = '♪ Connect Spotify to start listening ♫';
+            if (!ytPlayer) {
+                ticker.textContent = '♪ Connect YouTube to start listening ♫';
             }
         }, 5000);
 
