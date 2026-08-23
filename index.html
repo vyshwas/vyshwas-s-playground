@@ -2,7 +2,8 @@
 <html lang="en" class="antialiased">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, ">
+    <meta name="description" content="Portfolio of Vishwash Mehta, a Bengaluru-based strategic product designer and design engineer working across UX research, product systems, brand, prototyping, and front-end implementation.">
     <title>Vishwas Mehta — Strategic Designer & Design Engineer</title>
     <link rel="icon" type="image/jpeg" href="favicon.jpg">
     
@@ -54,13 +55,15 @@
         }
 
         /* --- New Typography Classes (Requested Script + Mix) --- */
-        .font-script { font-family: 'Caveat', cursive; font-size: 1.4em; font-weight: 700; display: inline-block; transform: translateY(2px);}
-        .font-d { font-family: 'Bodoni Moda', serif; font-style: italic; font-size: 1.1em; font-weight: 400; }
-        .font-e { font-family: 'Bebas Neue', sans-serif; font-size: 1.15em; transform: translateY(2px); display: inline-block; }
-        .font-s { font-family: 'Playfair Display', serif; font-style: italic; font-size: 1.05em; font-weight: 700; }
-        .font-i { font-family: 'Space Grotesk', sans-serif; font-size: 1.0em; font-weight: 500; }
-        .font-g { font-family: 'Inter', sans-serif; font-size: 1.0em; font-weight: 700; }
-        .font-n { font-family: 'JetBrains Mono', monospace; font-size: 0.95em; }
+        .font-design { 
+            font-family: 'Caveat', cursive; 
+            font-weight: 700;
+            color: var(--lemon);
+            font-size: 1.6em;
+            text-transform: lowercase;
+            display: inline-block;
+            transform: translateY(4px);
+        }
         
         html, body { 
             background-color: var(--deepblack); 
@@ -101,6 +104,14 @@
             position: relative; width: 100%; min-height: 100vh; min-height: 100svh; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 2rem; background: transparent;
         }
         
+        
+        .hero-subtitle {
+            font-family: 'Orbitron', sans-serif; font-size: clamp(1.2rem, 2vw, 1.8rem);
+            max-width: 900px; color: var(--lemon); font-weight: 700; text-transform: uppercase;
+            margin: 0 auto 1rem auto; letter-spacing: 0.05em; line-height: 1.4; text-align: center;
+        }
+        .hero-subtitle-small { max-width: 600px; margin: 0 auto; text-align: center; }
+
         .hero-title { 
             font-family: 'Orbitron', sans-serif; font-size: clamp(3.5rem, 8vw, 7.5rem); 
             font-weight: 700; line-height: 1.1; margin-bottom: 1.5rem; 
@@ -432,6 +443,8 @@
                 <a href="#work">Work</a>
                 <a href="#about">About</a>
                 <a href="#sandbox">Playground</a>
+                <a href="Vishwash_Mehta.pdf" target="_blank">Resume &#x2197;</a>
+                <a href="mailto:vyommehta197@gmail.com">Contact &#x2197;</a>
             </div>
         </nav>
 
@@ -439,8 +452,16 @@
             <span class="font-mono text-xs uppercase tracking-widest text-vermilion mb-8 block">Strategic Designer — Bengaluru, India</span>
             
             <h1 class="hero-title" id="scramble-text" title="Click to Scramble">
-                & Design Engineer.
+                DESIGN ENGINEER.
             </h1>
+            <h2 class="hero-subtitle">I TURN COMPLEX PRODUCT IDEAS INTO SYSTEMS PEOPLE CAN UNDERSTAND, TRUST, AND USE.</h2>
+            <p class="hero-subtitle-small mt-4 font-mono text-xs uppercase tracking-widest text-vermilion">Strategic designer and design engineer working across product, brand, research, and code.</p>
+
+            <div class="flex flex-wrap justify-center gap-4 mt-12 z-20 relative">
+                <a href="#work" class="px-8 py-3 bg-vermilion text-deepblack font-mono text-xs uppercase tracking-widest rounded-full hover:bg-lemon hover:text-deepblack transition-colors">View selected work</a>
+                <a href="Vishwash_Mehta.pdf" target="_blank" class="px-8 py-3 border border-vermilion text-vermilion font-mono text-xs uppercase tracking-widest rounded-full hover:bg-vermilion hover:text-deepblack transition-colors">Download resume</a>
+                <a href="mailto:vyommehta197@gmail.com" class="px-8 py-3 border border-lemon/30 text-lemon font-mono text-xs uppercase tracking-widest rounded-full hover:border-vermilion hover:text-vermilion transition-colors">Email me</a>
+            </div>
             
             <span class="scroll-hint">(Scroll)</span>
         </section>
@@ -450,23 +471,26 @@
             <div class="about-grid">
 
                 <p class="about-statement">
-                    <span class="about-lede">I didn't start in design.</span>
-                    I started in <span class="hl">computer science</span> — four years thinking in systems and code, then a two-year M.Des program that taught me the best design thinking comes from understanding how things actually work underneath. Today I work across brand and product, in the part of design that decides whether people <span class="hl">understand, trust, and act</span>.
+                    I started in <span class="hl">computer science</span> and moved into design to work on the decisions code alone cannot solve: what a product means, how it behaves, and why people should trust it. I now work across research, product, brand, and front-end prototyping—using <span class="hl">systems thinking</span> before visual polish.
                 </p>
 
                 <div class="about-facts">
+                    <div class="about-fact">
+                        <span class="about-fact-label">Location</span>
+                        <span class="about-fact-value">Based in Bengaluru</span>
+                    </div>
                     <div class="about-fact">
                         <span class="about-fact-label">Background</span>
                         <span class="about-fact-value">Computer Science &rarr; M.Des</span>
                     </div>
                     <div class="about-fact">
                         <span class="about-fact-label">Focus</span>
-                        <span class="about-fact-value">Brand &times; Product</span>
+                        <span class="about-fact-value">Product &times; Brand &times; Code</span>
                     </div>
                     <div class="about-fact">
-                        <span class="about-fact-label">Approach</span>
-                        <span class="about-fact-value">Systems before surface</span>
-                    </div>
+                        <span class="about-fact-label">Available for</span>
+                        <span class="about-fact-value">Product Design & Design Engineering</span>
+                    </div></div>
                     <div class="about-fact">
                         <span class="about-fact-label">Currently</span>
                         <span class="about-fact-value">Strategic Design &amp; Design Engineering</span>
@@ -479,7 +503,7 @@
         <section class="projects-section" id="work">
             <div class="projects-header border-b border-vermilion/30 pb-8">
                 <span class="font-mono text-xs uppercase tracking-widest block mb-4">Work 02</span>
-                <span class="text-lg font-light max-w-2xl text-lemon opacity-75">Three projects. Each chosen for what it taught me, not for validation or outcomes.</span>
+                <span class="text-lg font-light max-w-2xl text-lemon opacity-75">Three projects showing how I frame ambiguity, make decisions, and build working systems.</span>
             </div>
 
             <div class="projects-list">
@@ -498,6 +522,7 @@
                     <div>
                         <span class="project-index">Project 01 of 03</span>
                         <h2 class="project-title">Nocturne</h2>
+                        <p class="font-mono text-xs mt-2 text-lemon opacity-70">Redesigning checkout trust cues to reduce hesitation.</p>
                     </div>
                     <div class="project-tags">
                         <span class="project-tag">Product Design</span>
@@ -520,6 +545,7 @@
                     <div>
                         <span class="project-index">Project 02 of 03</span>
                         <h2 class="project-title">Munim</h2>
+                        <p class="font-mono text-xs mt-2 text-lemon opacity-70">A delegated UPI interface for AI agent purchasing.</p>
                     </div>
                     <div class="project-tags">
                         <span class="project-tag">Product Design</span>
@@ -542,6 +568,7 @@
                     <div>
                         <span class="project-index">Project 03 of 03</span>
                         <h2 class="project-title">Awara</h2>
+                        <p class="font-mono text-xs mt-2 text-lemon opacity-70">A live-adapting itinerary tool designed for mid-trip disruption.</p>
                     </div>
                     <div class="project-tags">
                         <span class="project-tag">Product Design</span>
@@ -608,9 +635,9 @@
 
         <section class="playground-section" id="sandbox">
             <div class="playground-header">
-                <span class="font-mono text-xs uppercase tracking-widest text-vermilion block mb-4">Sandbox 04</span>
-                <h3>A space for things not yet case studies.</h3>
-                <p class="mt-4">(Click to interact)</p>
+                <span class="font-mono text-xs uppercase tracking-widest text-vermilion block mb-4">Experiments 04</span>
+                <h3>Experiments in interaction, identity, motion, and code.</h3>
+                <p class="mt-4 text-lemon opacity-75 max-w-xl mx-auto">Small prototypes exploring how digital systems can feel and behave.</p>
             </div>
 
             <div class="physics-element" style="width: 180px; height: 50px;">Brand Strategy</div>
@@ -631,12 +658,25 @@
             </div>
         </section>
 
+        
+        <section class="conversion-section border-t border-vermilion/30 py-24 px-8 md:px-12 text-center" style="max-width: 1200px; margin: 0 auto;">
+            <h2 class="font-orbitron text-3xl md:text-5xl text-lemon font-bold uppercase tracking-wider mb-6">READY TO BUILD?</h2>
+            <p class="font-mono text-sm text-lemon opacity-80 max-w-2xl mx-auto mb-12 leading-relaxed">
+                Building something complex? I'm interested in product design and design-engineering roles where systems thinking matters.<br><br>
+                <span class="text-vermilion">Bengaluru · Open to Relocation</span>
+            </p>
+            <div class="flex flex-col sm:flex-row justify-center gap-6">
+                <a href="mailto:vyommehta197@gmail.com" class="px-8 py-4 border border-vermilion text-vermilion hover:bg-vermilion hover:text-deepblack transition-colors font-mono text-xs uppercase tracking-widest rounded-full">Email Me</a>
+                <a href="https://www.linkedin.com/in/vishwas-mehta-319924226/" target="_blank" class="px-8 py-4 border border-vermilion text-vermilion hover:bg-vermilion hover:text-deepblack transition-colors font-mono text-xs uppercase tracking-widest rounded-full">LinkedIn</a>
+            </div>
+        </section>
+
         <footer>
             <div class="footer-content">
                 <div class="footer-logo">Vishwas Mehta.</div>
                 <div class="footer-text">
                     Strategic Designer, Bengaluru India <br>
-                    2026 — vyommehta97@gmail.com
+                    2026 — vyommehta197@gmail.com
                 </div>
                 <div class="footer-meta">built quietly</div>
             </div>
@@ -673,13 +713,13 @@
 
         // --- STREAMING_CHUNK: Hero Text Scramble Toggle Logic ---
         const scrambleEl = document.getElementById('scramble-text');
-        const textNormal = "& Design Engineer.";
+        const textNormal = "DESIGN ENGINEER.";
         const textVys = "vysxwz";
         let isVysxwz = false;
         let scrambleInterval;
 
         // Maps strictly to "& Design " => Indices 0 to 7
-        const fontClasses = ['font-script', '', 'font-d', 'font-e', 'font-s', 'font-i', 'font-g', 'font-n'];
+        const fontClasses = ['font-design', 'font-design', 'font-design', 'font-design', 'font-design', 'font-design'];
 
         function runScramble(targetText) {
             clearInterval(scrambleInterval);
