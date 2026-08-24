@@ -352,10 +352,10 @@
             border-radius: 6px; overflow: hidden;
             box-shadow: 0 8px 32px rgba(0,0,0,0.6), 0 0 0 1px var(--wa-border);
             background: var(--wa-bg);
-            /* Was "transition: width 0.3s ease, box-shadow 0.3s ease". The width
-               transition was dead: base and .wa-minimized are both 320px, and
-               minimising hides .wa-body with display:none instead. It animated
-               nothing while still inviting layout work. */
+            /* This used to animate the widget's inline size as well, which was
+               dead weight: the base rule and .wa-minimized are both 320px, and
+               minimising hides .wa-body with display:none. It animated nothing
+               while still inviting layout work, so only the shadow eases now. */
             transition: box-shadow 0.3s ease;
             user-select: none;
         }
