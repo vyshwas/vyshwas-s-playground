@@ -8,7 +8,10 @@
     <link rel="icon" type="image/jpeg" href="favicon.jpg">
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@200;300;400;500;600;700&family=Orbitron:wght@400;500;700;900&family=Bebas+Neue&family=Bodoni+Moda:ital@0;1&family=Caveat:wght@700&family=JetBrains+Mono:wght@400;700&family=Playfair+Display:ital,wght@1,700&family=Space+Grotesk:wght@500&display=swap" rel="stylesheet">
+    <!-- Four families, all of them actually used. Was eight: Orbitron, Bebas Neue,
+     Bodoni Moda and Playfair Display were downloaded on every visit and
+     referenced once or never between them. -->
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@200;300;400;500;600;700&family=Space+Grotesk:wght@400;500;700&family=JetBrains+Mono:wght@400;700&family=Caveat:wght@700&display=swap" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
     
     <script>
@@ -26,7 +29,12 @@
                     },
                     fontFamily: {
                         sans: ['Inter', 'sans-serif'],
-                        orbitron: ['Orbitron', 'sans-serif'],
+                        /* Key kept as "orbitron" so existing font-orbitron
+                           utility classes in the markup keep working, but it
+                           now resolves to the new display face. */
+                        orbitron: ['Space Grotesk', 'Inter', 'sans-serif'],
+                        display: ['Space Grotesk', 'Inter', 'sans-serif'],
+                        mono: ['JetBrains Mono', 'ui-monospace', 'monospace'],
                     }
                 }
             }
@@ -45,18 +53,28 @@
         .lenis.lenis-stopped { overflow: hidden; }
         .lenis.lenis-scrolling iframe { pointer-events: none; }
 
-        :root { 
+        :root {
             --deepblack: #000000;
             --codgray: #111111;
             --white: #FFFFFF;
             --gray: #808080;
             --vermilion: #FC4C13;
             --lemon: #FEFACD;
+
+            /* Type system — four voices, each with a job.
+               Display was Orbitron, which reads as generic sci-fi rather than
+               as engineering. Space Grotesk was already being downloaded here
+               and never used once; it carries the same technical character
+               without the template association. */
+            --font-display: 'Space Grotesk', 'Inter', sans-serif;  /* headings, labels */
+            --font-body: 'Inter', system-ui, sans-serif;           /* reading copy */
+            --font-mono: 'JetBrains Mono', ui-monospace, monospace;/* slate, data, code */
+            --font-note: var(--font-note);                        /* margin annotation */
         }
 
         /* --- New Typography Classes (Requested Script + Mix) --- */
         .font-design { 
-            font-family: 'Caveat', cursive; 
+            font-family: var(--font-note); 
             font-weight: 700;
             color: var(--lemon);
             font-size: 1.6em;
@@ -93,7 +111,7 @@
         #content-wrapper { position: relative; z-index: 10; overflow-x: clip; width: 100%; }
 
         nav { position: fixed; top: 0; left: 0; width: 100%; padding: 2rem 3rem; display: flex; justify-content: space-between; align-items: flex-start; z-index: 80; }
-        nav a { font-family: 'Orbitron', sans-serif; color: var(--lemon); text-decoration: none; font-size: 0.75rem; font-weight: 700; letter-spacing: 0.15em; text-transform: uppercase; opacity: 0.6; transition: opacity 0.3s ease; }
+        nav a { font-family: var(--font-display); color: var(--lemon); text-decoration: none; font-size: 0.75rem; font-weight: 700; letter-spacing: 0.15em; text-transform: uppercase; opacity: 0.6; transition: opacity 0.3s ease; }
         .nav-right a { mix-blend-mode: difference; }
         nav a:hover { opacity: 1; }
         .logo-img { height: 32px; width: auto; object-fit: contain; opacity: 1 !important; transition: transform 0.3s ease; }
@@ -106,20 +124,20 @@
         
         
         .hero-subtitle {
-            font-family: 'Orbitron', sans-serif; font-size: clamp(1.2rem, 2vw, 1.8rem);
+            font-family: var(--font-display); font-size: clamp(1.2rem, 2vw, 1.8rem);
             max-width: 900px; color: var(--lemon); font-weight: 700; text-transform: uppercase;
             margin: 0 auto 1rem auto; letter-spacing: 0.05em; line-height: 1.4; text-align: center;
         }
         .hero-subtitle-small { max-width: 600px; margin: 0 auto; text-align: center; }
 
         .hero-title { 
-            font-family: 'Orbitron', sans-serif; font-size: clamp(3.5rem, 8vw, 7.5rem); 
+            font-family: var(--font-display); font-size: clamp(3.5rem, 8vw, 7.5rem); 
             font-weight: 700; line-height: 1.1; margin-bottom: 1.5rem; 
             letter-spacing: 0.05em; text-transform: uppercase; cursor: pointer; transition: opacity 0.2s;
             min-height: 1.2em; display: flex; align-items: center; justify-content: center; color: var(--lemon);
         }
         .hero-title:hover { opacity: 0.8; }
-        .scroll-hint { position: absolute; bottom: 40px; font-family: 'Orbitron', sans-serif; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.3em; color: var(--vermilion); }
+        .scroll-hint { position: absolute; bottom: 40px; font-family: var(--font-display); font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.3em; color: var(--vermilion); }
 
         .about-section {
             position: relative; z-index: 20;
@@ -152,14 +170,14 @@
             border-left: 1px solid rgba(252,76,19,0.25); padding-left: 2rem;
         }
         .about-fact { display: flex; flex-direction: column; gap: 0.6rem; }
-        .about-fact-label { font-family: 'Orbitron', sans-serif; font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.14em; font-weight: 700; color: var(--vermilion); opacity: 1; }
-        .about-fact-value { font-family: 'JetBrains Mono', monospace; font-size: 1.05rem; letter-spacing: 0.01em; color: var(--lemon); opacity: 1; }
+        .about-fact-label { font-family: var(--font-display); font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.14em; font-weight: 700; color: var(--vermilion); opacity: 1; }
+        .about-fact-value { font-family: var(--font-mono); font-size: 1.05rem; letter-spacing: 0.01em; color: var(--lemon); opacity: 1; }
 
         /* --- Projects --- */
         .projects-section { 
             position: relative; padding: 10rem 2rem; background: rgba(0,0,0,0.4); backdrop-filter: blur(4px); z-index: 10; 
         }
-        .projects-header { max-width: 1200px; margin: 0 auto 4rem auto; font-family: 'Orbitron', sans-serif; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.2em; display: flex; flex-direction: column; gap: 0.5rem; color: var(--vermilion);}
+        .projects-header { max-width: 1200px; margin: 0 auto 4rem auto; font-family: var(--font-display); font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.2em; display: flex; flex-direction: column; gap: 0.5rem; color: var(--vermilion);}
         
         .projects-list { max-width: 1200px; margin: 0 auto; display: flex; flex-direction: column; }
         .project-row { position: relative; overflow: hidden; display: flex; flex-direction: column; align-items: flex-start; padding: 3rem 0; border-bottom: 1px solid rgba(252,76,19,0.3); cursor: pointer; transition: all 0.4s ease; z-index: 1; }
@@ -169,11 +187,11 @@
         @media (min-width: 768px) { .project-row { flex-direction: row; justify-content: space-between; align-items: center; } }
         .project-row:hover { padding-left: 2rem; padding-right: 2rem; border-bottom-color: var(--lemon); background: rgba(0,0,0,0.2); }
         
-        .project-index { font-family: 'Orbitron', sans-serif; font-size: 0.75rem; margin-bottom: 1rem; display: block; text-transform: uppercase; letter-spacing: 0.2em; color: var(--vermilion); }
-        .project-title { font-family: 'Orbitron', sans-serif; font-size: clamp(2rem, 4vw, 3.5rem); font-weight: 700; text-transform: uppercase; margin: 0; transition: color 0.4s ease; line-height: 1; color: var(--lemon); letter-spacing: 0.05em;}
+        .project-index { font-family: var(--font-display); font-size: 0.75rem; margin-bottom: 1rem; display: block; text-transform: uppercase; letter-spacing: 0.2em; color: var(--vermilion); }
+        .project-title { font-family: var(--font-display); font-size: clamp(2rem, 4vw, 3.5rem); font-weight: 700; text-transform: uppercase; margin: 0; transition: color 0.4s ease; line-height: 1; color: var(--lemon); letter-spacing: 0.05em;}
         .project-tags { display: flex; gap: 0.5rem; flex-wrap: wrap; margin-top: 1.5rem; pointer-events: none; }
         @media (min-width: 768px) { .project-tags { justify-content: flex-end; margin-top: 0; text-align: right; } }
-        .project-tag { font-family: 'Orbitron', sans-serif; font-size: 0.7rem; font-weight: 500; text-transform: uppercase; letter-spacing: 0.15em; padding: 6px 16px; border: 1px solid rgba(252,76,19,0.5); border-radius: 999px; color: var(--vermilion); transition: all 0.3s ease; }
+        .project-tag { font-family: var(--font-display); font-size: 0.7rem; font-weight: 500; text-transform: uppercase; letter-spacing: 0.15em; padding: 6px 16px; border: 1px solid rgba(252,76,19,0.5); border-radius: 999px; color: var(--vermilion); transition: all 0.3s ease; }
         .project-row:hover .project-tag { color: var(--deepblack); background: var(--lemon); border-color: var(--lemon); }
 
         #project-preview-container {
@@ -202,9 +220,28 @@
             -webkit-overflow-scrolling: touch !important; overscroll-behavior: contain !important; touch-action: pan-y !important;
         }
         @media (min-width: 768px) { .drawer-content-scroll { width: 55%; padding: 4rem; } }
+
+        /* Prototype panel. Desktop keeps it beside the reading column; mobile
+           stacks it on top so the working artifact is still reachable there. */
+        #drawer-visual { height: 100%; }
+        @media (max-width: 767px) {
+            #drawer-panel { flex-direction: column; }
+            #drawer-visual {
+                width: 100%;
+                height: 45vh;
+                flex: 0 0 auto;
+                /* order:-1 puts the running prototype above the write-up. The
+                   artifact is the argument, so it should be the first thing on
+                   screen; with the text first the paragraph merely looked cut
+                   in half. */
+                order: -1;
+                border-bottom: 1px solid rgba(252, 76, 19, 0.4);
+            }
+            .drawer-content-scroll { flex: 1 1 auto; min-height: 0; height: auto; }
+        }
         
         .drawer-block { margin-bottom: 3rem; }
-        .drawer-label { font-family: 'Orbitron', sans-serif; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.2em; margin-bottom: 1rem; display: block; color: var(--vermilion); }
+        .drawer-label { font-family: var(--font-display); font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.2em; margin-bottom: 1rem; display: block; color: var(--vermilion); }
         .drawer-text { font-size: clamp(0.9rem, 1.5vw, 1.1rem); line-height: 1.6; color: rgba(254,250,205,0.85); font-weight: 300; }
 
         /* --- Playground & Vermilion Buttons --- */
@@ -213,18 +250,42 @@
             border-top: 1px solid rgba(252,76,19,0.3); background: transparent; touch-action: pan-y;
         }
         .playground-header { position: absolute; top: 10vh; left: 0; width: 100%; text-align: center; z-index: 10; pointer-events: none; padding: 0 1rem; }
-        .playground-header h3 { font-family: 'Orbitron', sans-serif; font-size: 1.5rem; font-weight: 700; text-transform: uppercase; color: var(--lemon); letter-spacing: 0.1em; margin-bottom: 0.5rem; }
-        .playground-header p { font-family: 'Orbitron', sans-serif; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.2em; color: var(--vermilion); }
+        .playground-header h3 { font-family: var(--font-display); font-size: 1.5rem; font-weight: 700; text-transform: uppercase; color: var(--lemon); letter-spacing: 0.1em; margin-bottom: 0.5rem; }
+        .playground-header p { font-family: var(--font-display); font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.2em; color: var(--vermilion); }
         
         .physics-element { 
             position: absolute; top: 0; left: 0; will-change: transform; transform-origin: center center; 
             background: rgba(20,20,20,0.9); border: 1px solid rgba(252,76,19,0.5); border-radius: 999px; 
             padding: 16px 32px; cursor: grab; user-select: none; display: flex; justify-content: center; align-items: center; 
             z-index: 30; opacity: 0; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
-            font-family: 'Orbitron', sans-serif; font-size: 0.85rem; font-weight: 500; text-transform: uppercase; letter-spacing: 0.1em; color: var(--lemon); white-space: nowrap; max-width: 90vw;
+            font-family: var(--font-display); font-size: 0.85rem; font-weight: 500; text-transform: uppercase; letter-spacing: 0.1em; color: var(--lemon); white-space: nowrap; max-width: 90vw;
             touch-action: none;
         }
         .physics-element:active { cursor: grabbing; border-color: var(--lemon); }
+
+        /* Reduced-motion fallback for the sandbox. The chips start at opacity 0
+           and are positioned by matter-js, so with physics off they would simply
+           never appear. This lays them out as a static tag list instead — same
+           information, no falling. */
+        .playground-section.physics-static {
+            height: auto;
+            min-height: 60vh;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.75rem;
+            align-content: center;
+            justify-content: center;
+            padding: 26vh 8vw 6rem;
+        }
+        .playground-section.physics-static .physics-element {
+            position: static;
+            opacity: 1;
+            width: auto !important;
+            height: auto !important;
+            transform: none;
+            cursor: default;
+            box-shadow: none;
+        }
 
         .sandbox-controls {
             position: absolute; bottom: 40px; left: 50%; transform: translateX(-50%);
@@ -233,7 +294,7 @@
         
         /* Updated Vermilion Buttons */
         .sandbox-btn {
-            font-family: 'Orbitron', sans-serif; font-size: 0.65rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.15em;
+            font-family: var(--font-display); font-size: 0.65rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.15em;
             color: var(--vermilion); background: rgba(252,76,19, 0.1); border: 1px solid rgba(252,76,19, 0.5);
             padding: 12px 24px; border-radius: 999px; cursor: pointer; transition: all 0.3s ease; backdrop-filter: blur(4px);
         }
@@ -255,9 +316,9 @@
             gap: 1rem;
             z-index: 2;
         }
-        .footer-logo { font-family: 'Orbitron', sans-serif; font-size: 1.5rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; color: var(--lemon); }
+        .footer-logo { font-family: var(--font-display); font-size: 1.5rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; color: var(--lemon); }
         .footer-text { font-size: 0.9rem; color: var(--lemon); opacity: 0.8; line-height: 1.6; font-weight: 300;}
-        .footer-meta { font-family: 'Orbitron', sans-serif; font-size: 0.75rem; margin-top: 2rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--vermilion); }
+        .footer-meta { font-family: var(--font-display); font-size: 0.75rem; margin-top: 2rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--vermilion); }
         .footer-dino-wrapper {
             z-index: 1;
             opacity: 0.9;
@@ -287,7 +348,7 @@
 
         #winamp-widget {
             position: fixed; bottom: 24px; right: 24px; z-index: 99999;
-            width: 320px; font-family: 'JetBrains Mono', 'Courier New', monospace;
+            width: 320px; font-family: var(--font-mono);
             border-radius: 6px; overflow: hidden;
             box-shadow: 0 8px 32px rgba(0,0,0,0.6), 0 0 0 1px var(--wa-border);
             background: var(--wa-bg);
@@ -622,9 +683,15 @@
                     </div>
                 </div>
                 
-                <div class="hidden md:block md:w-[45%] h-full bg-[#111]">
-                    <img id="drawer-img" src="" alt="Project Presentation" class="w-full h-full object-cover opacity-80">
-                    <iframe id="drawer-proto" src="" title="Interactive prototype" class="w-full h-full border-0" style="display:none;"></iframe>
+                <!-- The live prototype is the whole argument of this page: these
+                     are working artifacts, not screenshots. It used to be
+                     "hidden md:block", i.e. display:none on phones, which removed
+                     the proof entirely for mobile visitors. It now stacks above
+                     the reading column on small screens. -->
+                <div id="drawer-visual" class="md:w-[45%] bg-[#111]">
+                    <img id="drawer-img" alt="" class="w-full h-full object-cover opacity-80" style="display:none;">
+                    <iframe id="drawer-proto" title="Interactive prototype"
+                            loading="lazy" class="w-full h-full border-0" style="display:none;"></iframe>
                 </div>
             </div>
         </div>
@@ -684,18 +751,27 @@
 
     <!-- Floating Image Preview Element -->
     <div id="project-preview-container">
-        <img id="project-preview-img" src="" alt="Project Preview">
+        <!-- Real src assigned on hover; inline transparent pixel avoids the
+             invalid empty-src re-request. Decorative, so alt stays empty. -->
+        <img id="project-preview-img" alt=""
+             src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7">
     </div>
 
     <script>
         const isMobile = window.matchMedia("(max-width: 768px)").matches || window.matchMedia("(pointer: coarse)").matches;
         gsap.registerPlugin(ScrollTrigger);
 
+        /* This page ran Lenis, GSAP scroll animation, a matter-js physics
+           sandbox and two continuously animating canvases with no motion
+           opt-out at all. prefersReduced gates the ambient ones; the page
+           still works, it just stops moving on its own. */
+        const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
         const isTouchDevice = ('ontouchstart' in window) || (navigator.maxTouchPoints > 0) || window.matchMedia("(pointer: coarse)").matches;
-        
+
         let lenis;
-        
-        if (!isTouchDevice) {
+
+        if (!isTouchDevice && !prefersReduced) {
             lenis = new Lenis({ 
                 duration: 1.2, 
                 easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)), 
@@ -809,8 +885,10 @@
         }
 
         function renderWave() {
-            requestAnimationFrame(renderWave);
-            time += 3.5; 
+            // Under reduced motion, paint one static frame and stop the loop
+            // rather than animating the background indefinitely.
+            if (!prefersReduced) requestAnimationFrame(renderWave);
+            time += prefersReduced ? 0 : 3.5;
             
             ctx.fillStyle = '#000000';
             ctx.fillRect(0, 0, cWidth, cHeight);
@@ -881,16 +959,20 @@
             document.getElementById('drawer-learn').innerText = row.dataset.learn;
             const drawerImg = document.getElementById('drawer-img');
             const drawerProto = document.getElementById('drawer-proto');
+            // Clear with removeAttribute rather than src = '': an empty src is
+            // invalid and makes some browsers re-request the current page.
             if (row.dataset.proto) {
                 drawerProto.src = row.dataset.proto;
                 drawerProto.style.display = 'block';
                 drawerImg.style.display = 'none';
-                drawerImg.src = '';
+                drawerImg.removeAttribute('src');
+                drawerImg.alt = '';
             } else {
                 drawerProto.style.display = 'none';
-                drawerProto.src = '';
+                drawerProto.removeAttribute('src');
                 drawerImg.style.display = 'block';
                 drawerImg.src = row.dataset.image;
+                drawerImg.alt = (row.dataset.title || 'Project') + ' — project visual';
             }
             document.getElementById('drawer-behance').href = row.dataset.behance || "#";
             
@@ -1060,13 +1142,21 @@
             });
         }
 
-        ScrollTrigger.create({
-            trigger: "#sandbox",
-            start: "top 60%",
-            onEnter: () => {
-                if (!physicsInitialized) { initPhysics(); physicsInitialized = true; }
-            }
-        });
+        // The physics sandbox is the one place motion IS the content, so under
+        // reduced motion it lays the chips out as a static list instead of
+        // dropping them. The section still communicates the same skills.
+        if (prefersReduced) {
+            document.querySelector('.playground-section')?.classList.add('physics-static');
+            document.querySelector('.sandbox-controls')?.setAttribute('hidden', '');
+        } else {
+            ScrollTrigger.create({
+                trigger: "#sandbox",
+                start: "top 60%",
+                onEnter: () => {
+                    if (!physicsInitialized) { initPhysics(); physicsInitialized = true; }
+                }
+            });
+        }
 
         gsap.from(".about-statement", {
             scrollTrigger: { trigger: "#about", start: "top 75%" },
