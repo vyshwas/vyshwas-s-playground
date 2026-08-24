@@ -352,7 +352,11 @@
             border-radius: 6px; overflow: hidden;
             box-shadow: 0 8px 32px rgba(0,0,0,0.6), 0 0 0 1px var(--wa-border);
             background: var(--wa-bg);
-            transition: width 0.3s ease, box-shadow 0.3s ease;
+            /* Was "transition: width 0.3s ease, box-shadow 0.3s ease". The width
+               transition was dead: base and .wa-minimized are both 320px, and
+               minimising hides .wa-body with display:none instead. It animated
+               nothing while still inviting layout work. */
+            transition: box-shadow 0.3s ease;
             user-select: none;
         }
         #winamp-widget.wa-minimized { width: 320px; }
@@ -473,6 +477,27 @@
         @media (max-width: 768px) {
             #winamp-widget { bottom: 0; right: 0; left: 0; width: 100% !important; border-radius: 12px 12px 0 0; }
             #winamp-reopen { bottom: 12px; right: 12px; }
+        }
+
+        /* ── Motion opt-out ───────────────────────────────────────────
+           The script already stops Lenis, the wave canvas and the physics
+           sandbox. This covers the CSS-driven motion the script cannot
+           reach, chiefly the Winamp title marquee and its EQ bars.
+
+           The player is a deliberate skeuomorphic recreation, so the
+           scrolling title and moving bars stay for everyone else: that is
+           literally what the device does. They simply hold still for
+           anyone who has asked their OS for less movement, and the title
+           becomes horizontally scrollable so its full text stays
+           readable once it is no longer travelling past. */
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+                scroll-behavior: auto !important;
+            }
+            .wa-eq-bar { transform: scaleY(0.55); }
         }
     </style>
 </head>
