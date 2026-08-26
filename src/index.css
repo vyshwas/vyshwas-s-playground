@@ -1,0 +1,257 @@
+@import "tailwindcss";
+
+@theme {
+  /* Strict monochrome — bone paper, deep ink. No color accents. */
+  --color-void: #f7f6f3; /* page canvas */
+  --color-panel: #fcfbf9;
+  --color-panel-2: #efede7;
+  --color-titanium: #555555; /* slate secondary */
+  --color-titanium-dim: rgba(85, 85, 85, 0.5);
+  --color-bone: #121212; /* deep black primary */
+  /* legacy token names resolve to ink */
+  --color-cyan: #121212;
+  --color-cyan-bright: #000000;
+  --color-cyan-dim: rgba(18, 18, 18, 0.35);
+  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, monospace;
+}
+
+html {
+  scroll-behavior: auto;
+}
+
+html.lenis,
+html.lenis body {
+  height: auto;
+}
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+.lenis.lenis-stopped {
+  overflow: hidden;
+}
+
+body {
+  background: var(--color-void);
+  color: var(--color-bone);
+  font-family: var(--font-sans);
+  overflow-x: clip;
+  -webkit-font-smoothing: antialiased;
+}
+
+::selection {
+  background: var(--color-cyan);
+  color: var(--color-void);
+}
+
+::-webkit-scrollbar {
+  width: 10px;
+}
+::-webkit-scrollbar-track {
+  background: var(--color-void);
+}
+::-webkit-scrollbar-thumb {
+  background: #d6d2c8;
+  border-radius: 5px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-cyan);
+}
+
+.hw {
+  will-change: transform;
+  transform: translateZ(0);
+  backface-visibility: hidden;
+}
+
+
+
+.cine-img {
+  filter: grayscale(58%) sepia(10%) contrast(1.12) brightness(0.82);
+}
+
+.duotone::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(160deg, rgba(247, 246, 243, 0.10), rgba(18, 18, 18, 0.55));
+  mix-blend-mode: color;
+}
+
+.text-outline {
+  -webkit-text-stroke: 1px var(--color-titanium-dim);
+  color: transparent;
+}
+
+.font-display {
+  font-family: "Instrument Serif", Georgia, serif;
+  font-style: italic;
+  font-weight: 400;
+  letter-spacing: -0.01em;
+}
+
+@keyframes phase-in {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.phase-in {
+  animation: phase-in 0.55s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+}
+
+/* principle diagrams: strokes draw themselves on row hover */
+.prow .draw {
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+  transition: stroke-dashoffset 1.2s cubic-bezier(0.4, 0, 0.2, 1) 0.1s;
+}
+.prow:hover .draw,
+.prow:focus-within .draw {
+  stroke-dashoffset: 0;
+}
+
+/* paper grain — barely-there print texture over the whole page */
+.paper-grain {
+  position: fixed;
+  inset: 0;
+  z-index: 200;
+  pointer-events: none;
+  opacity: 0.035;
+  mix-blend-mode: multiply;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+:focus-visible {
+  outline: 2px solid var(--color-cyan);
+  outline-offset: 3px;
+  border-radius: 2px;
+}
+
+[data-cursor] {
+  cursor: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  [data-cursor] {
+    cursor: auto;
+  }
+}
+
+@keyframes pulse-ring {
+  0% { transform: scale(1); opacity: 0.4; }
+  100% { transform: scale(2.5); opacity: 0; }
+}
+
+.magnetic-ripple {
+  position: absolute;
+  border-radius: 50%;
+  border: 2px solid var(--color-cyan);
+  pointer-events: none;
+  animation: pulse-ring 0.8s ease-out forwards;
+}
+
+.chapter-indicator {
+  position: fixed;
+  right: 2rem;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 80;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  pointer-events: none;
+}
+
+.chapter-dot {
+  position: relative;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: rgba(18, 18, 18, 0.18);
+  border: none;
+  padding: 0;
+  transition: all 0.4s cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+
+.chapter-dot.active {
+  background: var(--color-bone);
+  box-shadow: 0 0 0 4px rgba(18, 18, 18, 0.12);
+  transform: scale(1.25);
+}
+
+.chapter-dot::after {
+  content: attr(data-label);
+  position: absolute;
+  right: calc(100% + 0.9rem);
+  top: 50%;
+  white-space: nowrap;
+  font-family: var(--font-mono);
+  font-size: 0.55rem;
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+  color: var(--color-titanium);
+  opacity: 0;
+  transition: opacity 0.3s, transform 0.3s;
+  transform: translateY(-50%) translateX(8px);
+  pointer-events: none;
+}
+
+.chapter-dot.active::after,
+.chapter-dot:hover::after {
+  opacity: 1;
+  transform: translateY(-50%) translateX(0);
+}
+
+.chapter-indicator { pointer-events: auto; }
+
+@media (max-width: 768px) {
+  .chapter-indicator { display: none; }
+}
+
+.low-quality .ambient-canvas,
+.low-quality .lab-canvas,
+.low-quality .hero-canvas {
+  display: none !important;
+}
+.low-quality .hero-video-canvas {
+  filter: brightness(0.55) contrast(1.25) saturate(1.08) hue-rotate(-5deg) !important;
+}
+.low-quality * {
+  animation-duration: 0.01ms !important;
+  transition-duration: 0.01ms !important;
+}
+
+.terminal-window {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  line-height: 1.6;
+}
+.terminal-window .cmd { color: var(--color-cyan); }
+.terminal-window .output { color: var(--color-bone); }
+.terminal-window .error { color: #f87171; }
+.terminal-window .comment { color: var(--color-titanium-dim); }
+.terminal-window .highlight { color: var(--color-cyan-bright); }
+.terminal-window .cursor { display: inline-block; width: 0.5em; height: 1em; background: var(--color-cyan); animation: blink 1s infinite; }
+@keyframes blink { 0%, 50% { opacity: 1; } 51%, 100% { opacity: 0; } }
+
+.matrix-rain {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 9999;
+  mix-blend-mode: screen;
+  opacity: 0;
+  transition: opacity 0.5s;
+}
+.matrix-rain.active { opacity: 0.15; }
+
+.konami-flash {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 10000;
+  background: radial-gradient(circle at center, rgba(18, 18, 18, 0.18) 0%, transparent 70%);
+  opacity: 0;
+  transition: opacity 0.1s;
+}
+.konami-flash.active { opacity: 1; }

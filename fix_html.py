@@ -1,4 +1,5 @@
-<!doctype html>
+﻿with open("index.html", "w", encoding="utf-8") as f:
+    f.write("""<!doctype html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
@@ -28,4 +29,4 @@
     <div id="root"></div>
     <script type="module" src="/src/main.jsx"></script>
   </body>
-</html>
+</html>""")
