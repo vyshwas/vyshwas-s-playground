@@ -237,7 +237,8 @@ export default function LabReveal() {
         requestAnimationFrame(animate)
         if (!visible || document.hidden) return
         const t = clock.getElapsedTime()
-        uniforms.uTime.value = t
+        const speed = document.body.classList.contains('konami-mode') ? 8.0 : 1.0
+        uniforms.uTime.value = t * speed
 
         const span = Math.max(st.end - st.start, 1)
         const prog = THREE.MathUtils.clamp((window.scrollY - st.start) / span, 0, 1)

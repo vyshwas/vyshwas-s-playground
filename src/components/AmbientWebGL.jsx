@@ -235,9 +235,26 @@ export default function AmbientWebGL() {
         lastTime = now
         const elapsed = clock.getElapsedTime()
 
-        themeUniforms.uTime.value = elapsed
+        const isKonami = document.body.classList.contains('konami-mode')
+        const speed = isKonami ? 5.0 : 1.0
+        themeUniforms.uTime.value = elapsed * speed
+
         scrollProgress += (targetProgress - scrollProgress) * 0.06
         themeUniforms.uProgress.value = scrollProgress
+
+        if (isKonami) {
+          bloomPass.strength = 1.2
+          chromaticPass.uniforms.offset.value = 0.04
+          vignettePass.uniforms.darkness.value = 2.0
+          particles.rotation.y = elapsed * 0.5
+          particles.rotation.x = elapsed * 0.2
+        } else {
+          bloomPass.strength = 0.3
+          chromaticPass.uniforms.offset.value = 0.003
+          vignettePass.uniforms.darkness.value = 1.2
+          particles.rotation.y = 0
+          particles.rotation.x = 0
+        }
 
         const p = scrollProgress
         if (p < 0.12) {

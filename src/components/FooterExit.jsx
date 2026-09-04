@@ -97,6 +97,7 @@ export default function FooterExit() {
       if (konamiBuffer.current.join(',') === konamiSequence.join(',')) {
         setKonamiActive(true)
         setKonamiFlash(true)
+        document.body.classList.add('konami-mode')
         setTimeout(() => setKonamiFlash(false), 150)
         addOutput('$ konami', 'input')
         addOutput(commands.konami, 'output')
@@ -176,6 +177,7 @@ export default function FooterExit() {
       if (trimmed === 'konami') {
         setKonamiActive(true)
         setKonamiFlash(true)
+        document.body.classList.add('konami-mode')
         setTimeout(() => setKonamiFlash(false), 150)
       }
       if (trimmed.startsWith('theme ')) {
