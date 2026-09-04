@@ -398,9 +398,14 @@ export default function Projects() {
           </div>
 
           {/* Right Panel: Interactive Prototype */}
-          <div className="flex-1 w-full h-[55vh] md:h-full bg-black relative flex items-center justify-center p-4">
+          <div className="flex-1 w-full h-[55vh] md:h-full bg-black relative flex items-center justify-center p-4 overflow-hidden">
+            <div className="absolute inset-0 bg-void duotone" />
+            
+            {/* Ambient glows behind the prototype */}
+            <div className={`absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[60%] h-[80%] rounded-full bg-gradient-to-br ${activeProto?.color} blur-[120px] opacity-10`} />
+
             {activeProto && (
-              <div className="relative z-10 w-full h-full max-w-[440px] max-h-[900px] mx-auto flex items-center justify-center">
+              <div className="relative z-10 w-full h-full max-w-[440px] max-h-[900px] flex items-center justify-center mx-auto">
                 <iframe
                   src={activeProto.protoUrl}
                   title={`${activeProto.title} Prototype`}
