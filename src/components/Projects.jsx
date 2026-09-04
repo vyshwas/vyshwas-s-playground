@@ -11,13 +11,14 @@ const projects = [
     title: 'Nocturne',
     tagline: 'A checkout concept that absorbs blame and preserves trust.',
     year: '2024',
-    role: 'Product Design & Prototype',
-    problem: 'Cart abandonment spikes when payment fails. Generic red error messages destroy trust and force the user to start over.',
-    approach: 'Redesigning checkout trust cues to reduce hesitation at the highest-friction moment. First-class payment failure screens that absorb blame.',
+    role: 'Product Design & Prototyping',
+    context: 'Late-night checkout flows for food delivery often suffer from high cart abandonment due to last-minute fees and payment anxiety.',
+    problem: 'When a payment fails or extra fees are added at the very end, generic red error messages and sudden price jumps destroy trust. Users feel cheated, resulting in high abandonment at the highest-friction step of the funnel.',
+    approach: 'I designed a checkout experience optimized to preserve trust. The UI actively absorbs blame for failures with empathetic error states, proactively explains late-night surges ("Night owl fee waived"), and highlights UPI-first payment methods with clear, contextual trust cues right above the CTA.',
     outcome: [
-      'UPI-first payment methods',
-      'Itemised bill with permanent night-fee waiver',
-      'Trust line at the exact moment of hesitation'
+      'Itemised transparency with proactive fee waivers',
+      '"Blame-absorbing" failure states that guide recovery',
+      'Strategic trust markers at peak hesitation moments'
     ],
     stack: ['Figma', 'Protopie'],
     protoUrl: './assets/nocturne-prototype.html?v=2',
@@ -30,13 +31,14 @@ const projects = [
     title: 'Munim',
     tagline: 'Supervised delegation and transparent ledger loops.',
     year: '2024',
-    role: 'Product Design & Prototype',
-    problem: 'Delegating payments requires giving up control. Existing solutions are either too rigid or too insecure.',
-    approach: 'A fully clickable prototype of the whole delegation loop: the mandate, supervised asks with a UPI PIN sheet, the live countdown hold.',
+    role: 'Product Design & Prototyping',
+    context: 'Small businesses and households often need to delegate digital payments to staff or family members without handing over full banking access.',
+    problem: 'Current delegation relies on sharing OTPs, physical cards, or screenshots. These workarounds are highly insecure, unscalable, and lack accountability, forcing users to choose between convenience and security.',
+    approach: 'Munim introduces a "supervised delegation" model inspired by the traditional \'bahi-khata\' (ledger). It features a robust mandate system, supervised payment requests via a secure UPI PIN sheet, and a live countdown hold mechanism for high-risk transactions.',
     outcome: [
-      'Trusted merchant price jumps get held',
-      'Cancel works mid-hold',
-      'Visual system built on the bahi-khata'
+      'Trusted merchant price jumps are automatically held',
+      'Mid-hold cancellation prevents unauthorized clearing',
+      'Transparent ledger loops for real-time auditability'
     ],
     stack: ['Figma', 'Protopie'],
     protoUrl: './assets/munim-prototype.html',
@@ -49,19 +51,20 @@ const projects = [
     title: 'Awara',
     tagline: 'A living itinerary system that adapts as your day changes.',
     year: '2024',
-    role: 'Product Design & Prototype',
-    problem: 'Most itinerary tools ask for dates and a destination, hand you a list, and disappear from the trip once you land.',
-    approach: 'Awara keeps the plan live: it adapts as the day changes, instead of assuming the itinerary you left with is the one you actually follow.',
+    role: 'Product Design & Prototyping',
+    context: 'Travel planning apps treat itineraries as static documents that are generated once before the trip and rarely updated.',
+    problem: 'Once a traveler arrives, plans inevitably change due to weather, delays, or spontaneity. Most tools fail to adapt, leaving users with a broken schedule and forcing them back to manual searching in maps and browsers.',
+    approach: 'Awara acts as an active travel companion. It continuously adapts the schedule as the day unfolds. If a user spends too long at a museum, the app proactively suggests adjusting the next activity, seamlessly recalculating travel times and options.',
     outcome: [
-      'Live three-day itinerary',
-      'Adjust sheet with proactive suggestions',
-      'Vermilion-and-ink editorial system'
+      'Live, context-aware itinerary that heals itself',
+      'Adjust sheet with proactive, localized alternatives',
+      'Striking vermilion-and-ink editorial visual system'
     ],
     stack: ['Figma', 'Protopie'],
-    protoUrl: './assets/awara-prototype.html?v=3',
-    color: 'from-green-400 to-emerald-600',
-    pos: { top: '18%', right: '6%', rotate: '10deg' },
-    size: 'w-[260px] h-[310px] md:w-[300px] md:h-[370px] lg:w-[330px] lg:h-[420px]',
+    protoUrl: './assets/awara-prototype.html',
+    color: 'from-zinc-700 to-black',
+    pos: { top: '15%', right: '8%', rotate: '5deg' },
+    size: 'w-[270px] h-[320px] md:w-[310px] md:h-[380px] lg:w-[340px] lg:h-[420px]',
   }
 ]
 
@@ -348,25 +351,33 @@ export default function Projects() {
 
                 <hr className="border-white/8" />
 
+                {/* Context */}
+                {activeProto.context && (
+                  <div>
+                    <h4 className="font-mono text-[10px] uppercase tracking-widest text-white/35 mb-3">Context</h4>
+                    <p className="text-white/75 text-sm leading-relaxed">{activeProto.context}</p>
+                  </div>
+                )}
+
                 {/* Problem */}
                 <div>
                   <h4 className="font-mono text-[10px] uppercase tracking-widest text-white/35 mb-3">The Problem</h4>
                   <p className="text-white/75 text-sm leading-relaxed">{activeProto.problem}</p>
                 </div>
 
-                {/* Approach */}
+                {/* Solution */}
                 <div>
-                  <h4 className="font-mono text-[10px] uppercase tracking-widest text-white/35 mb-3">The Approach</h4>
+                  <h4 className="font-mono text-[10px] uppercase tracking-widest text-white/35 mb-3">The Solution</h4>
                   <p className="text-white/75 text-sm leading-relaxed">{activeProto.approach}</p>
                 </div>
 
-                {/* Outcomes */}
+                {/* Outcome */}
                 <div>
-                  <h4 className="font-mono text-[10px] uppercase tracking-widest text-white/35 mb-3">Outcomes</h4>
-                  <ul className="space-y-2">
-                    {activeProto.outcome.map(item => (
-                      <li key={item} className="flex items-start gap-2.5 text-white/75 text-sm leading-relaxed">
-                        <span className="mt-1.5 w-1.5 h-1.5 rounded-full bg-white/30 flex-shrink-0" />
+                  <h4 className="font-mono text-[10px] uppercase tracking-widest text-white/35 mb-3">Impact & Outcomes</h4>
+                  <ul className="flex flex-col gap-2">
+                    {activeProto.outcome.map((item, i) => (
+                      <li key={i} className="flex gap-2.5 text-sm text-white/75 leading-relaxed">
+                        <span className="text-white/30 mt-0.5">•</span>
                         {item}
                       </li>
                     ))}
