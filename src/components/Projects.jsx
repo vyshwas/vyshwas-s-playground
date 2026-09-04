@@ -22,6 +22,7 @@ const projects = [
     ],
     stack: ['Figma', 'Protopie'],
     protoUrl: './assets/nocturne-prototype.html?v=2',
+    protoScale: 0.65,
     color: 'from-blue-500 to-blue-700',
     pos: { top: '12%', left: '6%', rotate: '-8deg' },
     size: 'w-[260px] h-[310px] md:w-[300px] md:h-[370px] lg:w-[320px] lg:h-[400px]',
@@ -42,6 +43,7 @@ const projects = [
     ],
     stack: ['Figma', 'Protopie'],
     protoUrl: './assets/munim-prototype.html',
+    protoScale: 0.65,
     color: 'from-orange-500 to-red-500',
     pos: { bottom: '8%', left: '28%', rotate: '6deg' },
     size: 'w-[250px] h-[300px] md:w-[280px] md:h-[350px] lg:w-[300px] lg:h-[380px]',
@@ -62,6 +64,7 @@ const projects = [
     ],
     stack: ['Figma', 'Protopie'],
     protoUrl: './assets/awara-prototype.html',
+    protoScale: 1.0,
     color: 'from-zinc-700 to-black',
     pos: { top: '15%', right: '8%', rotate: '5deg' },
     size: 'w-[270px] h-[320px] md:w-[310px] md:h-[380px] lg:w-[340px] lg:h-[420px]',
@@ -315,7 +318,7 @@ export default function Projects() {
           </button>
 
           {/* Left Panel: Project Write-up */}
-          <div className="w-full h-[45vh] md:h-full md:w-[380px] lg:w-[460px] bg-[#1a1a1a] flex-shrink-0 border-b md:border-b-0 md:border-r border-white/10 overflow-y-auto p-6 md:p-10 flex flex-col">
+          <div className="w-full h-[45vh] md:h-full md:w-[380px] lg:w-[460px] bg-[#1a1a1a] flex-shrink-0 border-b md:border-b-0 md:border-r border-white/10 overflow-y-auto overscroll-contain p-6 md:p-10 block">
             {activeProto && (
               <div className="space-y-7 pb-10">
                 {/* Header */}
@@ -395,14 +398,19 @@ export default function Projects() {
           </div>
 
           {/* Right Panel: Interactive Prototype */}
-          <div className="flex-1 w-full h-[55vh] md:h-full bg-black relative">
+          <div className="flex-1 w-full h-[55vh] md:h-full bg-black relative flex items-center justify-center p-4">
             {activeProto && (
-              <iframe 
-                src={activeProto.protoUrl} 
-                className="w-full h-full border-none"
-                title={`${activeProto.title} Prototype`}
-                loading="lazy"
-              />
+              <div className="relative z-10 w-full h-full max-w-[440px] max-h-[900px] mx-auto flex items-center justify-center">
+                <iframe
+                  src={activeProto.protoUrl}
+                  title={`${activeProto.title} Prototype`}
+                  className="w-full h-full rounded-[3rem] shadow-2xl border-[6px] border-white/5 bg-black hw origin-center transition-transform duration-500"
+                  style={{
+                    transform: `scale(${activeProto.protoScale || 1})`,
+                    clipPath: 'inset(0 round 3rem)'
+                  }}
+                />
+              </div>
             )}
           </div>
         </div>
