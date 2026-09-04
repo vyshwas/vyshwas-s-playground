@@ -173,6 +173,11 @@ export default function FooterExit() {
         setTimeout(() => window.open('https://vyshwas.github.io/', '_blank'), 800)
         return
       }
+      if (trimmed === 'konami') {
+        setKonamiActive(true)
+        setKonamiFlash(true)
+        setTimeout(() => setKonamiFlash(false), 150)
+      }
       if (trimmed.startsWith('theme ')) {
         const t = trimmed.split(' ')[1]
         if (['void', 'amber', 'cyan', 'matrix', 'retro'].includes(t)) {
