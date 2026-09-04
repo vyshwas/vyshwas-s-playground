@@ -1,4 +1,4 @@
-﻿import { useEffect, useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { reducedMotion } from '../App.jsx'
 
 export default function MagneticCursor() {
@@ -23,22 +23,25 @@ export default function MagneticCursor() {
 
     document.body.style.cursor = 'none'
 
-    let targetX = 0, targetY = 0
+    let mouseX = 0, mouseY = 0
+    let cursorX = 0, cursorY = 0
     let followerX = 0, followerY = 0
 
     const onMouseMove = (e) => {
-      targetX = e.clientX
-      targetY = e.clientY
+      mouseX = e.clientX
+      mouseY = e.clientY
     }
 
     function animate() {
-      targetX += (targetX - targetX) * 0.35
-      targetY += (targetY - targetY) * 0.35
+      // Smooth the dot cursor (fast follow)
+      cursorX += (mouseX - cursorX) * 0.35
+      cursorY += (mouseY - cursorY) * 0.35
 
-      followerX += (targetX - followerX) * 0.12
-      followerY += (targetY - followerY) * 0.12
+      // Smooth the follower ring (slow follow)
+      followerX += (mouseX - followerX) * 0.12
+      followerY += (mouseY - followerY) * 0.12
 
-      cursor.style.transform = `translate(${targetX}px, ${targetY}px) translate(-50%, -50%)`
+      cursor.style.transform = `translate(${cursorX}px, ${cursorY}px) translate(-50%, -50%)`
       follower.style.transform = `translate(${followerX}px, ${followerY}px) translate(-50%, -50%)`
 
       reqRef.current = requestAnimationFrame(animate)

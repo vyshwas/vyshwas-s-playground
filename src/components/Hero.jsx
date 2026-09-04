@@ -165,57 +165,8 @@ export default function Hero() {
   useLayoutEffect(() => {
     if (reducedMotion()) return
 
-    const ctx = gsap.context(() => {
-      gsap.set('.hero-word', { transformPerspective: 1100 })
+      // Removed GSAP text entrance and scroll animations as requested
 
-      // No pin — the hero scrolls away naturally while its layers ease out.
-      // This removes the choppy pinned-section handoff into the Lab entirely.
-      const tl = gsap.timeline({
-        defaults: { ease: 'none' },
-        scrollTrigger: {
-          trigger: root.current,
-          start: 'top top',
-          end: 'bottom top',
-          scrub: 0.6,
-        },
-      })
-
-      tl.to('.hero-video-canvas', { scale: 1.08, duration: 1 }, 0)
-        .to('.hero-meta', { y: -60, opacity: 0, duration: 0.55 }, 0)
-        .to('.hero-scrollcue', { opacity: 0, duration: 0.3 }, 0)
-        .to(
-          '.hero-word',
-          {
-            y: (i) => [-70, 60][i] ?? 0,
-            rotateX: (i) => [4, -5][i] ?? 0,
-            opacity: 0,
-            duration: 0.8,
-            stagger: 0.04,
-          },
-          0.05,
-        )
-        .to('.hero-headline', { scale: 1.06, duration: 1 }, 0)
-
-      gsap.set('.hero-word', { y: 70, rotateX: -30 })
-      gsap.set('.hero-intro', { y: 24 })
-      gsap.to('.hero-word', {
-        opacity: 1,
-        y: 0,
-        rotateX: 0,
-        duration: 1.1,
-        stagger: 0.14,
-        ease: 'power3.out',
-        delay: 0.35,
-      })
-      gsap.to('.hero-intro', {
-        opacity: 1,
-        y: 0,
-        duration: 0.9,
-        stagger: 0.12,
-        ease: 'power3.out',
-        delay: 0.55,
-      })
-    }, root)
 
     const video = videoRef.current
     if (!video) return
@@ -372,8 +323,6 @@ export default function Hero() {
     } else {
       video.addEventListener('loadeddata', initThree, { once: true })
     }
-
-    return () => ctx.revert()
   }, [])
 
   return (
@@ -400,7 +349,7 @@ export default function Hero() {
       <div className="relative z-10 flex h-full flex-col items-center justify-center px-6 text-center">
         <p
           className="hero-meta hero-intro font-mono text-[0.65rem] uppercase tracking-[0.35em] text-[#e8e4da] md:text-xs"
-          style={{ opacity: reducedMotion() ? 1 : 0 }}
+          style={{ opacity: 1 }}
           data-cursor="text"
         >
           {'// Vishwas Mehta — Product Designer A Bengaluru'}
@@ -414,7 +363,7 @@ export default function Hero() {
           <span className="block overflow-visible">
             <span
               className="hero-word inline-block hw text-[11.5vw] font-extrabold leading-[1.02] tracking-[-0.04em] text-[#f7f6f3] md:text-[7.2vw]"
-              style={{ opacity: reducedMotion() ? 1 : 0, transformStyle: 'preserve-3d', fontVariationSettings: '"wght" 800', textShadow: '0 4px 34px rgba(0,0,0,0.55)' }}
+              style={{ opacity: 1, transformStyle: 'preserve-3d', fontVariationSettings: '"wght" 800', textShadow: '0 4px 34px rgba(0,0,0,0.55)' }}
             >
               Design that <em className="font-display font-normal text-[#f7f6f3]">ships.</em>
             </span>
@@ -422,7 +371,7 @@ export default function Hero() {
           <span className="block overflow-visible">
             <span
               className="hero-word inline-block hw text-[11.5vw] font-extrabold leading-[1.02] tracking-[-0.04em] text-[#f7f6f3] md:text-[7.2vw]"
-              style={{ opacity: reducedMotion() ? 1 : 0, transformStyle: 'preserve-3d', fontVariationSettings: '"wght" 800', textShadow: '0 4px 34px rgba(0,0,0,0.55)' }}
+              style={{ opacity: 1, transformStyle: 'preserve-3d', fontVariationSettings: '"wght" 800', textShadow: '0 4px 34px rgba(0,0,0,0.55)' }}
             >
               Code that <em className="font-display font-normal text-[#f7f6f3]">feels.</em>
             </span>
@@ -431,7 +380,7 @@ export default function Hero() {
 
         <p
           className="hero-meta hero-intro mt-9 max-w-xl text-sm font-light leading-relaxed text-[#f7f6f3]/85 md:text-base"
-          style={{ opacity: reducedMotion() ? 1 : 0, textShadow: '0 2px 12px rgba(0,0,0,0.75)' }}
+          style={{ opacity: 1, textShadow: '0 2px 12px rgba(0,0,0,0.75)' }}
           data-cursor="text"
         >
           Local-first AI tools, design systems, and vision-based automation —
@@ -440,7 +389,7 @@ export default function Hero() {
 
         <div
           className="hero-meta hero-intro mt-10 flex flex-wrap items-center justify-center gap-5"
-          style={{ opacity: reducedMotion() ? 1 : 0 }}
+          style={{ opacity: 1 }}
         >
           <button
             type="button"
@@ -451,11 +400,11 @@ export default function Hero() {
             View Selected Work
           </button>
           <a
-            href="mailto:hello@vyshwas.design"
+            href="mailto:vyommehta197@gmail.com"
             className="rounded-full border border-white/30 px-8 py-3.5 font-mono text-[0.65rem] uppercase tracking-[0.22em] text-white backdrop-blur-sm transition-colors duration-300 hover:border-white hover:bg-white/10"
             data-cursor="magnetic"
           >
-            hello@vyshwas.design
+            vyommehta197@gmail.com
           </a>
         </div>
       </div>

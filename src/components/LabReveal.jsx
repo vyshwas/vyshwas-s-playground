@@ -230,6 +230,9 @@ export default function LabReveal() {
 
       const clock = new THREE.Clock()
 
+      let morphTarget = 0
+      let morphVelocity = 0
+
       function animate() {
         requestAnimationFrame(animate)
         if (!visible || document.hidden) return
@@ -238,17 +241,32 @@ export default function LabReveal() {
 
         const span = Math.max(st.end - st.start, 1)
         const prog = THREE.MathUtils.clamp((window.scrollY - st.start) / span, 0, 1)
-        uniforms.uMorph.value += (prog * 3 - uniforms.uMorph.value) * 0.14
+        morphTarget = prog * 3
+
+        // Smooth the morph with velocity damping for buttery transitions
+        const morphDelta = morphTarget - uniforms.uMorph.value
+        morphVelocity += morphDelta * 0.008  // spring-like acceleration
+        morphVelocity *= 0.88                 // damping
+        uniforms.uMorph.value += morphVelocity
+        // Clamp to valid range
+        uniforms.uMorph.value = THREE.MathUtils.clamp(uniforms.uMorph.value, 0, 3)
         const morph = uniforms.uMorph.value
 
-        const ph = Math.min(3, Math.round(morph))
+        // Phase detection with hysteresis to prevent flickering
+        const ph = morph < 0.4 ? 0 : morph < 1.4 ? 1 : morph < 2.4 ? 2 : 3
         if (ph !== phaseRef.current) { phaseRef.current = ph; setPhase(ph) }
 
         uniforms.uRepel.value += (repelTarget - uniforms.uRepel.value) * 0.08
         if (!dragging) dragVel *= 0.94
         points.rotation.y += 0.0016 + dragVel
-        points.rotation.x = Math.sin(t * 0.12) * 0.08 + (ph === 3 ? -0.45 : 0)
-        camera.position.z = 6.2 - Math.sin(morph * Math.PI) * 0.5
+
+        // Smooth tilt toward grid view — interpolate instead of snapping
+        const gridTilt = THREE.MathUtils.smoothstep(morph, 2.2, 3.0) * -0.45
+        points.rotation.x = Math.sin(t * 0.12) * 0.08 + gridTilt
+
+        // Gentle camera ease — no jarring zoom pulses mid-transition
+        const camPull = THREE.MathUtils.smoothstep(morph, 0.0, 1.5) * 0.4 - THREE.MathUtils.smoothstep(morph, 1.5, 3.0) * 0.4
+        camera.position.z = 6.2 - camPull
         camera.lookAt(0, 0, 0)
         renderer.render(scene, camera)
       }

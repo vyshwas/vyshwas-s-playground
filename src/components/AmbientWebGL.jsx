@@ -275,10 +275,25 @@ export default function AmbientWebGL() {
       window.addEventListener('scroll', onScroll, { passive: true })
       window.addEventListener('resize', resize)
 
+      let isVisible = true
+      const obs = new IntersectionObserver(([entry]) => {
+        isVisible = entry.isIntersecting
+      }, { threshold: 0 })
+      obs.observe(container)
+
       onScroll()
-      animate(performance.now())
+
+      function animateLoop(now) {
+        if (!isVisible || document.hidden) {
+          requestAnimationFrame(animateLoop)
+          return
+        }
+        animate(now)
+      }
+      animateLoop(performance.now())
 
       return () => {
+        obs.disconnect()
         window.removeEventListener('scroll', onScroll)
         window.removeEventListener('resize', resize)
         renderer.dispose()
