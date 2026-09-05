@@ -209,7 +209,7 @@ export default function AmbientWebGL() {
       const particles = new THREE.Points(geometry, material)
       scene.add(particles)
 
-      const clock = new THREE.Clock()
+      const startTime = performance.now()
       let lastScrollY = window.scrollY
       let lastTime = performance.now()
       let scrollProgress = 0
@@ -233,7 +233,7 @@ export default function AmbientWebGL() {
       function animate(now) {
         const _dt = Math.min(33, now - lastTime)
         lastTime = now
-        const elapsed = clock.getElapsedTime()
+        const elapsed = (now - startTime) * 0.001
 
         const isKonami = document.body.classList.contains('konami-mode')
         const speed = isKonami ? 5.0 : 1.0

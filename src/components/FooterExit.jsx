@@ -242,7 +242,7 @@ export default function FooterExit() {
   }), [])
 
   return (
-    <footer className="relative px-6 pb-16 pt-[14vh] md:px-[8vw]" aria-label="Exit" style={{ '--accent': themeStyles[theme].accent, '--accent2': themeStyles[theme].accent2 }}>
+    <footer id="exit" className="relative px-6 pb-16 pt-[14vh] md:px-[8vw]" aria-label="Exit" style={{ '--accent': themeStyles[theme].accent, '--accent2': themeStyles[theme].accent2 }}>
       <canvas ref={matrixCanvasRef} className={`matrix-rain ${showMatrix ? 'active' : ''}`} aria-hidden="true" />
       <div className={`konami-flash ${konamiFlash ? 'active' : ''}`} aria-hidden="true" />
 
@@ -283,7 +283,7 @@ export default function FooterExit() {
       </div>
 
       <div className="mt-20 flex flex-col items-center gap-6 text-center">
-        <span className="font-mono text-[0.65rem] uppercase tracking-[0.35em] text-titanium-dim" data-cursor="text">
+        <span className="font-sans text-[0.65rem] uppercase tracking-[0.35em] text-titanium-dim" data-cursor="text">
           [ Let's Talk ]
         </span>
         <h2 className="max-w-2xl text-3xl font-bold tracking-[-0.03em] text-bone md:text-5xl" data-cursor="text">
@@ -296,7 +296,7 @@ export default function FooterExit() {
         <div className="mt-4 flex flex-col gap-5 sm:flex-row">
           <Magnetic as="a" strength={0.4}
             href="mailto:vyommehta197@gmail.com?subject=Saw%20your%20playground"
-            className="inline-flex items-center justify-center rounded-full bg-cyan px-9 py-4 font-mono text-[0.7rem] font-bold uppercase tracking-[0.22em] text-void transition-colors duration-300 hover:bg-cyan-bright"
+            className="inline-flex items-center justify-center rounded-full bg-cyan px-9 py-4 font-sans text-[0.7rem] font-bold uppercase tracking-[0.22em] text-void transition-colors duration-300 hover:bg-cyan-bright"
             data-cursor="magnetic"
           >
             vyommehta197@gmail.com
@@ -305,7 +305,7 @@ export default function FooterExit() {
             href="https://vyshwas.github.io/"
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center justify-center rounded-full border border-titanium/40 px-9 py-4 font-mono text-[0.7rem] uppercase tracking-[0.22em] text-bone transition-colors duration-300 hover:border-cyan hover:text-cyan"
+            className="inline-flex items-center justify-center rounded-full border border-titanium/40 px-9 py-4 font-sans text-[0.7rem] uppercase tracking-[0.22em] text-bone transition-colors duration-300 hover:border-cyan hover:text-cyan"
             data-cursor="magnetic"
           >
             Portfolio ↗
@@ -323,14 +323,14 @@ export default function FooterExit() {
               href={s.href}
               target="_blank"
               rel="noopener noreferrer"
-              className="font-mono text-[0.6rem] uppercase tracking-[0.25em] text-titanium-dim transition-colors hover:text-bone"
+              className="font-sans text-[0.6rem] uppercase tracking-[0.25em] text-titanium-dim transition-colors hover:text-bone"
               data-cursor="magnetic"
             >
               {s.label} ↗
             </a>
           ))}
         </div>
-        <p className="mt-10 font-mono text-[0.6rem] uppercase tracking-[0.3em] text-titanium-dim">
+        <p className="mt-10 font-sans text-[0.6rem] uppercase tracking-[0.3em] text-titanium-dim">
           built quietly — vishwas mehta, {new Date().getFullYear()}
           {konamiActive && <span className="ml-2 text-cyan animate-pulse"> ◆ KONAMI ACTIVE ◆</span>}
         </p>

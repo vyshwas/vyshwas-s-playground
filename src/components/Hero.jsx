@@ -1,426 +1,272 @@
-import { useLayoutEffect, useRef } from 'react'
+import { useLayoutEffect, useRef, useEffect } from 'react'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
-import * as THREE from 'three'
-import { EffectComposer } from 'three/examples/jsm/postprocessing/EffectComposer.js'
-import { RenderPass } from 'three/examples/jsm/postprocessing/RenderPass.js'
-import { ShaderPass } from 'three/examples/jsm/postprocessing/ShaderPass.js'
-import { reducedMotion } from '../App.jsx'
+import { reducedMotion, scrollToTarget } from '../App.jsx'
 
 gsap.registerPlugin(ScrollTrigger)
 
-const VIDEO_SRC =
-  'https://videos.pexels.com/video-files/5561389/5561389-hd_1920_1080_25fps.mp4'
-
-const DisplacementShader = {
-  uniforms: {
-    tDiffuse: { value: null },
-    tDisplacement: { value: null },
-    uProgress: { value: 0 },
-    uTime: { value: 0 },
-    uIntensity: { value: 0.015 },
-  },
-  vertexShader: `
-    varying vec2 vUv;
-    void main() {
-      vUv = uv;
-      gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
-    }
-  `,
-  fragmentShader: `
-    uniform sampler2D tDiffuse;
-    uniform sampler2D tDisplacement;
-    uniform float uProgress;
-    uniform float uTime;
-    uniform float uIntensity;
-    varying vec2 vUv;
-    void main() {
-      vec2 disp = texture2D(tDisplacement, vUv * 2.0 + uTime * 0.02).rg;
-      vec2 uv = vUv + (disp - 0.5) * uIntensity * (1.0 + uProgress * 2.0);
-      vec4 color = texture2D(tDiffuse, uv);
-      float vig = 1.0 - length(vUv - 0.5) * 1.2;
-      color.rgb *= vig;
-      gl_FragColor = color;
-    }
-  `,
-}
-
-const ColorGradeShader = {
-  uniforms: {
-    tDiffuse: { value: null },
-    uProgress: { value: 0 },
-    uTime: { value: 0 },
-    uBrightness: { value: 0.45 },
-    uContrast: { value: 1.15 },
-    uSaturation: { value: 1.08 },
-    uHueRotate: { value: -0.087 },
-    uLift: { value: new THREE.Vector3(0.02, 0.01, 0.03) },
-    uGamma: { value: new THREE.Vector3(1.0, 0.98, 0.95) },
-    uGain: { value: new THREE.Vector3(0.95, 0.92, 0.88) },
-  },
-  vertexShader: `
-    varying vec2 vUv;
-    void main() {
-      vUv = uv;
-      gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
-    }
-  `,
-  fragmentShader: `
-    uniform sampler2D tDiffuse;
-    uniform float uProgress;
-    uniform float uTime;
-    uniform float uBrightness;
-    uniform float uContrast;
-    uniform float uSaturation;
-    uniform float uHueRotate;
-    uniform vec3 uLift;
-    uniform vec3 uGamma;
-    uniform vec3 uGain;
-    varying vec2 vUv;
-    vec3 hueRotate(vec3 color, float angle) {
-      float c = cos(angle);
-      float s = sin(angle);
-      mat3 m = mat3(
-        0.299 + 0.701 * c + 0.168 * s, 0.587 - 0.587 * c - 0.330 * s, 0.114 - 0.114 * c + 0.498 * s,
-        0.299 - 0.299 * c - 0.328 * s, 0.587 + 0.413 * c + 0.035 * s, 0.114 - 0.114 * c + 0.292 * s,
-        0.299 - 0.3 * c + 1.25 * s, 0.587 - 0.588 * c - 1.05 * s, 0.114 + 0.886 * c - 0.203 * s
-      );
-      return m * color;
-    }
-    void main() {
-      vec3 color = texture2D(tDiffuse, vUv).rgb;
-      color = color * uGain + uLift;
-      color = pow(color, uGamma);
-      color = (color - 0.5) * uContrast + 0.5;
-      float gray = dot(color, vec3(0.299, 0.587, 0.114));
-      color = mix(vec3(gray), color, uSaturation);
-      color = hueRotate(color, uHueRotate + uProgress * 0.05);
-      color = color * uBrightness * (1.0 - uProgress * 0.15);
-      float vig = 1.0 - length(vUv - 0.5) * 0.8;
-      color *= vig;
-      gl_FragColor = vec4(color, 1.0);
-    }
-  `,
-}
-
-const ChromaticShader = {
-  uniforms: {
-    tDiffuse: { value: null },
-    uProgress: { value: 0 },
-    uOffset: { value: 0.001 },
-  },
-  vertexShader: `
-    varying vec2 vUv;
-    void main() {
-      vUv = uv;
-      gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
-    }
-  `,
-  fragmentShader: `
-    uniform sampler2D tDiffuse;
-    uniform float uProgress;
-    uniform float uOffset;
-    varying vec2 vUv;
-    void main() {
-      float offset = uOffset * (1.0 + uProgress * 3.0);
-      vec2 uv = vUv;
-      float r = texture2D(tDiffuse, uv + vec2(offset, 0.0)).r;
-      float g = texture2D(tDiffuse, uv).g;
-      float b = texture2D(tDiffuse, uv - vec2(offset, 0.0)).b;
-      gl_FragColor = vec4(r, g, b, 1.0);
-    }
-  `,
-}
-
-const VignetteShader = {
-  uniforms: {
-    tDiffuse: { value: null },
-    uProgress: { value: 0 },
-  },
-  vertexShader: `
-    varying vec2 vUv;
-    void main() {
-      vUv = uv;
-      gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
-    }
-  `,
-  fragmentShader: `
-    uniform sampler2D tDiffuse;
-    uniform float uProgress;
-    varying vec2 vUv;
-    void main() {
-      vec4 color = texture2D(tDiffuse, vUv);
-      float vig = smoothstep(0.45, 0.85, length(vUv - 0.5));
-      float darkness = 0.35 + uProgress * 0.25;
-      color.rgb = mix(color.rgb, vec3(0.0), vig * darkness);
-      gl_FragColor = color;
-    }
-  `,
-}
-
 export default function Hero() {
   const root = useRef(null)
-  const videoRef = useRef(null)
+  const canvasRef = useRef(null)
+
+  // Animated CRT static noise on the TV screen
+  useEffect(() => {
+    if (reducedMotion() || !canvasRef.current) return
+    const canvas = canvasRef.current
+    const ctx = canvas.getContext('2d')
+    let animId
+    const w = (canvas.width = 180)
+    const h = (canvas.height = 140)
+    const imgData = ctx.createImageData(w, h)
+    const buffer32 = new Uint32Array(imgData.data.buffer)
+
+    const drawNoise = () => {
+      const len = buffer32.length
+      for (let i = 0; i < len; i++) {
+        // Soft amber-white phosphor noise matching the museum CRT screen
+        const gray = (Math.random() * 55 + 20) | 0
+        const tintR = Math.min(255, gray + 28)
+        const tintG = Math.min(255, gray + 18)
+        buffer32[i] = (230 << 24) | (gray << 16) | (tintG << 8) | tintR
+      }
+      ctx.putImageData(imgData, 0, 0)
+      animId = requestAnimationFrame(drawNoise)
+    }
+
+    drawNoise()
+    return () => cancelAnimationFrame(animId)
+  }, [])
 
   useLayoutEffect(() => {
     if (reducedMotion()) return
 
-      // Removed GSAP text entrance and scroll animations as requested
+    const ctx = gsap.context(() => {
+      // 16:9 Museum Skylight TV exact screen coordinates:
+      // Center X = 48.7%, Center Y = 65.1%
+      const TV_X = '48.7%'
+      const TV_Y = '65.1%'
+      const FINAL_SCALE = 11.2
 
-
-    const video = videoRef.current
-    if (!video) return
-
-    let renderer, composer, scene, camera, quad, videoTexture, displacementTexture
-    let displacementPass, colorGradePass, chromaticPass, vignettePass
-    let animationId = 0
-    let lastProgress = 0
-    let clock = new THREE.Clock()
-    let cleanupFn = null
-
-    const initThree = () => {
-      const heroRoot = root.current
-      renderer = new THREE.WebGLRenderer({
-        alpha: true,
-        antialias: false,
-        powerPreference: 'high-performance',
-      })
-      renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.5))
-      renderer.setSize(window.innerWidth, window.innerHeight)
-      renderer.toneMapping = THREE.NoToneMapping
-
-      videoTexture = new THREE.VideoTexture(video)
-      videoTexture.minFilter = THREE.LinearFilter
-      videoTexture.magFilter = THREE.LinearFilter
-      videoTexture.generateMipmaps = false
-
-      const displacementCanvas = document.createElement('canvas')
-      displacementCanvas.width = 512
-      displacementCanvas.height = 512
-      const dctx = displacementCanvas.getContext('2d')
-      const imgData = dctx.createImageData(512, 512)
-      for (let i = 0; i < imgData.data.length; i += 4) {
-        imgData.data[i] = Math.random() * 255
-        imgData.data[i + 1] = Math.random() * 255
-        imgData.data[i + 2] = 128
-        imgData.data[i + 3] = 255
-      }
-      dctx.putImageData(imgData, 0, 0)
-      displacementTexture = new THREE.CanvasTexture(displacementCanvas)
-      displacementTexture.wrapS = THREE.RepeatWrapping
-      displacementTexture.wrapT = THREE.RepeatWrapping
-
-      scene = new THREE.Scene()
-      camera = new THREE.OrthographicCamera(-1, 1, 1, -1, 0, 1)
-
-      const quadGeometry = new THREE.PlaneGeometry(2, 2)
-      const baseMaterial = new THREE.ShaderMaterial({
-        uniforms: { tDiffuse: { value: videoTexture } },
-        vertexShader: `
-          varying vec2 vUv;
-          void main() {
-            vUv = uv;
-            gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
-          }
-        `,
-        fragmentShader: `
-          uniform sampler2D tDiffuse;
-          varying vec2 vUv;
-          void main() {
-            gl_FragColor = texture2D(tDiffuse, vUv);
-          }
-        `,
-      })
-      quad = new THREE.Mesh(quadGeometry, baseMaterial)
-      scene.add(quad)
-
-      composer = new EffectComposer(renderer)
-      composer.addPass(new RenderPass(scene, camera))
-
-      displacementPass = new ShaderPass(DisplacementShader)
-      displacementPass.uniforms.tDisplacement.value = displacementTexture
-      composer.addPass(displacementPass)
-
-      colorGradePass = new ShaderPass(ColorGradeShader)
-      composer.addPass(colorGradePass)
-
-      chromaticPass = new ShaderPass(ChromaticShader)
-      composer.addPass(chromaticPass)
-
-      vignettePass = new ShaderPass(VignetteShader)
-      composer.addPass(vignettePass)
-
-      const canvas = renderer.domElement
-      canvas.className = 'hero-video-canvas absolute inset-0 w-full h-full object-cover hw'
-      canvas.style.mixBlendMode = 'normal'
-      canvas.style.opacity = '0'
-      canvas.style.transition = 'opacity 1s ease'
-      heroRoot?.prepend(canvas)
-      requestAnimationFrame(() => { canvas.style.opacity = '1' })
-
-      window.__heroVis = true
-      const _obs = new IntersectionObserver(([entry]) => { window.__heroVis = entry.isIntersecting }, { threshold: 0 })
-      if (root.current) _obs.observe(root.current)
-
-      function animate() {
-        if (!window.__heroVis) {
-          requestAnimationFrame(animate)
-          return
-        }
-        animationId = requestAnimationFrame(animate)
-        const elapsed = clock.getElapsedTime()
-
-        const isLowQuality = document.documentElement.classList.contains('low-quality')
-
-        displacementPass.uniforms.uTime.value = elapsed
-        displacementPass.uniforms.uProgress.value = lastProgress
-        colorGradePass.uniforms.uTime.value = elapsed
-        colorGradePass.uniforms.uProgress.value = lastProgress
-        chromaticPass.uniforms.uProgress.value = lastProgress
-        vignettePass.uniforms.uProgress.value = lastProgress
-
-        colorGradePass.uniforms.uBrightness.value = THREE.MathUtils.lerp(0.55, 0.45, lastProgress)
-        colorGradePass.uniforms.uContrast.value = THREE.MathUtils.lerp(1.25, 1.4, lastProgress)
-        colorGradePass.uniforms.uSaturation.value = THREE.MathUtils.lerp(1.08, 0.85, lastProgress)
-        colorGradePass.uniforms.uHueRotate.value = THREE.MathUtils.lerp(-0.087, 0.05, lastProgress)
-
-        displacementPass.uniforms.uIntensity.value = THREE.MathUtils.lerp(0.015, 0.035, lastProgress)
-
-        if (!isLowQuality) {
-          composer.render()
-        } else {
-          renderer.render(scene, camera)
-        }
-      }
-
-      ScrollTrigger.create({
-        trigger: root.current,
-        start: 'top top',
-        end: 'bottom top',
-        onUpdate: (self) => { lastProgress = self.progress },
+      const tl = gsap.timeline({
+        scrollTrigger: {
+          trigger: root.current,
+          start: 'top top',
+          end: '+=100%',
+          scrub: 0.6,
+          pin: true,
+          pinSpacing: false,
+          anticipatePin: 1,
+        },
       })
 
-      animate()
+      // 1. Fade out the top editorial positioning statement as scroll begins
+      tl.to('.hero-editorial-copy', {
+        opacity: 0,
+        y: -30,
+        duration: 0.25,
+        ease: 'power2.inOut',
+      }, 0)
 
-      function resize() {
-        renderer.setSize(window.innerWidth, window.innerHeight)
-        composer.setSize(window.innerWidth, window.innerHeight)
-      }
-      window.addEventListener('resize', resize)
+      // 2. Fade out the bottom watermark and high-contrast scroll cue early
+      tl.to(['.hero-watermark', '.hero-scroll-cue'], {
+        opacity: 0,
+        y: 15,
+        duration: 0.2,
+        ease: 'power2.inOut',
+      }, 0)
 
-      return () => {
-        cancelAnimationFrame(animationId)
-        window.removeEventListener('resize', resize)
-        renderer.dispose()
-        videoTexture.dispose()
-        displacementTexture.dispose()
-        composer.passes.forEach(p => p.dispose?.())
-        heroRoot?.removeChild(canvas)
-      }
-    }
+      // 3. Zoom the museum background image directly into the TV screen center
+      tl.to('.hero-bg', {
+        scale: FINAL_SCALE,
+        ease: 'power2.in',
+      }, 0)
 
-    if (video.readyState >= 2) {
-      cleanupFn = initThree()
-    } else {
-      const handleLoad = () => { cleanupFn = initThree() }
-      video.addEventListener('loadeddata', handleLoad, { once: true })
-      cleanupFn = () => video.removeEventListener('loadeddata', handleLoad)
-    }
+      // 4. Scale the TV screen frame in exact lockstep
+      tl.to('.hero-screen-frame', {
+        scale: FINAL_SCALE,
+        ease: 'power2.in',
+      }, 0)
 
-    return () => {
-      if (cleanupFn) cleanupFn()
-    }
+      // 5. Fade out the screen text early as the camera approaches the glass
+      tl.to('.hero-screen-text', {
+        opacity: 0,
+        scale: 1.5,
+        duration: 0.35,
+        ease: 'power1.in',
+      }, 0.08)
+
+      // 6. As the TV screen expands to fill 100% of the viewport (progress 0.78 -> 1.0),
+      // seamlessly dissolve the hero container so the camera enters directly into Chapter 02 (The Lab)
+      tl.to(root.current, {
+        opacity: 0,
+        duration: 0.22,
+        ease: 'power1.inOut',
+      }, 0.78)
+
+    }, root.current)
+
+    return () => ctx.revert()
   }, [])
 
   return (
     <section
       ref={root}
       id="hero"
-      className="relative h-screen overflow-hidden hw"
-      style={{ background: 'radial-gradient(85% 65% at 50% 42%, rgba(247,246,243,0.07) 0%, transparent 70%), #121212' }}
-      aria-label="Intro — Vishwas's Playground"
+      className="relative z-20 h-screen w-full overflow-hidden bg-void hw pointer-events-auto"
+      aria-label="Vishwas Mehta — Strategic Product Designer & Design Engineer"
     >
-      <video
-        ref={videoRef}
-        className="hidden"
-        src={VIDEO_SRC}
-        autoPlay
-        muted
-        loop
-        playsInline
-        preload="auto"
-        aria-hidden="true"
-        onEnded={(e) => { e.target.currentTime = 0; e.target.play().catch(() => {}) }}
+      {/* ─── 1. Museum Gallery Background Image (16:9 Widescreen) ─── */}
+      <div
+        className="hero-bg absolute inset-0 bg-cover bg-center bg-no-repeat hw"
+        style={{
+          backgroundImage: 'url(./assets/hero-tv.jpg)',
+          transformOrigin: '48.7% 65.1%',
+          willChange: 'transform',
+        }}
       />
 
-      <div className="relative z-10 flex h-full flex-col items-center justify-center px-6 text-center">
-        <p
-          className="hero-meta hero-intro font-mono text-[0.65rem] uppercase tracking-[0.35em] text-[#e8e4da] md:text-xs"
-          style={{ opacity: 1 }}
-          data-cursor="text"
-        >
-          {'// Vishwas Mehta — Product Designer A Bengaluru'}
-        </p>
+      {/* ─── 2. Subtle Museum Room Vignette ─── */}
+      <div
+        className="absolute inset-0 z-[4] pointer-events-none"
+        style={{
+          background:
+            'radial-gradient(ellipse 70% 70% at 48.7% 65.1%, transparent 0%, rgba(18,18,18,0.22) 100%)',
+        }}
+      />
 
-        <h1
-          className="hero-headline mt-8 hw"
-          style={{ perspective: '1100px', transformStyle: 'preserve-3d' }}
-          data-cursor="text"
-        >
-          <span className="block overflow-visible">
-            <span
-              className="hero-word inline-block hw text-[11.5vw] font-extrabold leading-[1.02] tracking-[-0.04em] text-[#f7f6f3] md:text-[7.2vw]"
-              style={{ opacity: 1, transformStyle: 'preserve-3d', fontVariationSettings: '"wght" 800', textShadow: '0 4px 34px rgba(0,0,0,0.55)' }}
-            >
-              Design that <em className="font-display font-normal text-[#f7f6f3]">ships.</em>
-            </span>
+      {/* ─── 3. Top Section: Prominent Editorial Positioning Statement ─── */}
+      <div className="hero-editorial-copy absolute top-[12vh] inset-x-0 z-10 flex flex-col items-center text-center px-6 pointer-events-none">
+        {/* Recruiter Role Eyebrow Tag */}
+        <div className="inline-flex items-center gap-2 mb-3 px-3 py-1 rounded-full bg-white/80 backdrop-blur-md border border-black/10 shadow-[0_2px_10px_rgba(0,0,0,0.04)]">
+          <span className="w-1.5 h-1.5 rounded-full bg-bone animate-pulse" />
+          <span className="font-sans text-[0.68rem] md:text-[0.74rem] font-semibold tracking-[0.25em] uppercase text-bone">
+            Strategic Product Designer &amp; Design Engineer
           </span>
-          <span className="block overflow-visible">
-            <span
-              className="hero-word inline-block hw text-[11.5vw] font-extrabold leading-[1.02] tracking-[-0.04em] text-[#f7f6f3] md:text-[7.2vw]"
-              style={{ opacity: 1, transformStyle: 'preserve-3d', fontVariationSettings: '"wght" 800', textShadow: '0 4px 34px rgba(0,0,0,0.55)' }}
-            >
-              Code that <em className="font-display font-normal text-[#f7f6f3]">feels.</em>
-            </span>
-          </span>
+        </div>
+
+        {/* Primary Positioning Statement (Bold, Confident, Immediate Recruiter Clarity) */}
+        <h1 className="max-w-4xl font-display text-3xl sm:text-4xl md:text-5xl lg:text-[3.5rem] leading-[1.08] text-bone tracking-tight drop-shadow-sm">
+          I turn complex ideas into products people understand, trust, and remember.
         </h1>
 
-        <p
-          className="hero-meta hero-intro mt-9 max-w-xl text-sm font-light leading-relaxed text-[#f7f6f3]/85 md:text-base"
-          style={{ opacity: 1, textShadow: '0 2px 12px rgba(0,0,0,0.75)' }}
-          data-cursor="text"
-        >
-          Local-first AI tools, design systems, and vision-based automation —
-          taken from first sketch to production by one person.
+        {/* Supporting Subheading */}
+        <p className="mt-3 max-w-xl font-sans text-xs sm:text-sm md:text-[0.92rem] font-normal leading-relaxed text-[#444444] tracking-wide">
+          Systems thinking before visual polish. Designing &amp; building local-first AI tools,
+          production systems, and interactive prototypes in Bengaluru.
         </p>
+      </div>
 
-        <div
-          className="hero-meta hero-intro mt-10 flex flex-wrap items-center justify-center gap-5"
-          style={{ opacity: 1 }}
-        >
-          <button
-            type="button"
-            onClick={() => document.getElementById('experiments')?.scrollIntoView({ behavior: 'smooth' })}
-            className="rounded-full bg-[#f7f6f3] px-8 py-3.5 font-mono text-[0.65rem] font-bold uppercase tracking-[0.22em] text-[#121212] transition-colors duration-300 hover:bg-white"
-            data-cursor="magnetic"
+      {/* ─── 4. TV Screen Overlay (Positioned directly over the 1970s CRT tube) ─── */}
+      <div
+        className="hero-screen-frame absolute z-10 pointer-events-none"
+        style={{
+          left: '48.7%',
+          top: '65.1%',
+          width: 'clamp(120px, 10.9vw, 210px)',
+          height: 'clamp(80px, 7.3vw, 140px)',
+          transform: 'translate(-50%, -50%)',
+          transformOrigin: 'center center',
+          willChange: 'transform',
+        }}
+      >
+        {/* Animated CRT Screen Phosphor & Noise */}
+        <div className="hero-screen-portal absolute inset-0 overflow-hidden rounded-[6px] shadow-[inset_0_0_14px_rgba(0,0,0,0.8)]">
+          {/* Procedural CRT Noise Canvas */}
+          <canvas
+            ref={canvasRef}
+            className="absolute inset-0 w-full h-full object-cover opacity-45 mix-blend-screen"
+            aria-hidden="true"
+          />
+
+          {/* CRT Horizontal Scanlines */}
+          <div
+            className="absolute inset-0 pointer-events-none opacity-40"
+            style={{
+              backgroundImage: `repeating-linear-gradient(
+                to bottom,
+                transparent 0px,
+                transparent 2px,
+                rgba(0, 0, 0, 0.4) 2px,
+                rgba(0, 0, 0, 0.4) 4px
+              )`,
+            }}
+          />
+
+          {/* Moving CRT Sweep Beam */}
+          <div className="crt-sweep-line" />
+        </div>
+
+        {/* Screen Text Content (Strict Monochrome CRT Interface) */}
+        <div className="hero-screen-text absolute inset-0 z-[3] flex flex-col items-center justify-center p-2 text-center crt-flicker">
+          <span className="font-sans text-[0.4rem] font-bold tracking-[0.25em] uppercase text-white/70 mb-1">
+            [ SIGNAL: LIVE ]
+          </span>
+
+          <h2
+            className="font-display text-white text-center leading-[1.08] tracking-tight"
+            style={{
+              fontSize: 'clamp(0.6rem, 0.85vw, 1.1rem)',
+              textShadow: '0 0 8px rgba(255,255,255,0.6)',
+            }}
           >
-            View Selected Work
-          </button>
-          <a
-            href="mailto:vyommehta197@gmail.com"
-            className="rounded-full border border-white/30 px-8 py-3.5 font-mono text-[0.65rem] uppercase tracking-[0.22em] text-white backdrop-blur-sm transition-colors duration-300 hover:border-white hover:bg-white/10"
-            data-cursor="magnetic"
+            Design that ships.
+            <br />
+            Code that feels.
+          </h2>
+
+          <p
+            className="mt-1 font-sans text-white/80 font-medium tracking-[0.16em] uppercase text-center"
+            style={{
+              fontSize: 'clamp(0.32rem, 0.42vw, 0.52rem)',
+              textShadow: '0 0 6px rgba(255,255,255,0.4)',
+            }}
           >
-            vyommehta197@gmail.com
-          </a>
+            Local-First AI • Interactive Systems
+          </p>
         </div>
       </div>
 
-      <div className="hero-scrollcue absolute bottom-8 left-1/2 z-10 -translate-x-1/2" data-cursor="drag">
-        <span className="font-mono text-[0.55rem] uppercase tracking-[0.3em] text-white/50">
-          Scroll
-        </span>
-        <div className="mx-auto mt-3 h-9 w-px animate-pulse bg-gradient-to-b from-white/40 to-transparent" />
+      {/* ─── 5. Shaded Editorial Watermark: "EXPERIENCED DESIGNER" ─── */}
+      <h2
+        className="hero-watermark absolute z-[5] pointer-events-none select-none text-center whitespace-nowrap text-bone"
+        style={{
+          bottom: '1.5vh',
+          left: '50%',
+          transform: 'translateX(-50%)',
+          width: '100vw',
+          fontFamily: '"Instrument Serif", Georgia, serif',
+          fontStyle: 'italic',
+          fontSize: 'clamp(3.5rem, 11vw, 11rem)',
+          lineHeight: 0.8,
+          letterSpacing: '-0.02em',
+          opacity: 0.08,
+        }}
+      >
+        EXPERIENCED DESIGNER
+      </h2>
+
+      {/* ─── 6. High-Contrast "Scroll to Explore" Navigation Capsule ─── */}
+      <div className="hero-scroll-cue absolute bottom-8 left-1/2 -translate-x-1/2 z-20 flex flex-col items-center">
+        <button
+          type="button"
+          onClick={() => scrollToTarget('#lab')}
+          className="group pointer-events-auto flex items-center gap-3 px-5 py-2.5 rounded-full bg-white/95 backdrop-blur-md border border-black/20 shadow-[0_6px_20px_rgba(0,0,0,0.12)] hover:border-black/50 hover:shadow-[0_8px_28px_rgba(0,0,0,0.18)] transition-all duration-300 focus:outline-none"
+          data-cursor="magnetic"
+          aria-label="Scroll to enter the Lab"
+        >
+          {/* Animated Downward Indicator */}
+          <div className="w-3.5 h-5 rounded-full border border-black/50 flex justify-center pt-1">
+            <span className="w-1 h-1.5 rounded-full bg-bone animate-bounce" />
+          </div>
+
+          <span className="font-sans text-[0.68rem] font-semibold tracking-[0.22em] uppercase text-bone">
+            Scroll to explore
+          </span>
+
+          <span className="font-sans text-[0.72rem] text-black/50 group-hover:translate-y-0.5 transition-transform">
+            ↓
+          </span>
+        </button>
       </div>
     </section>
   )

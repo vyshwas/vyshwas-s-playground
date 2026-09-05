@@ -100,7 +100,7 @@ export default function MagneticCursor() {
         style={{ width: 36, height: 36, borderRadius: '50%', border: '1.5px solid rgba(0,0,0,0.5)', mixBlendMode: 'normal', transition: 'width 0.3s, height 0.3s, border-color 0.3s' }}
         aria-hidden="true"
       />
-      <style jsx>{`
+      <style>{`
         .is-hover { width: 24px !important; height: 24px !important; border-color: #000000 !important; background: #000000 !important; }
         .is-hover + * { width: 48px !important; height: 48px !important; border-color: rgba(0,0,0,0.3) !important; }
         .is-magnetic { width: 20px !important; height: 20px !important; border-color: #000000 !important; background: #000000 !important; opacity: 0.8 !important; }

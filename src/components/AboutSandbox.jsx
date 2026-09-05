@@ -50,7 +50,7 @@ export default function AboutSandbox() {
           },
         },
       )
-    }, textRef)
+    }, textRef.current)
     return () => ctx.revert()
   }, [])
 
@@ -291,7 +291,7 @@ export default function AboutSandbox() {
       <div className="grid items-center gap-16 md:grid-cols-2 md:gap-20">
 
         <div className="max-w-xl">
-          <span className="mb-8 block font-mono text-[0.65rem] uppercase tracking-[0.35em] text-cyan" data-cursor="text">
+          <span className="mb-8 block font-sans text-[0.65rem] uppercase tracking-[0.35em] text-cyan" data-cursor="text">
             [ Chapter 04.5 — Context ]
           </span>
           <p
@@ -309,7 +309,7 @@ export default function AboutSandbox() {
               )
             })}
           </p>
-          <p className="mt-8 font-mono text-[0.6rem] uppercase tracking-[0.25em] text-titanium-dim" data-cursor="text">
+          <p className="mt-8 font-sans text-[0.6rem] uppercase tracking-[0.25em] text-titanium-dim" data-cursor="text">
             grab a chip — throw it — break the laws of physics
           </p>
         </div>
@@ -326,12 +326,12 @@ export default function AboutSandbox() {
           />
 
           <div className="pointer-events-none absolute inset-x-0 top-0 z-10 flex items-center justify-between border-b border-black/5 bg-gradient-to-b from-black/[0.03] to-transparent px-4 py-3">
-            <span className="flex items-center gap-2 font-mono text-[0.55rem] uppercase tracking-[0.25em] text-cyan/80">
+            <span className="flex items-center gap-2 font-sans text-[0.55rem] uppercase tracking-[0.25em] text-cyan/80">
               <span className={`h-1.5 w-1.5 rounded-full ${mode === 'zero' ? 'bg-cyan-bright' : 'bg-cyan'} animate-pulse`} />
               Interactive Space — {SKILLS.length} skills in orbit
             </span>
             <span
-              className="rounded-full border px-2.5 py-1 font-mono text-[0.5rem] uppercase tracking-[0.2em] transition-colors duration-300"
+              className="rounded-full border px-2.5 py-1 font-sans text-[0.5rem] uppercase tracking-[0.2em] transition-colors duration-300"
               style={{
                 borderColor: `${PALETTE[Object.keys(MODES).indexOf(mode)]}66`,
                 color: PALETTE[Object.keys(MODES).indexOf(mode)],
@@ -357,7 +357,7 @@ export default function AboutSandbox() {
                     type="button"
                     onClick={() => applyMode(b.key)}
                     aria-pressed={active}
-                    className={`rounded-full border px-4 py-2 font-mono text-[0.6rem] uppercase tracking-[0.18em] backdrop-blur-md transition-all duration-300 ${
+                    className={`rounded-full border px-4 py-2 font-sans text-[0.6rem] uppercase tracking-[0.18em] backdrop-blur-md transition-all duration-300 ${
                       active
                         ? 'border-cyan bg-cyan text-void'
                         : 'border-black/20 bg-white/70 text-bone hover:border-cyan/60 hover:text-cyan'
@@ -369,7 +369,7 @@ export default function AboutSandbox() {
                 )
               })}
             </div>
-            <span className="font-mono text-[0.5rem] uppercase tracking-[0.25em] text-titanium-dim">
+            <span className="font-sans text-[0.5rem] uppercase tracking-[0.25em] text-titanium-dim">
               {MODES[mode].hint}
             </span>
           </div>

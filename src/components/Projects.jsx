@@ -124,7 +124,7 @@ export default function Projects() {
           force3D: true,
         })
       })
-    }, containerRef)
+    }, containerRef.current)
     return () => ctx.revert()
   }, [])
 
@@ -195,7 +195,7 @@ export default function Projects() {
                 <div className="absolute inset-0 border-[3px] border-white/20 rounded-[2.5rem]" />
 
                 <div className="relative z-10 flex justify-between items-start">
-                  <span className="bg-black/20 text-white px-4 py-1.5 rounded-full font-mono text-sm tracking-widest uppercase border border-white/10">
+                  <span className="bg-black/20 text-white px-4 py-1.5 rounded-full font-sans text-sm tracking-widest uppercase border border-white/10">
                     {p.no}
                   </span>
                   <div className="w-10 h-10 rounded-full bg-white/20 flex items-center justify-center border border-white/10 transition-transform group-hover:scale-110">
@@ -263,7 +263,7 @@ export default function Projects() {
                 <div className="absolute inset-0 border-[3px] border-white/20 rounded-[2rem]" />
 
                 <div className="relative z-10 flex justify-between items-start">
-                  <span className="bg-black/20 text-white px-3 py-1 rounded-full font-mono text-xs tracking-widest uppercase border border-white/10">
+                  <span className="bg-black/20 text-white px-3 py-1 rounded-full font-sans text-xs tracking-widest uppercase border border-white/10">
                     {p.no}
                   </span>
                   <div className="w-9 h-9 rounded-full bg-white/20 flex items-center justify-center border border-white/10">
@@ -324,11 +324,11 @@ export default function Projects() {
                 {/* Header */}
                 <div>
                   <div className="flex items-center gap-3 mb-4">
-                    <span className="font-mono text-xs text-white/40 uppercase tracking-widest">
+                    <span className="font-sans text-xs text-white/40 uppercase tracking-widest">
                       {activeProto.no}
                     </span>
                     <span className="w-px h-3 bg-white/20" />
-                    <span className="font-mono text-xs text-white/40 uppercase tracking-widest">
+                    <span className="font-sans text-xs text-white/40 uppercase tracking-widest">
                       {activeProto.year}
                     </span>
                   </div>
@@ -343,11 +343,11 @@ export default function Projects() {
                 {/* Meta */}
                 <div className="flex gap-8">
                   <div className="flex flex-col gap-1">
-                    <span className="font-mono text-[10px] uppercase tracking-widest text-white/35">Role</span>
+                    <span className="font-sans text-[10px] uppercase tracking-widest text-white/35">Role</span>
                     <span className="text-white/85 text-sm">{activeProto.role}</span>
                   </div>
                   <div className="flex flex-col gap-1">
-                    <span className="font-mono text-[10px] uppercase tracking-widest text-white/35">Stack</span>
+                    <span className="font-sans text-[10px] uppercase tracking-widest text-white/35">Stack</span>
                     <span className="text-white/85 text-sm">{activeProto.stack.join(', ')}</span>
                   </div>
                 </div>
@@ -357,26 +357,26 @@ export default function Projects() {
                 {/* Context */}
                 {activeProto.context && (
                   <div>
-                    <h4 className="font-mono text-[10px] uppercase tracking-widest text-white/35 mb-3">Context</h4>
+                    <h4 className="font-sans text-[10px] uppercase tracking-widest text-white/35 mb-3">Context</h4>
                     <p className="text-white/75 text-sm leading-relaxed">{activeProto.context}</p>
                   </div>
                 )}
 
                 {/* Problem */}
                 <div>
-                  <h4 className="font-mono text-[10px] uppercase tracking-widest text-white/35 mb-3">The Problem</h4>
+                  <h4 className="font-sans text-[10px] uppercase tracking-widest text-white/35 mb-3">The Problem</h4>
                   <p className="text-white/75 text-sm leading-relaxed">{activeProto.problem}</p>
                 </div>
 
                 {/* Solution */}
                 <div>
-                  <h4 className="font-mono text-[10px] uppercase tracking-widest text-white/35 mb-3">The Solution</h4>
+                  <h4 className="font-sans text-[10px] uppercase tracking-widest text-white/35 mb-3">The Solution</h4>
                   <p className="text-white/75 text-sm leading-relaxed">{activeProto.approach}</p>
                 </div>
 
                 {/* Outcome */}
                 <div>
-                  <h4 className="font-mono text-[10px] uppercase tracking-widest text-white/35 mb-3">Impact & Outcomes</h4>
+                  <h4 className="font-sans text-[10px] uppercase tracking-widest text-white/35 mb-3">Impact & Outcomes</h4>
                   <ul className="flex flex-col gap-2">
                     {activeProto.outcome.map((item, i) => (
                       <li key={i} className="flex gap-2.5 text-sm text-white/75 leading-relaxed">
@@ -389,7 +389,7 @@ export default function Projects() {
 
                 {/* Scroll indicator for mobile — tells user the prototype is below */}
                 <div className="md:hidden text-center pt-4 border-t border-white/8">
-                  <span className="font-mono text-[10px] uppercase tracking-widest text-white/40">
+                  <span className="font-sans text-[10px] uppercase tracking-widest text-white/40">
                     ↓ Scroll down for interactive prototype
                   </span>
                 </div>

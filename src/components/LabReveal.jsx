@@ -228,7 +228,7 @@ export default function LabReveal() {
       }
       window.addEventListener('resize', onResize)
 
-      const clock = new THREE.Clock()
+      const startTime = performance.now()
 
       let morphTarget = 0
       let morphVelocity = 0
@@ -236,7 +236,7 @@ export default function LabReveal() {
       function animate() {
         requestAnimationFrame(animate)
         if (!visible || document.hidden) return
-        const t = clock.getElapsedTime()
+        const t = (performance.now() - startTime) * 0.001
         const speed = document.body.classList.contains('konami-mode') ? 8.0 : 1.0
         uniforms.uTime.value = t * speed
 
@@ -286,7 +286,7 @@ export default function LabReveal() {
         renderer.dispose()
         canvas.remove()
       }
-    }, mountRef)
+    }, mountRef.current)
 
     return () => ctx.revert()
   }, [])
@@ -295,7 +295,7 @@ export default function LabReveal() {
     return (
       <section ref={mountRef} id="lab" className="relative flex h-screen items-center justify-center bg-void hw" aria-label="The lab">
         <div className="max-w-xl px-6 text-center">
-          <p className="font-mono text-[0.65rem] uppercase tracking-[0.35em] text-titanium-dim">[ Chapter 02 — The Lab ]</p>
+          <p className="font-sans text-[0.65rem] uppercase tracking-[0.35em] text-titanium-dim">[ Chapter 02 — The Lab ]</p>
           <h2 className="mt-6 text-3xl font-semibold text-bone md:text-5xl">
             Not a template — <span className="font-display">hand-written WebGL</span>, tuned to 60fps.
           </h2>
@@ -307,18 +307,18 @@ export default function LabReveal() {
   return (
     <section ref={mountRef} id="lab" className="relative h-screen bg-void hw" aria-label="The lab — interactive particle lab">
       <div ref={stageRef} className="sticky top-0 flex h-screen flex-col items-center justify-center overflow-hidden">
-        <p className="pointer-events-none absolute top-[9vh] font-mono text-[0.65rem] uppercase tracking-[0.35em] text-titanium-dim">
+        <p className="pointer-events-none absolute top-[9vh] font-sans text-[0.65rem] uppercase tracking-[0.35em] text-titanium-dim">
           [ Chapter 02 — Enter the Lab ]
         </p>
         <div className="pointer-events-none absolute bottom-[16vh] flex flex-col items-center gap-3 text-center">
-          <span key={'l' + phase} className="phase-in font-mono text-[0.6rem] uppercase tracking-[0.4em] text-bone">
+          <span key={'l' + phase} className="phase-in font-sans text-[0.6rem] uppercase tracking-[0.4em] text-bone">
             {PHASES[phase].label}
           </span>
           <h2 key={phase} className="phase-in text-3xl font-semibold tracking-tight text-bone md:text-5xl" data-cursor="text">
             {PHASES[phase].text}
           </h2>
         </div>
-        <div className="pointer-events-none absolute bottom-[7vh] flex items-center gap-6 font-mono text-[0.55rem] uppercase tracking-[0.25em] text-titanium-dim">
+        <div className="pointer-events-none absolute bottom-[7vh] flex items-center gap-6 font-sans text-[0.55rem] uppercase tracking-[0.25em] text-titanium-dim">
           <span>drag — spin</span>
           <span className="h-3 w-px bg-black/20" />
           <span>move — disturb</span>

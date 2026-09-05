@@ -148,7 +148,7 @@ function PrincipleRow({ p }) {
         y: 40, opacity: 0, stagger: 0.08, duration: 0.9, ease: 'power3.out',
         scrollTrigger: { trigger: ref.current, start: 'top 80%', once: true },
       })
-    }, ref)
+    }, ref.current)
     return () => ctx.revert()
   }, [])
 
@@ -172,7 +172,7 @@ function PrincipleRow({ p }) {
       </div>
 
       <div className={`col-span-12 md:col-span-7 ${p.flip ? 'md:order-1 md:text-right' : ''}`}>
-        <span className="p-reveal font-mono text-[0.6rem] uppercase tracking-[0.35em] text-titanium-dim">
+        <span className="p-reveal font-sans text-[0.6rem] uppercase tracking-[0.35em] text-titanium-dim">
           Principle {p.n}
         </span>
         <h3
@@ -186,7 +186,7 @@ function PrincipleRow({ p }) {
         </p>
         <div className={`p-reveal mt-7 flex flex-wrap gap-2.5 ${p.flip ? 'md:justify-end' : ''}`}>
           {p.chips.map((c) => (
-            <span key={c} className="rounded-full border border-black/20 px-3.5 py-1.5 font-mono text-[0.55rem] uppercase tracking-[0.18em] text-titanium">
+            <span key={c} className="rounded-full border border-black/20 px-3.5 py-1.5 font-sans text-[0.55rem] uppercase tracking-[0.18em] text-titanium">
               {c}
             </span>
           ))}
@@ -200,7 +200,7 @@ export default function Bento() {
   return (
     <section id="system" className="relative bg-void px-6 py-[16vh] md:px-[8vw]" aria-label="How I think — principles">
       <header className="mb-10 flex flex-col gap-5">
-        <span className="font-mono text-[0.65rem] uppercase tracking-[0.35em] text-titanium-dim" data-cursor="text">
+        <span className="font-sans text-[0.65rem] uppercase tracking-[0.35em] text-titanium-dim" data-cursor="text">
           [ How I Think — Principles ]
         </span>
         <h2 className="max-w-3xl font-display text-5xl leading-[1.02] text-bone md:text-7xl" data-cursor="text">
@@ -216,7 +216,7 @@ export default function Bento() {
       ))}
 
       {/* status strip */}
-      <div className="flex flex-wrap items-center justify-between gap-4 border-t border-black/10 py-8 font-mono text-[0.6rem] uppercase tracking-[0.25em] text-titanium">
+      <div className="flex flex-wrap items-center justify-between gap-4 border-t border-black/10 py-8 font-sans text-[0.6rem] uppercase tracking-[0.25em] text-titanium">
         <span className="flex items-center gap-2.5">
           <span className="relative flex h-1.5 w-1.5">
             <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-bone opacity-50" />
@@ -237,7 +237,7 @@ export default function Bento() {
         aria-label="Jump to selected work"
       >
         <span>
-          <span className="block font-mono text-[0.55rem] uppercase tracking-[0.3em] text-bone/50">See it applied</span>
+          <span className="block font-sans text-[0.55rem] uppercase tracking-[0.3em] text-bone/50">See it applied</span>
           <span className="mt-3 block max-w-xl font-display text-3xl leading-tight text-void md:text-5xl" data-cursor="text">
             Every principle above shows up in the shipped work.
           </span>

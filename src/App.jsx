@@ -103,23 +103,6 @@ export default function App() {
   }, [])
 
   useEffect(() => {
-    const dots = document.querySelectorAll('.chapter-dot')
-    const sections = chapters.map(c => document.getElementById(c.id)).filter(Boolean)
-    const update = () => {
-      const scrollY = window.scrollY + window.innerHeight * 0.4
-      sections.forEach((sec, i) => {
-        if (!sec) return
-        const top = sec.offsetTop
-        const bottom = top + sec.offsetHeight
-        dots[i]?.classList.toggle('active', scrollY >= top && scrollY < bottom)
-      })
-    }
-    window.addEventListener('scroll', update, { passive: true })
-    update()
-    return () => window.removeEventListener('scroll', update)
-  }, [])
-
-  useEffect(() => {
     const handleLoad = () => {
       ScrollTrigger.sort()
       ScrollTrigger.refresh()
@@ -230,19 +213,6 @@ export default function App() {
         aria-hidden="true"
         className="fixed top-0 left-0 z-[100] h-px w-full origin-left scale-x-0 bg-cyan hw"
       />
-      <nav className="chapter-indicator" aria-label="Chapter navigation" role="navigation">
-        {chapters.map((c) => (
-          <button
-            key={c.id}
-            type="button"
-            className="chapter-dot"
-            data-label={c.label}
-            data-target={c.id}
-            onClick={() => scrollToTarget(`#${c.id}`)}
-            aria-label={`Go to ${c.label}`}
-          />
-        ))}
-      </nav>
       <Nav />
       <main>
         <Hero />
