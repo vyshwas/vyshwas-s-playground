@@ -41,11 +41,9 @@ export default function Hero() {
     if (reducedMotion()) return
 
     const ctx = gsap.context(() => {
-      // 16:9 Museum Skylight TV exact screen coordinates:
-      // Center X = 48.7%, Center Y = 65.1%
-      const TV_X = '48.7%'
-      const TV_Y = '65.1%'
-      const FINAL_SCALE = 11.2
+      // Image 5 (vintage retro computer monitor on concrete plinth):
+      // Center X = 49.8%, Center Y = 51.6%
+      const FINAL_SCALE = 12.0
 
       const tl = gsap.timeline({
         scrollTrigger: {
@@ -75,13 +73,13 @@ export default function Hero() {
         ease: 'power2.inOut',
       }, 0)
 
-      // 3. Zoom the museum background image directly into the TV screen center
+      // 3. Zoom the museum background image directly into the monitor screen center
       tl.to('.hero-bg', {
         scale: FINAL_SCALE,
         ease: 'power2.in',
       }, 0)
 
-      // 4. Scale the TV screen frame in exact lockstep
+      // 4. Scale the monitor screen frame in exact lockstep
       tl.to('.hero-screen-frame', {
         scale: FINAL_SCALE,
         ease: 'power2.in',
@@ -115,12 +113,12 @@ export default function Hero() {
       className="relative z-20 h-screen w-full overflow-hidden bg-void hw pointer-events-auto"
       aria-label="Vishwas Mehta — Strategic Product Designer & Design Engineer"
     >
-      {/* ─── 1. Museum Gallery Background Image (16:9 Widescreen) ─── */}
+      {/* ─── 1. Museum Gallery Background Image (Image 5 - Vintage Monitor on Concrete Plinth) ─── */}
       <div
         className="hero-bg absolute inset-0 bg-cover bg-center bg-no-repeat hw"
         style={{
           backgroundImage: 'url(./assets/hero-tv.jpg)',
-          transformOrigin: '48.7% 65.1%',
+          transformOrigin: '49.8% 51.6%',
           willChange: 'transform',
         }}
       />
@@ -130,64 +128,64 @@ export default function Hero() {
         className="absolute inset-0 z-[4] pointer-events-none"
         style={{
           background:
-            'radial-gradient(ellipse 70% 70% at 48.7% 65.1%, transparent 0%, rgba(18,18,18,0.22) 100%)',
+            'radial-gradient(ellipse 70% 70% at 49.8% 51.6%, transparent 0%, rgba(18,18,18,0.18) 100%)',
         }}
       />
 
-      {/* ─── 3. Top Section: Prominent Editorial Positioning Statement ─── */}
-      <div className="hero-editorial-copy absolute top-[12vh] inset-x-0 z-10 flex flex-col items-center text-center px-6 pointer-events-none">
+      {/* ─── 3. Top Section: Architectural Identity & Role Hierarchy ─── */}
+      <div className="hero-editorial-copy absolute top-[10vh] sm:top-[11vh] inset-x-0 z-10 flex flex-col items-center text-center px-6 pointer-events-none">
         {/* Recruiter Role Eyebrow Tag */}
-        <div className="inline-flex items-center gap-2 mb-3 px-3 py-1 rounded-full bg-white/80 backdrop-blur-md border border-black/10 shadow-[0_2px_10px_rgba(0,0,0,0.04)]">
+        <div className="inline-flex items-center gap-2 mb-2 px-3 py-1 rounded-full bg-white/85 backdrop-blur-md border border-black/10 shadow-[0_2px_10px_rgba(0,0,0,0.04)]">
           <span className="w-1.5 h-1.5 rounded-full bg-bone animate-pulse" />
-          <span className="font-sans text-[0.68rem] md:text-[0.74rem] font-semibold tracking-[0.25em] uppercase text-bone">
-            [ PRODUCT DESIGNER &amp; DESIGN ENGINEER ]
+          <span className="font-sans text-[0.66rem] md:text-[0.72rem] font-semibold tracking-[0.22em] uppercase text-bone">
+            [ STRATEGIC PRODUCT DESIGNER &amp; DESIGN ENGINEER ]
           </span>
         </div>
 
-        {/* Primary Positioning Statement (Bold, Confident, Immediate Recruiter Clarity) */}
-        <h1 className="max-w-4xl font-display text-3xl sm:text-4xl md:text-5xl lg:text-[3.5rem] leading-[1.08] text-bone tracking-tight drop-shadow-sm">
-          I turn complex ideas into products people understand, trust, and remember.
+        {/* Primary Header: Proportioned & Elegant */}
+        <h1 className="max-w-3xl font-display italic text-2xl sm:text-3xl md:text-4xl lg:text-[2.6rem] leading-[1.12] text-bone tracking-tight drop-shadow-sm">
+          Design that ships. Code that feels.
         </h1>
 
         {/* Supporting Subheading */}
-        <p className="mt-3 max-w-xl font-sans text-xs sm:text-sm md:text-[0.92rem] font-normal leading-relaxed text-[#444444] tracking-wide">
+        <p className="mt-2 max-w-lg font-sans text-xs sm:text-sm md:text-[0.88rem] font-normal leading-relaxed text-[#333333] tracking-wide">
           Systems thinking before visual polish. Designing &amp; building local-first AI tools,
           production systems, and interactive prototypes in Bengaluru.
         </p>
       </div>
 
-      {/* ─── 4. TV Screen Overlay (Positioned directly over the 1970s CRT tube) ─── */}
+      {/* ─── 4. Vintage Monitor Screen Overlay (Calibrated to Glass Center) ─── */}
       <div
         className="hero-screen-frame absolute z-10 pointer-events-none"
         style={{
-          left: '48.7%',
-          top: '65.1%',
-          width: 'clamp(120px, 10.9vw, 210px)',
-          height: 'clamp(80px, 7.3vw, 140px)',
+          left: '50.1%',
+          top: '50.6%',
+          width: 'clamp(108px, 8.8vw, 126px)',
+          height: 'clamp(120px, 15.2vh, 138px)',
           transform: 'translate(-50%, -50%)',
           transformOrigin: 'center center',
           willChange: 'transform',
         }}
       >
         {/* Animated CRT Screen Phosphor & Noise */}
-        <div className="hero-screen-portal absolute inset-0 overflow-hidden rounded-[6px] shadow-[inset_0_0_14px_rgba(0,0,0,0.8)]">
+        <div className="hero-screen-portal absolute inset-0 overflow-hidden rounded-[10px] shadow-[inset_0_0_12px_rgba(0,0,0,0.9)] bg-[#0b100d]">
           {/* Procedural CRT Noise Canvas */}
           <canvas
             ref={canvasRef}
-            className="absolute inset-0 w-full h-full object-cover opacity-45 mix-blend-screen"
+            className="absolute inset-0 w-full h-full object-cover opacity-35 mix-blend-screen"
             aria-hidden="true"
           />
 
           {/* CRT Horizontal Scanlines */}
           <div
-            className="absolute inset-0 pointer-events-none opacity-40"
+            className="absolute inset-0 pointer-events-none opacity-30"
             style={{
               backgroundImage: `repeating-linear-gradient(
                 to bottom,
                 transparent 0px,
                 transparent 2px,
-                rgba(0, 0, 0, 0.4) 2px,
-                rgba(0, 0, 0, 0.4) 4px
+                rgba(0, 0, 0, 0.5) 2px,
+                rgba(0, 0, 0, 0.5) 4px
               )`,
             }}
           />
@@ -196,33 +194,34 @@ export default function Hero() {
           <div className="crt-sweep-line" />
         </div>
 
-        {/* Screen Text Content (Strict Monochrome CRT Interface) */}
-        <div className="hero-screen-text absolute inset-0 z-[3] flex flex-col items-center justify-center p-2 text-center crt-flicker">
-          <span className="font-sans text-[0.4rem] font-bold tracking-[0.25em] uppercase text-white/70 mb-1">
-            [ SIGNAL: LIVE ]
-          </span>
+        {/* Screen Text Content: Crisp, Prominent Positioning Statement */}
+        <div className="hero-screen-text absolute inset-0 z-[3] flex flex-col justify-between p-2 sm:p-2.5 text-center crt-flicker">
+          {/* Telemetry Header */}
+          <div className="flex items-center justify-between border-b border-white/15 pb-0.5 px-0.5">
+            <span className="font-mono text-[0.42rem] sm:text-[0.48rem] font-bold tracking-[0.2em] uppercase text-[#a8ffb2]">
+              SYS.01 // LIVE
+            </span>
+            <span className="w-1 h-1 rounded-full bg-[#39ff14] animate-pulse" />
+          </div>
 
-          <h2
-            className="font-display text-white text-center leading-[1.08] tracking-tight"
-            style={{
-              fontSize: 'clamp(0.6rem, 0.85vw, 1.1rem)',
-              textShadow: '0 0 8px rgba(255,255,255,0.6)',
-            }}
-          >
-            Design that ships.
-            <br />
-            Code that feels.
-          </h2>
+          {/* Core Positioning Statement (Clearly Readable & Centered) */}
+          <div className="my-auto py-0.5">
+            <h2
+              className="font-display italic text-[#f7f6f3] text-center leading-[1.14] tracking-tight"
+              style={{
+                fontSize: 'clamp(0.64rem, 0.82vw, 0.94rem)',
+                textShadow: '0 0 8px rgba(255,255,255,0.7)',
+              }}
+            >
+              I turn complex ideas into products people understand, trust, and remember.
+            </h2>
+          </div>
 
-          <p
-            className="mt-1 font-sans text-white/80 font-medium tracking-[0.16em] uppercase text-center"
-            style={{
-              fontSize: 'clamp(0.32rem, 0.42vw, 0.52rem)',
-              textShadow: '0 0 6px rgba(255,255,255,0.4)',
-            }}
-          >
-            Local-First AI • Interactive Systems
-          </p>
+          {/* Telemetry Footer */}
+          <div className="flex items-center justify-between border-t border-white/15 pt-0.5 px-0.5 font-mono text-[0.38rem] sm:text-[0.44rem] text-white/70 uppercase tracking-[0.14em]">
+            <span>V. MEHTA</span>
+            <span>BLR · IN</span>
+          </div>
         </div>
       </div>
 

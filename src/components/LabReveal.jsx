@@ -366,7 +366,7 @@ return (
         </div>
       )}
 
-      <p className="pointer-events-none absolute top-[10vh] z-[2] font-sans text-[0.65rem] uppercase tracking-[0.35em] text-titanium-dim">
+      <p className="pointer-events-none absolute top-[10vh] z-[2] font-sans text-[0.65rem] uppercase tracking-[0.35em] text-[#333333] font-medium">
         [ Chapter 02 — Enter the Lab ]
       </p>
       <div className="pointer-events-none absolute bottom-[16vh] z-[2] flex flex-col items-center gap-3 text-center">
@@ -377,7 +377,7 @@ return (
           {PHASES[phase].text}
         </h2>
       </div>
-      <div className="pointer-events-none absolute bottom-[7vh] z-[2] flex items-center gap-6 font-sans text-[0.55rem] uppercase tracking-[0.25em] text-titanium-dim">
+      <div className="pointer-events-none absolute bottom-[7vh] z-[2] flex items-center gap-6 font-sans text-[0.55rem] uppercase tracking-[0.25em] text-titanium font-medium">
         {webglActive ? (
           <>
             <span>drag — spin</span>

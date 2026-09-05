@@ -3,11 +3,6 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<script>
-  if (window.self !== window.top || location.search.indexOf('embed') !== -1) {
-    document.documentElement.classList.add('is-embed');
-  }
-</script>
 </head>
 <body>
 <title>Awara — Interactive Prototype</title>
@@ -892,31 +887,6 @@
       animation-delay: 0s !important;
       transition-duration: .01ms !important;
     }
-  }
-
-  /* Embedded mode for drawer */
-  .is-embed body { overflow: hidden !important; background: #0D0705 !important; margin: 0 !important; }
-  .is-embed .rail { display: none !important; }
-  .is-embed .stage {
-    display: flex !important;
-    grid-template-columns: none !important;
-    align-items: center !important;
-    justify-content: center !important;
-    height: 100vh !important;
-    width: 100% !important;
-    padding: 0 !important;
-    overflow: hidden !important;
-  }
-  .is-embed .deck {
-    height: 100vh !important;
-    width: 100% !important;
-    display: flex !important;
-    align-items: center !important;
-    justify-content: center !important;
-  }
-  .is-embed .phone {
-    margin: 0 auto !important;
-    box-shadow: 0 0 0 1.5px rgba(245, 239, 230, .15), 0 25px 60px rgba(0, 0, 0, .85) !important;
   }
 </style>
 

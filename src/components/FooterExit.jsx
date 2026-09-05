@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState, useCallback, useMemo } from 'react'
+import { useEffect, useRef, useState, useCallback } from 'react'
 import Magnetic from './Magnetic.jsx'
 
 const commands = {
@@ -80,8 +80,16 @@ export default function FooterExit() {
   const inputRef = useRef(null)
   const konamiBuffer = useRef([])
   const [konamiActive, setKonamiActive] = useState(false)
-  const terminalRef = useRef(null)
   const matrixCanvasRef = useRef(null)
+  const [copied, setCopied] = useState(false)
+
+  const handleCopyEmail = (e) => {
+    e?.preventDefault()
+    e?.stopPropagation()
+    navigator.clipboard?.writeText('vyommehta197@gmail.com')
+    setCopied(true)
+    setTimeout(() => setCopied(false), 2200)
+  }
 
   const addOutput = useCallback((text, type = 'output') => {
     const raw = typeof text === 'string' ? text : String(text)
@@ -234,19 +242,13 @@ export default function FooterExit() {
     inputRef.current?.focus()
   }, [history.length])
 
-  const themeStyles = useMemo(() => ({
-    void: { accent: '#121212', accent2: '#444444' },
-    cyan: { accent: '#121212', accent2: '#444444' },
-    matrix: { accent: '#22c55e', accent2: '#86efac' },
-    retro: { accent: '#f43f5e', accent2: '#fb923c' },
-  }), [])
-
   return (
-    <footer id="exit" className="relative px-6 pb-16 pt-[14vh] md:px-[8vw]" aria-label="Exit" style={{ '--accent': themeStyles[theme].accent, '--accent2': themeStyles[theme].accent2 }}>
+    <footer id="contact" className="relative z-10 w-full bg-void px-6 py-28 md:px-[8vw]">
+      <div id="exit" className="absolute top-0 pointer-events-none" />
       <canvas ref={matrixCanvasRef} className={`matrix-rain ${showMatrix ? 'active' : ''}`} aria-hidden="true" />
       <div className={`konami-flash ${konamiFlash ? 'active' : ''}`} aria-hidden="true" />
 
-      <div className="mx-auto max-w-3xl overflow-hidden rounded-lg border border-black/10 bg-panel shadow-[0_50px_120px_-40px_rgba(0,0,0,0.9)] terminal-window" ref={terminalRef}>
+      <div className="mx-auto max-w-3xl overflow-hidden rounded-2xl border border-black/10 bg-panel shadow-2xl">
         <div className="flex items-center gap-2 border-b border-black/10 bg-panel-2 px-4 py-3">
           <span className="h-2.5 w-2.5 rounded-full bg-black/15" />
           <span className="h-2.5 w-2.5 rounded-full bg-black/15" />
@@ -283,32 +285,65 @@ export default function FooterExit() {
       </div>
 
       <div className="mt-20 flex flex-col items-center gap-6 text-center">
-        <span className="font-sans text-[0.65rem] uppercase tracking-[0.35em] text-titanium-dim" data-cursor="text">
+        <span className="font-sans text-[0.68rem] font-medium uppercase tracking-[0.35em] text-titanium-dim" data-cursor="text">
           [ Let's Talk ]
         </span>
         <h2 className="max-w-2xl font-display text-3xl leading-[1.1] text-bone md:text-5xl" data-cursor="text">
           Have a product that needs design depth?{' '}
           <span className="text-titanium">Let's build it.</span>
         </h2>
-        <p className="max-w-md text-sm font-light leading-relaxed text-titanium" data-cursor="text">
+        <p className="max-w-md text-sm font-normal leading-relaxed text-titanium" data-cursor="text">
           Open to full-time product design roles and select freelance engagements.
         </p>
-        <div className="mt-4 flex flex-col gap-5 sm:flex-row">
-          <Magnetic as="a" strength={0.4}
-            href="mailto:vyommehta197@gmail.com?subject=Saw%20your%20playground"
-            className="inline-flex items-center justify-center rounded-full bg-cyan px-9 py-4 font-sans text-[0.7rem] font-bold uppercase tracking-[0.22em] text-void transition-colors duration-300 hover:bg-cyan-bright"
-            data-cursor="magnetic"
-          >
-            vyommehta197@gmail.com
+
+        {/* Harmonized Candidate Contact Suite */}
+        <div className="mt-4 flex flex-col sm:flex-row items-center gap-4 z-10">
+          <Magnetic as="div" strength={0.35}>
+            <a
+              href="mailto:vyommehta197@gmail.com?subject=Product%20Design%20%26%20Design%20Engineering%20Inquiry%20%E2%80%94%20Vishwas%20Mehta"
+              className="group relative inline-flex items-center gap-3 rounded-full bg-[#121212] px-7 py-3.5 font-sans text-xs font-medium tracking-[0.14em] uppercase text-[#f7f6f3] shadow-xl hover:bg-black transition-all duration-300"
+              aria-label="Email Vishwas Mehta at vyommehta197@gmail.com"
+              data-cursor="magnetic"
+            >
+              <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+              <span>Contact Vishwas</span>
+              <span className="text-white/40 group-hover:text-white/80 transition-colors hidden md:inline">
+                (vyommehta197@gmail.com)
+              </span>
+              <span className="text-white/60 transition-transform group-hover:translate-x-0.5">↗</span>
+            </a>
           </Magnetic>
-          <Magnetic as="a" strength={0.4}
-            href="./resume.pdf"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex items-center justify-center rounded-full border border-titanium/40 px-9 py-4 font-sans text-[0.7rem] uppercase tracking-[0.22em] text-bone transition-colors duration-300 hover:border-bone hover:text-bone"
-            data-cursor="magnetic"
+
+          <button
+            type="button"
+            onClick={handleCopyEmail}
+            className="inline-flex items-center gap-2 rounded-full border border-black/15 bg-white/70 backdrop-blur-md px-5 py-3.5 font-sans text-xs font-medium uppercase tracking-[0.12em] text-[#121212] hover:border-black/35 hover:bg-white transition-all shadow-sm active:scale-95"
+            data-cursor="hover"
+            aria-label="Copy email address"
           >
-            View Resume ↗
+            {copied ? (
+              <span className="text-emerald-600 font-semibold">✓ Copied to clipboard</span>
+            ) : (
+              <>
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <rect x="9" y="9" width="13" height="13" rx="2" ry="2" />
+                  <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" />
+                </svg>
+                <span>Copy Email</span>
+              </>
+            )}
+          </button>
+
+          <Magnetic as="div" strength={0.35}>
+            <a
+              href="./resume.pdf"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center justify-center rounded-full border border-black/15 bg-transparent px-6 py-3.5 font-sans text-xs uppercase tracking-[0.14em] text-bone transition-all duration-300 hover:border-black/50 hover:bg-black/5"
+              data-cursor="magnetic"
+            >
+              View Resume ↗
+            </a>
           </Magnetic>
         </div>
         <div className="mt-6 flex items-center gap-8">

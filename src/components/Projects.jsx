@@ -21,11 +21,11 @@ const projects = [
       'Strategic trust markers at peak hesitation moments'
     ],
     stack: ['Figma', 'Protopie'],
-    protoUrl: './assets/nocturne-prototype.html?embed=1',
+    protoUrl: './assets/nocturne-prototype.html',
     preview: './assets/project_nocturne_checkout.png',
     previewAlt: 'Nocturne blame-absorbing checkout error receipt with saved order and state recovery',
     previewPos: 'object-[center_42%]',
-    pos: { top: '22%', left: '4%', rotate: '-7deg' },
+    pos: { top: '26%', left: '4%', rotate: '-6deg' },
     size: 'w-[260px] h-[340px] md:w-[280px] md:h-[360px] lg:w-[290px] lg:h-[380px]',
   },
   {
@@ -43,11 +43,11 @@ const projects = [
       'Transparent ledger loops for real-time auditability'
     ],
     stack: ['Figma', 'Protopie'],
-    protoUrl: './assets/munim-prototype.html?embed=1',
+    protoUrl: './assets/munim-prototype.html',
     preview: './assets/project_munim.png',
     previewAlt: 'Munim ledger showing spend against a fixed NPCI delegation ceiling',
     previewPos: 'object-top',
-    pos: { bottom: '6%', left: '18%', rotate: '5deg' },
+    pos: { bottom: '6%', left: '23%', rotate: '4deg' },
     size: 'w-[250px] h-[330px] md:w-[270px] md:h-[350px] lg:w-[280px] lg:h-[370px]',
   },
   {
@@ -65,11 +65,11 @@ const projects = [
       'Striking vermilion-and-ink editorial visual system'
     ],
     stack: ['Figma', 'Protopie'],
-    protoUrl: './assets/awara-prototype.html?embed=1',
+    protoUrl: './assets/awara-prototype.html',
     preview: './assets/project_awara_itinerary.png',
     previewAlt: 'Awara living adaptive itinerary timeline showing Day 1 Old City Jaipur schedule and adjust sheets',
     previewPos: 'object-[center_12%]',
-    pos: { top: '22%', right: '4%', rotate: '6deg' },
+    pos: { top: '29%', left: 'calc(50% - 145px)', rotate: '-1deg' },
     size: 'w-[260px] h-[340px] md:w-[280px] md:h-[360px] lg:w-[290px] lg:h-[380px]',
   },
   {
@@ -93,7 +93,7 @@ const projects = [
     previewPos: 'object-center',
     link: 'https://www.behance.net/vishwashmehta',
     linkLabel: 'See Brand System ↗',
-    pos: { bottom: '6%', right: '18%', rotate: '-5deg' },
+    pos: { bottom: '6%', right: '23%', rotate: '4deg' },
     size: 'w-[250px] h-[330px] md:w-[270px] md:h-[350px] lg:w-[280px] lg:h-[370px]',
   },
   {
@@ -117,7 +117,7 @@ const projects = [
     previewPos: 'object-top',
     link: 'https://vyshwas.github.io/gamut/',
     linkLabel: 'Launch Token Engine ↗',
-    pos: { bottom: '10%', left: 'calc(50% - 140px)', rotate: '2deg' },
+    pos: { top: '26%', right: '4%', rotate: '-5deg' },
     size: 'w-[250px] h-[330px] md:w-[270px] md:h-[350px] lg:w-[280px] lg:h-[370px]',
   }
 ]
@@ -125,34 +125,49 @@ const projects = [
 export default function Projects() {
   const containerRef = useRef(null)
   const [activeProto, setActiveProto] = useState(null)
+  const [modalMode, setModalMode] = useState('prototype') // 'prototype' | 'spec'
+  const [hudOpen, setHudOpen] = useState(false)
   const drawerRef = useRef(null)
 
-  // Close drawer on Escape key
+  const openDrawer = useCallback((p) => {
+    setActiveProto(p)
+    setModalMode(p.protoUrl ? 'prototype' : 'spec')
+    setHudOpen(false)
+  }, [])
+
+  const closeDrawer = useCallback(() => {
+    setActiveProto(null)
+    setHudOpen(false)
+  }, [])
+
+  // Robust Capture-Phase Escape Listener & Full-Tree Scroll Lock
   useEffect(() => {
-    const handleEsc = (e) => {
-      if (e.key === 'Escape' && activeProto) {
-        setActiveProto(null)
+    if (!activeProto) return
+
+    const handleKeyDown = (e) => {
+      if (e.key === 'Escape') {
+        e.preventDefault()
+        e.stopPropagation()
+        closeDrawer()
       }
     }
-    window.addEventListener('keydown', handleEsc)
-    return () => window.removeEventListener('keydown', handleEsc)
-  }, [activeProto])
 
-  // Lock body scroll when drawer is open
-  useEffect(() => {
-    if (activeProto) {
-      document.body.style.overflow = 'hidden'
-      // Also pause Lenis smooth scroll
-      window.__lenis?.stop()
-    } else {
-      document.body.style.overflow = ''
-      window.__lenis?.start()
-    }
+    // Capture phase ensures Escape fires even if focus is inside the iframe
+    window.addEventListener('keydown', handleKeyDown, { capture: true })
+
+    const prevBodyOverflow = document.body.style.overflow
+    const prevHtmlOverflow = document.documentElement.style.overflow
+    document.body.style.overflow = 'hidden'
+    document.documentElement.style.overflow = 'hidden'
+    window.__lenis?.stop()
+
     return () => {
-      document.body.style.overflow = ''
+      window.removeEventListener('keydown', handleKeyDown, { capture: true })
+      document.body.style.overflow = prevBodyOverflow
+      document.documentElement.style.overflow = prevHtmlOverflow
       window.__lenis?.start()
     }
-  }, [activeProto])
+  }, [activeProto, closeDrawer])
 
   // Floating animation for cards (desktop only — mobile uses static stacked layout)
   useLayoutEffect(() => {
@@ -183,14 +198,11 @@ export default function Projects() {
   useLayoutEffect(() => {
     if (!drawerRef.current) return
     if (activeProto) {
-      gsap.to(drawerRef.current, { x: '0%', duration: 0.6, ease: 'expo.out' })
+      gsap.to(drawerRef.current, { x: '0%', duration: 0.5, ease: 'expo.out' })
     } else {
-      gsap.to(drawerRef.current, { x: '100%', duration: 0.5, ease: 'expo.in' })
+      gsap.to(drawerRef.current, { x: '100%', duration: 0.4, ease: 'expo.in' })
     }
   }, [activeProto])
-
-  const openDrawer = useCallback((p) => setActiveProto(p), [])
-  const closeDrawer = useCallback(() => setActiveProto(null), [])
 
   return (
     <>
@@ -349,201 +361,390 @@ export default function Projects() {
         </div>
       </section>
 
-      {/* ─── PROTOTYPE DRAWER ─── */}
+      {/* ─── DUAL-MODE CASE STUDY & PROTOTYPE WORKSPACE ─── */}
       <div
         ref={drawerRef}
-        className="fixed inset-0 z-[99999] flex justify-end pointer-events-none"
+        className="fixed inset-0 z-[99999] pointer-events-none flex flex-col bg-[#0d0d0d]"
         style={{ transform: 'translateX(100%)' }}
       >
-        {/* Scrim */}
-        <div
-          className="absolute inset-0 bg-black/50 pointer-events-auto"
-          onClick={closeDrawer}
-        />
-        
-        {/* Drawer panel */}
-        <div 
-          data-lenis-prevent="true"
-          className="relative w-full md:w-[92vw] lg:w-[88vw] max-w-7xl h-full bg-[#121212] pointer-events-auto shadow-2xl flex flex-col md:flex-row border-l border-white/10 overflow-hidden"
-        >
-          
-          {/* Close button (always visible) */}
-          <button
-            onClick={closeDrawer}
-            className="absolute top-5 right-5 z-50 flex h-11 items-center gap-2.5 rounded-full border border-white/15 bg-black/60 px-4 font-sans text-[0.65rem] uppercase tracking-[0.25em] text-[#f7f6f3] backdrop-blur-md transition-colors hover:bg-white/15 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#f7f6f3]"
-            aria-label="Close drawer"
-            data-cursor="hover"
-          >
-            Esc
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-              <path d="M18 6L6 18M6 6l12 12" />
-            </svg>
-          </button>
-
-          {/* Left Panel: Project Write-up */}
-          <div 
-            data-lenis-prevent="true"
-            onWheel={(e) => e.stopPropagation()}
-            className="w-full h-[45vh] md:h-full md:w-[380px] lg:w-[460px] bg-[#1a1a1a] flex-shrink-0 border-b md:border-b-0 md:border-r border-white/10 overflow-y-auto overscroll-contain p-6 md:p-10 block"
-          >
-            {activeProto && (
-              <div className="space-y-7 pb-10">
-                {/* Header */}
-                <div>
-                  <div className="flex items-center gap-3 mb-4">
-                    <span className="font-sans text-xs text-white/40 uppercase tracking-widest">
-                      {activeProto.no}
-                    </span>
-                    <span className="w-px h-3 bg-white/20" />
-                    <span className="font-sans text-xs text-white/40 uppercase tracking-widest">
-                      {activeProto.year}
-                    </span>
-                  </div>
-                  <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-3 tracking-tight">
-                    {activeProto.title}
-                  </h2>
-                  <p className="text-white/70 text-sm md:text-base leading-relaxed">
-                    {activeProto.tagline}
-                  </p>
-                </div>
-
-                {/* Meta */}
-                <div className="flex gap-8">
-                  <div className="flex flex-col gap-1">
-                    <span className="font-sans text-[10px] uppercase tracking-widest text-white/35">Role</span>
-                    <span className="text-white/85 text-sm">{activeProto.role}</span>
-                  </div>
-                  <div className="flex flex-col gap-1">
-                    <span className="font-sans text-[10px] uppercase tracking-widest text-white/35">Stack</span>
-                    <span className="text-white/85 text-sm">{activeProto.stack.join(', ')}</span>
-                  </div>
-                </div>
-
-                <hr className="border-white/8" />
-
-                {/* Context */}
-                {activeProto.context && (
-                  <div>
-                    <h4 className="font-sans text-[10px] uppercase tracking-widest text-white/35 mb-3">Context</h4>
-                    <p className="text-white/75 text-sm leading-relaxed">{activeProto.context}</p>
-                  </div>
-                )}
-
-                {/* Problem */}
-                <div>
-                  <h4 className="font-sans text-[10px] uppercase tracking-widest text-white/35 mb-3">The Problem</h4>
-                  <p className="text-white/75 text-sm leading-relaxed">{activeProto.problem}</p>
-                </div>
-
-                {/* Solution */}
-                <div>
-                  <h4 className="font-sans text-[10px] uppercase tracking-widest text-white/35 mb-3">The Solution</h4>
-                  <p className="text-white/75 text-sm leading-relaxed">{activeProto.approach}</p>
-                </div>
-
-                {/* Outcome */}
-                <div>
-                  <h4 className="font-sans text-[10px] uppercase tracking-widest text-white/35 mb-3">Impact & Outcomes</h4>
-                  <ul className="flex flex-col gap-2">
-                    {activeProto.outcome.map((item, i) => (
-                      <li key={i} className="flex gap-2.5 text-sm text-white/75 leading-relaxed">
-                        <span className="text-white/30 mt-0.5">•</span>
-                        {item}
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-
-                {/* Direct Action Link */}
-                {activeProto.link ? (
-                  <div className="pt-2">
-                    <a
-                      href={activeProto.link}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="inline-flex items-center justify-center gap-2.5 w-full py-3.5 px-5 rounded-full bg-white/10 hover:bg-white/20 text-[#f7f6f3] font-sans text-xs uppercase tracking-[0.2em] font-semibold border border-white/15 transition-all text-center"
-                    >
-                      {activeProto.linkLabel || 'Open Project ↗'}
-                    </a>
-                  </div>
-                ) : activeProto.protoUrl && (
-                  <div className="pt-2">
-                    <a
-                      href={activeProto.protoUrl}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="inline-flex items-center justify-center gap-2.5 w-full py-3 px-4 rounded-full bg-white/10 hover:bg-white/20 text-[#f7f6f3] font-sans text-[0.7rem] uppercase tracking-[0.2em] border border-white/15 transition-all text-center"
-                    >
-                      Launch Standalone Prototype ↗
-                    </a>
-                  </div>
-                )}
-
-                {/* Scroll indicator for mobile — tells user the prototype is below */}
-                <div className="md:hidden text-center pt-4 border-t border-white/8">
-                  <span className="font-sans text-[10px] uppercase tracking-widest text-white/40">
-                    ↓ Scroll down for {activeProto.protoUrl ? 'interactive prototype' : 'visual system'}
-                  </span>
-                </div>
-              </div>
-            )}
+        {/* Top Header Bar */}
+        <div className="w-full h-14 px-4 sm:px-6 flex items-center justify-between border-b border-white/10 bg-[#141414] pointer-events-auto flex-shrink-0 z-50">
+          <div className="flex items-center gap-3 sm:gap-4 overflow-hidden">
+            <span className="font-sans text-xs uppercase tracking-[0.2em] text-white/40 flex-shrink-0">
+              {activeProto?.no}
+            </span>
+            <span className="w-px h-3 bg-white/20 flex-shrink-0" />
+            <h3 className="font-display italic text-lg md:text-xl text-[#f7f6f3] truncate">
+              {activeProto?.title}
+            </h3>
+            <span className="hidden lg:inline-block px-2.5 py-0.5 rounded-full bg-white/10 text-[0.62rem] font-sans uppercase tracking-[0.18em] text-white/70 border border-white/10 flex-shrink-0">
+              {activeProto?.protoUrl ? 'Interactive Prototype' : 'Design System'}
+            </span>
           </div>
 
-          {/* Right Panel: Interactive Prototype or Visual Showcase */}
-          <div 
-            data-lenis-prevent="true"
-            className="flex-1 w-full h-[55vh] md:h-full bg-black relative flex items-center justify-center p-2 sm:p-4 md:p-6 overflow-hidden"
-          >
-            <div className="absolute inset-0 bg-void duotone" />
-            
-            {/* Ambient glows behind the prototype */}
-            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[60%] h-[80%] rounded-full bg-white blur-[120px] opacity-[0.07]" />
+          {/* Segmented Mode Switcher (for interactive prototypes) */}
+          {activeProto?.protoUrl && (
+            <div className="flex items-center p-0.5 rounded-full bg-white/5 border border-white/10 flex-shrink-0">
+              <button
+                type="button"
+                onClick={() => setModalMode('prototype')}
+                className={`px-3 py-1 rounded-full font-sans text-[0.65rem] uppercase tracking-[0.16em] transition-all ${
+                  modalMode === 'prototype'
+                    ? 'bg-[#f7f6f3] text-[#121212] font-semibold shadow'
+                    : 'text-white/60 hover:text-white'
+                }`}
+                data-cursor="hover"
+              >
+                ⦿ Live Prototype
+              </button>
+              <button
+                type="button"
+                onClick={() => setModalMode('spec')}
+                className={`px-3 py-1 rounded-full font-sans text-[0.65rem] uppercase tracking-[0.16em] transition-all ${
+                  modalMode === 'spec'
+                    ? 'bg-[#f7f6f3] text-[#121212] font-semibold shadow'
+                    : 'text-white/60 hover:text-white'
+                }`}
+                data-cursor="hover"
+              >
+                ☵ Case Study Spec
+              </button>
+            </div>
+          )}
 
-            {activeProto && (
-              activeProto.protoUrl ? (
-                /* Interactive Phone Prototype */
-                <div 
-                  data-lenis-prevent="true"
-                  className="relative z-10 w-full h-full max-w-[480px] flex items-center justify-center mx-auto"
+          <div className="flex items-center gap-2 sm:gap-3 flex-shrink-0">
+            {activeProto?.protoUrl && modalMode === 'prototype' && (
+              <button
+                type="button"
+                onClick={() => setHudOpen(!hudOpen)}
+                className={`hidden md:inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full border text-[0.65rem] font-sans uppercase tracking-[0.16em] transition-all ${
+                  hudOpen
+                    ? 'bg-white text-[#121212] border-white font-semibold'
+                    : 'border-white/20 bg-white/5 hover:bg-white/15 text-white/80 hover:text-white'
+                }`}
+                data-cursor="hover"
+              >
+                {hudOpen ? '✕ Close Intel' : '◧ Quick Spec & Metrics'}
+              </button>
+            )}
+
+            {activeProto?.protoUrl && (
+              <a
+                href={activeProto.protoUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="hidden sm:inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full border border-white/15 bg-white/5 hover:bg-white/15 text-white/80 hover:text-white font-sans text-[0.65rem] uppercase tracking-[0.16em] transition-colors"
+                data-cursor="hover"
+              >
+                Open in new tab ↗
+              </a>
+            )}
+            {activeProto?.link && (
+              <a
+                href={activeProto.link}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="hidden sm:inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full border border-white/15 bg-white/5 hover:bg-white/15 text-white/80 hover:text-white font-sans text-[0.65rem] uppercase tracking-[0.16em] transition-colors"
+                data-cursor="hover"
+              >
+                {activeProto.linkLabel || 'Open System ↗'}
+              </a>
+            )}
+            <button
+              onClick={closeDrawer}
+              className="flex items-center gap-2 px-3.5 py-1.5 rounded-full border border-white/20 bg-white/10 hover:bg-white/20 text-[#f7f6f3] font-sans text-xs uppercase tracking-[0.2em] transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-white"
+              aria-label="Close modal"
+              data-cursor="hover"
+            >
+              Esc Close ×
+            </button>
+          </div>
+        </div>
+
+        {/* Modal Body Container */}
+        <div 
+          data-lenis-prevent="true"
+          className="flex-1 w-full h-[calc(100vh-56px)] bg-black relative pointer-events-auto overflow-hidden"
+        >
+          {activeProto && (
+            modalMode === 'prototype' && activeProto.protoUrl ? (
+              /* Full-Bleed Standalone Embedded Prototype View */
+              <div className="w-full h-full relative">
+                <iframe
+                  src={activeProto.protoUrl}
+                  title={`${activeProto.title} Interactive Prototype`}
+                  className="w-full h-full border-none bg-black hw"
+                  loading="eager"
+                />
+
+                {/* Mobile Quick Intel HUD trigger pill */}
+                <button
+                  type="button"
+                  onClick={() => setHudOpen(!hudOpen)}
+                  className="md:hidden absolute bottom-5 right-5 z-40 px-3.5 py-2 rounded-full bg-[#141414]/90 backdrop-blur-md border border-white/20 text-[#f7f6f3] font-sans text-[0.62rem] uppercase tracking-[0.18em] shadow-2xl flex items-center gap-1.5"
+                  data-cursor="hover"
                 >
-                  <iframe
-                    src={activeProto.protoUrl}
-                    title={`${activeProto.title} Interactive Prototype`}
-                    className="w-full h-full max-h-[880px] border-0 bg-transparent rounded-none md:rounded-[3rem] transition-all"
-                    style={{
-                      transform: 'scale(min(1, calc((100vh - 48px) / 860)))',
-                      transformOrigin: 'center center'
-                    }}
-                  />
-                </div>
-              ) : (
-                /* Visual Showcase for Case Studies (Whole Fruit, Gamut) */
-                <div 
-                  data-lenis-prevent="true"
-                  className="relative z-10 w-full h-full max-w-3xl flex flex-col items-center justify-center p-4 md:p-8 mx-auto"
-                >
-                  <div className="relative w-full max-h-[70vh] rounded-2xl overflow-hidden border border-white/10 shadow-2xl bg-[#141414] mb-6 flex items-center justify-center">
+                  {hudOpen ? '✕ Close Intel' : '◧ Quick Spec'}
+                </button>
+
+                {/* Collapsible Quick Intel HUD drawer overlay */}
+                {hudOpen && (
+                  <div
+                    className="absolute top-0 right-0 bottom-0 w-full sm:w-[420px] md:w-[460px] bg-[#121212]/95 backdrop-blur-2xl border-l border-white/15 p-6 md:p-8 flex flex-col justify-between overflow-y-auto z-40 text-[#f7f6f3] shadow-2xl"
+                    data-lenis-prevent="true"
+                  >
+                    <div>
+                      <div className="flex items-center justify-between mb-6 pb-4 border-b border-white/10">
+                        <div className="flex items-center gap-3">
+                          <span className="font-sans text-[0.65rem] uppercase tracking-[0.25em] text-white/50">
+                            {activeProto.no} // Quick Spec
+                          </span>
+                          <span className="w-px h-3 bg-white/20" />
+                          <span className="font-sans text-[0.65rem] uppercase tracking-[0.2em] text-white/50">
+                            {activeProto.role}
+                          </span>
+                        </div>
+                        <button
+                          onClick={() => setHudOpen(false)}
+                          className="p-1 rounded-full text-white/50 hover:text-white transition-colors text-xs font-sans uppercase tracking-[0.2em]"
+                          data-cursor="hover"
+                        >
+                          ✕ Close
+                        </button>
+                      </div>
+
+                      <h3 className="font-display italic text-2xl md:text-3xl mb-2 text-[#f7f6f3]">
+                        {activeProto.title}
+                      </h3>
+                      <p className="font-sans text-xs text-white/70 leading-relaxed mb-6 italic">
+                        "{activeProto.tagline}"
+                      </p>
+
+                      <div className="space-y-5 text-xs font-sans leading-relaxed text-white/80">
+                        <div>
+                          <span className="block font-sans text-[0.6rem] uppercase tracking-[0.25em] text-white/40 mb-1.5">
+                            [ 01 / Strategic Context ]
+                          </span>
+                          <p className="text-white/75">{activeProto.context}</p>
+                        </div>
+
+                        <div>
+                          <span className="block font-sans text-[0.6rem] uppercase tracking-[0.25em] text-white/40 mb-1.5">
+                            [ 02 / The Problem & Friction ]
+                          </span>
+                          <p className="text-white/75">{activeProto.problem}</p>
+                        </div>
+
+                        <div>
+                          <span className="block font-sans text-[0.6rem] uppercase tracking-[0.25em] text-white/40 mb-1.5">
+                            [ 03 / Interaction Architecture ]
+                          </span>
+                          <p className="text-white/75">{activeProto.approach}</p>
+                        </div>
+
+                        <div>
+                          <span className="block font-sans text-[0.6rem] uppercase tracking-[0.25em] text-white/40 mb-2">
+                            [ 04 / Measurable Outcomes ]
+                          </span>
+                          <div className="space-y-2">
+                            {activeProto.outcome?.map((out, idx) => (
+                              <div key={idx} className="flex items-start gap-2.5 p-2.5 rounded-xl bg-white/5 border border-white/5">
+                                <span className="text-white/40 mt-0.5 text-[0.7rem]">✓</span>
+                                <span className="text-white/90 text-[0.72rem]">{out}</span>
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+
+                        <div className="pt-2">
+                          <span className="block font-sans text-[0.6rem] uppercase tracking-[0.25em] text-white/40 mb-2">
+                            [ 05 / Tools & Stack ]
+                          </span>
+                          <div className="flex flex-wrap gap-1.5">
+                            {activeProto.stack?.map((tool, idx) => (
+                              <span key={idx} className="px-2.5 py-1 rounded-full bg-white/10 text-[0.62rem] font-sans uppercase tracking-[0.15em] text-white/70 border border-white/10">
+                                {tool}
+                              </span>
+                            ))}
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="pt-6 mt-6 border-t border-white/10 flex items-center justify-between">
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setHudOpen(false)
+                          setModalMode('spec')
+                        }}
+                        className="text-[0.65rem] font-sans uppercase tracking-[0.2em] text-white/70 hover:text-white underline underline-offset-4"
+                        data-cursor="hover"
+                      >
+                        Open Full Spec View →
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => setHudOpen(false)}
+                        className="px-4 py-2 rounded-full bg-white text-[#121212] font-sans text-[0.65rem] font-bold uppercase tracking-[0.18em]"
+                        data-cursor="hover"
+                      >
+                        Keep Interacting
+                      </button>
+                    </div>
+                  </div>
+                )}
+              </div>
+            ) : (
+              /* Case Study Specification View (Deep Strategic Rationale) */
+              <div 
+                data-lenis-prevent="true"
+                className="w-full h-full overflow-y-auto px-6 py-10 md:px-16 md:py-16 flex flex-col items-center bg-[#0d0d0d] text-[#f7f6f3]"
+              >
+                <div className="max-w-4xl w-full mx-auto">
+                  {/* Meta eyebrow bar */}
+                  <div className="flex flex-wrap items-center gap-3 mb-6 pb-4 border-b border-white/10">
+                    <span className="font-sans text-xs uppercase tracking-[0.25em] text-white/40">
+                      Case Study {activeProto.no}
+                    </span>
+                    <span className="w-px h-3 bg-white/20" />
+                    <span className="font-sans text-xs uppercase tracking-[0.25em] text-white/40">
+                      {activeProto.year}
+                    </span>
+                    <span className="w-px h-3 bg-white/20" />
+                    <span className="font-sans text-xs uppercase tracking-[0.25em] text-white/70">
+                      {activeProto.role}
+                    </span>
+                    {activeProto.protoUrl && (
+                      <button
+                        type="button"
+                        onClick={() => setModalMode('prototype')}
+                        className="ml-auto inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[#f7f6f3] text-[#121212] font-sans text-[0.68rem] font-bold uppercase tracking-[0.18em] hover:scale-105 active:scale-95 transition-transform shadow-xl"
+                        data-cursor="hover"
+                      >
+                        ⦿ Run Live Prototype ↗
+                      </button>
+                    )}
+                  </div>
+
+                  {/* Title and Strategic Tagline */}
+                  <h2 className="font-display italic text-4xl sm:text-6xl md:text-7xl text-[#f7f6f3] mb-4 tracking-tight leading-[0.95]">
+                    {activeProto.title}
+                  </h2>
+                  <p className="max-w-2xl font-sans text-base sm:text-lg text-white/70 leading-relaxed mb-10">
+                    {activeProto.tagline}
+                  </p>
+
+                  {/* Visual Interface Preview */}
+                  <div className="w-full max-h-[55vh] rounded-3xl overflow-hidden border border-white/10 shadow-2xl bg-[#141414] mb-12 flex items-center justify-center relative group">
                     <img
                       src={activeProto.preview}
                       alt={activeProto.previewAlt || activeProto.title}
-                      className="w-full h-full object-contain max-h-[62vh]"
+                      className="w-full h-full object-contain max-h-[52vh]"
                     />
+                    {activeProto.protoUrl && (
+                      <div className="absolute inset-0 bg-black/45 backdrop-blur-[2px] opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                        <button
+                          type="button"
+                          onClick={() => setModalMode('prototype')}
+                          className="px-6 py-3 rounded-full bg-white text-[#121212] font-sans text-xs font-bold uppercase tracking-[0.2em] shadow-2xl transition-transform hover:scale-105"
+                          data-cursor="hover"
+                        >
+                          ⦿ Run Live Interactive Prototype
+                        </button>
+                      </div>
+                    )}
                   </div>
-                  {activeProto.link && (
-                    <a
-                      href={activeProto.link}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="inline-flex items-center gap-2.5 px-7 py-3.5 rounded-full bg-[#f7f6f3] text-[#121212] font-sans text-xs font-semibold uppercase tracking-[0.2em] transition-transform hover:scale-105 active:scale-95 shadow-xl"
-                      data-cursor="hover"
-                    >
-                      {activeProto.linkLabel || 'Explore System ↗'}
-                    </a>
-                  )}
+
+                  {/* Two-column brutalist design specification */}
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-10 md:gap-14 mb-14 text-sm font-sans leading-relaxed">
+                    <div className="space-y-8">
+                      <div>
+                        <span className="block font-sans text-[0.65rem] uppercase tracking-[0.3em] text-white/40 mb-3">
+                          [ 01 / Strategic Context ]
+                        </span>
+                        <p className="text-white/80 leading-relaxed text-sm md:text-base">
+                          {activeProto.context}
+                        </p>
+                      </div>
+
+                      <div>
+                        <span className="block font-sans text-[0.65rem] uppercase tracking-[0.3em] text-white/40 mb-3">
+                          [ 02 / The Problem & Friction ]
+                        </span>
+                        <p className="text-white/80 leading-relaxed text-sm md:text-base">
+                          {activeProto.problem}
+                        </p>
+                      </div>
+                    </div>
+
+                    <div className="space-y-8">
+                      <div>
+                        <span className="block font-sans text-[0.65rem] uppercase tracking-[0.3em] text-white/40 mb-3">
+                          [ 03 / Interaction Architecture ]
+                        </span>
+                        <p className="text-white/80 leading-relaxed text-sm md:text-base">
+                          {activeProto.approach}
+                        </p>
+                      </div>
+
+                      <div>
+                        <span className="block font-sans text-[0.65rem] uppercase tracking-[0.3em] text-white/40 mb-3">
+                          [ 04 / Core Outcomes & Impact ]
+                        </span>
+                        <div className="space-y-2.5">
+                          {activeProto.outcome?.map((out, idx) => (
+                            <div key={idx} className="flex items-start gap-3 p-3.5 rounded-2xl bg-[#141414] border border-white/10">
+                              <span className="text-white/50 mt-0.5 text-xs">✓</span>
+                              <span className="text-white/90 text-xs sm:text-sm font-medium">{out}</span>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Footer Action Strip */}
+                  <div className="pt-8 border-t border-white/10 flex flex-wrap items-center justify-between gap-4">
+                    <div className="flex flex-wrap items-center gap-2">
+                      <span className="font-sans text-[0.65rem] uppercase tracking-[0.2em] text-white/40 mr-2">
+                        Stack:
+                      </span>
+                      {activeProto.stack?.map((tool, idx) => (
+                        <span key={idx} className="px-3 py-1 rounded-full bg-white/5 text-[0.65rem] font-sans uppercase tracking-[0.16em] text-white/70 border border-white/10">
+                          {tool}
+                        </span>
+                      ))}
+                    </div>
+
+                    <div className="flex items-center gap-3">
+                      {activeProto.protoUrl && (
+                        <button
+                          type="button"
+                          onClick={() => setModalMode('prototype')}
+                          className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-[#f7f6f3] text-[#121212] font-sans text-xs font-bold uppercase tracking-[0.2em] transition-transform hover:scale-105 active:scale-95 shadow-2xl"
+                          data-cursor="hover"
+                        >
+                          ⦿ Run Live Prototype ↗
+                        </button>
+                      )}
+                      {activeProto.link && (
+                        <a
+                          href={activeProto.link}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-[#f7f6f3] text-[#121212] font-sans text-xs font-bold uppercase tracking-[0.2em] transition-transform hover:scale-105 active:scale-95 shadow-2xl"
+                          data-cursor="hover"
+                        >
+                          {activeProto.linkLabel || 'Explore System ↗'}
+                        </a>
+                      )}
+                    </div>
+                  </div>
                 </div>
-              )
-            )}
-          </div>
+              </div>
+            )
+          )}
         </div>
       </div>
     </>

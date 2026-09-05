@@ -4,15 +4,11 @@ import { reducedMotion } from '../App.jsx'
 export default function MagneticCursor() {
   const cursorRef = useRef(null)
   const followerRef = useRef(null)
-  const [visible, setVisible] = useState(false)
-  const [state, setState] = useState('default')
+  const [visible] = useState(() => {
+    if (typeof window === 'undefined') return false
+    return !reducedMotion() && !window.matchMedia('(pointer: coarse)').matches
+  })
   const reqRef = useRef(null)
-
-  useEffect(() => {
-    if (reducedMotion() || window.matchMedia('(pointer: coarse)').matches) return
-
-    setVisible(true)
-  }, [])
 
   useEffect(() => {
     if (!visible) return
@@ -23,9 +19,9 @@ export default function MagneticCursor() {
 
     document.body.style.cursor = 'none'
 
-    let mouseX = 0, mouseY = 0
-    let cursorX = 0, cursorY = 0
-    let followerX = 0, followerY = 0
+    let mouseX = window.innerWidth / 2, mouseY = window.innerHeight / 2
+    let cursorX = mouseX, cursorY = mouseY
+    let followerX = mouseX, followerY = mouseY
 
     const onMouseMove = (e) => {
       mouseX = e.clientX
@@ -34,12 +30,12 @@ export default function MagneticCursor() {
 
     function animate() {
       // Smooth the dot cursor (fast follow)
-      cursorX += (mouseX - cursorX) * 0.35
-      cursorY += (mouseY - cursorY) * 0.35
+      cursorX += (mouseX - cursorX) * 0.38
+      cursorY += (mouseY - cursorY) * 0.38
 
       // Smooth the follower ring (slow follow)
-      followerX += (mouseX - followerX) * 0.12
-      followerY += (mouseY - followerY) * 0.12
+      followerX += (mouseX - followerX) * 0.14
+      followerY += (mouseY - followerY) * 0.14
 
       cursor.style.transform = `translate(${cursorX}px, ${cursorY}px) translate(-50%, -50%)`
       follower.style.transform = `translate(${followerX}px, ${followerY}px) translate(-50%, -50%)`
@@ -58,20 +54,18 @@ export default function MagneticCursor() {
   }, [visible])
 
   useEffect(() => {
-    if (reducedMotion()) return
+    if (reducedMotion() || !visible) return
 
     const handleMouseOver = (e) => {
       const target = e.target.closest('[data-cursor]')
       if (!target) return
       const type = target.dataset.cursor
-      setState(type)
       cursorRef.current?.classList.add('is-' + type)
       followerRef.current?.classList.add('is-' + type)
     }
     const handleMouseOut = (e) => {
       const target = e.target.closest('[data-cursor]')
       if (!target) return
-      setState('default')
       cursorRef.current?.classList.remove('is-hover', 'is-magnetic', 'is-text', 'is-drag')
       followerRef.current?.classList.remove('is-hover', 'is-magnetic', 'is-text', 'is-drag')
     }
@@ -82,7 +76,7 @@ export default function MagneticCursor() {
       document.removeEventListener('mouseover', handleMouseOver)
       document.removeEventListener('mouseout', handleMouseOut)
     }
-  }, [])
+  }, [visible])
 
   if (!visible || reducedMotion()) return null
 
@@ -90,23 +84,65 @@ export default function MagneticCursor() {
     <>
       <div
         ref={cursorRef}
-        className="fixed top-0 left-0 pointer-events-none z-[10000] hw"
-        style={{ width: 12, height: 12, borderRadius: '50%', border: '2px solid #000000', background: '#000000', mixBlendMode: 'normal', transition: 'width 0.2s, height 0.2s, border-color 0.2s, background 0.1s' }}
+        className="fixed top-0 left-0 pointer-events-none z-[999999] hw"
+        style={{
+          width: 10,
+          height: 10,
+          borderRadius: '50%',
+          backgroundColor: '#ffffff',
+          mixBlendMode: 'difference',
+          transition: 'width 0.2s cubic-bezier(0.16, 1, 0.3, 1), height 0.2s cubic-bezier(0.16, 1, 0.3, 1)',
+        }}
         aria-hidden="true"
       />
       <div
         ref={followerRef}
-        className="fixed top-0 left-0 pointer-events-none z-[9999] hw"
-        style={{ width: 36, height: 36, borderRadius: '50%', border: '1.5px solid rgba(0,0,0,0.5)', mixBlendMode: 'normal', transition: 'width 0.3s, height 0.3s, border-color 0.3s' }}
+        className="fixed top-0 left-0 pointer-events-none z-[999998] hw"
+        style={{
+          width: 36,
+          height: 36,
+          borderRadius: '50%',
+          border: '1.5px solid rgba(255, 255, 255, 0.85)',
+          mixBlendMode: 'difference',
+          transition: 'width 0.25s cubic-bezier(0.16, 1, 0.3, 1), height 0.25s cubic-bezier(0.16, 1, 0.3, 1)',
+        }}
         aria-hidden="true"
       />
       <style>{`
-        .is-hover { width: 24px !important; height: 24px !important; border-color: #000000 !important; background: #000000 !important; }
-        .is-hover + * { width: 48px !important; height: 48px !important; border-color: rgba(0,0,0,0.3) !important; }
-        .is-magnetic { width: 20px !important; height: 20px !important; border-color: #000000 !important; background: #000000 !important; opacity: 0.8 !important; }
-        .is-magnetic + * { width: 48px !important; height: 48px !important; border-color: rgba(18,18,18,0.2) !important; }
-        .is-text { width: 40px !important; height: 4px !important; border-radius: 2px !important; border-color: #000000 !important; background: #000000 !important; }
-        .is-drag { width: 32px !important; height: 32px !important; border-color: #000000 !important; border-style: dashed !important; background: transparent !important; }
+        .is-hover {
+          width: 22px !important;
+          height: 22px !important;
+          background-color: #ffffff !important;
+          opacity: 0.95 !important;
+        }
+        .is-hover + * {
+          width: 48px !important;
+          height: 48px !important;
+          border-color: rgba(255, 255, 255, 0.6) !important;
+        }
+        .is-magnetic {
+          width: 20px !important;
+          height: 20px !important;
+          background-color: #ffffff !important;
+          opacity: 0.9 !important;
+        }
+        .is-magnetic + * {
+          width: 48px !important;
+          height: 48px !important;
+          border-color: rgba(255, 255, 255, 0.5) !important;
+        }
+        .is-text {
+          width: 36px !important;
+          height: 4px !important;
+          border-radius: 2px !important;
+          background-color: #ffffff !important;
+        }
+        .is-drag {
+          width: 36px !important;
+          height: 36px !important;
+          border: 1.5px dashed #ffffff !important;
+          background-color: transparent !important;
+        }
       `}</style>
     </>
   )

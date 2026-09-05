@@ -3,11 +3,6 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<script>
-  if (window.self !== window.top || location.search.indexOf('embed') !== -1) {
-    document.documentElement.classList.add('is-embed');
-  }
-</script>
 </head>
 <body>
 <title>Munim · Delegated UPI Concept</title>
@@ -322,25 +317,6 @@
   .big-ring .t{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;font-family:var(--mono);font-weight:600;font-variant-numeric:tabular-nums}
   .big-ring .t b{font-size:26px}
   .big-ring .t small{font-size:9px;letter-spacing:.18em;color:var(--ink-lo);margin-top:4px}
-
-  /* Embedded mode for drawer */
-  .is-embed body { overflow: hidden !important; background: #131E18 !important; margin: 0 !important; }
-  .is-embed .mn-page {
-    min-height: 100vh !important;
-    height: 100vh !important;
-    padding: 0 !important;
-    overflow: hidden !important;
-    display: flex !important;
-    align-items: center !important;
-    justify-content: center !important;
-    background: transparent !important;
-  }
-  .is-embed .mn-head,
-  .is-embed .mn-footnote { display: none !important; }
-  .is-embed .mn-phone {
-    margin: 0 auto !important;
-    box-shadow: 0 0 0 1px rgba(255,255,255,0.08), 0 25px 60px rgba(0,0,0,0.7) !important;
-  }
 </style>
 
 <div class="mn-page">

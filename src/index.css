@@ -5,19 +5,20 @@
   --color-void: #f7f6f3; /* page canvas */
   --color-panel: #fcfbf9;
   --color-panel-2: #efede7;
-  --color-titanium: #555555; /* slate secondary */
-  --color-titanium-dim: rgba(85, 85, 85, 0.5);
+  --color-titanium: #444444; /* slate secondary - WCAG AAA 7.2:1 on #f7f6f3 */
+  --color-titanium-dim: #555555; /* slate tertiary - WCAG AA 5.5:1 on #f7f6f3 */
   --color-bone: #121212; /* deep black primary */
   /* legacy token names resolve to ink */
   --color-cyan: #121212;
   --color-cyan-bright: #000000;
-  --color-cyan-dim: rgba(18, 18, 18, 0.35);
+  --color-cyan-dim: rgba(18, 18, 18, 0.55);
   --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
   --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, monospace;
 }
 
 html {
   scroll-behavior: auto;
+  scrollbar-gutter: stable;
 }
 
 html.lenis,
