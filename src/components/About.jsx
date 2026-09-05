@@ -35,24 +35,28 @@ export default function About() {
   }, [])
 
   const text =
-    'I started in computer science and moved into design to work on the decisions code alone cannot solve: what a product means, how it behaves, and why people should trust it. I work across research, product, brand, and front-end prototyping — systems thinking before visual polish.'
+    'I started in computer science and moved into design to work on the questions code alone cannot answer: what a product should do, how it should behave, and why people should trust it. Today I work across product strategy, research, interaction design, prototyping, and front-end execution. I use systems thinking to make complex ideas understandable before polishing the surface.'
 
   return (
     <section id="about" className="relative border-t border-black/5 bg-void px-6 py-[20vh] md:px-[8vw] flex flex-col items-center justify-center min-h-[70vh]" aria-label="About">
       <div className="max-w-4xl mx-auto text-center flex flex-col items-center">
-        <span className="mb-10 block font-sans text-[0.65rem] uppercase tracking-[0.35em] text-cyan" data-cursor="text">
-          [ Chapter 02 &mdash; Context ]
+        <span className="mb-8 block font-sans text-[0.65rem] uppercase tracking-[0.35em] text-cyan" data-cursor="text">
+          [ WHAT I BRING ]
         </span>
+        
+        <h2 className="mb-12 font-display italic text-4xl text-bone/90 md:text-5xl" data-cursor="text">
+          I work on the decisions between an idea and an interface.
+        </h2>
         
         <p
           ref={textRef}
-          className="text-3xl font-bold leading-[1.3] text-bone md:text-[3.2rem]"
+          className="text-2xl font-bold leading-[1.4] text-bone md:text-[2.8rem]"
           data-cursor="text"
         >
           {text.split(' ').map((word, i) => {
             // Emphasize specific words by wrapping them in italics or colored spans
-            const accent = ['computer', 'science', 'systems', 'thinking.', 'code'].includes(word.replace(/[^a-z.]/gi, ''))
-            const italic = ['design', 'trust', 'prototyping'].includes(word.replace(/[^a-z]/gi, ''))
+            const accent = ['computer', 'science', 'systems', 'thinking', 'code'].includes(word.replace(/[^a-z]/gi, ''))
+            const italic = ['design', 'trust', 'strategy,', 'prototyping,', 'execution.', 'understandable'].includes(word.replace(/[^a-z.,]/gi, ''))
             
             return (
               <span key={i} className="kinetic-word mr-[0.28em] inline-block">
@@ -67,6 +71,18 @@ export default function About() {
             )
           })}
         </p>
+
+        <div className="mt-20 flex flex-wrap items-center justify-center gap-4 text-[0.65rem] font-sans uppercase tracking-[0.2em] text-titanium/80">
+          <span>PROBLEM FRAMING</span>
+          <span className="text-cyan">&middot;</span>
+          <span>PRODUCT SYSTEMS</span>
+          <span className="text-cyan">&middot;</span>
+          <span>INTERACTION DESIGN</span>
+          <span className="text-cyan">&middot;</span>
+          <span>PROTOTYPING</span>
+          <span className="text-cyan">&middot;</span>
+          <span>FRONT-END EXECUTION</span>
+        </div>
       </div>
     </section>
   )

@@ -219,13 +219,36 @@ export default function Hero() {
         </h1>
 
         {/* Subtitle */}
-        <p className="mt-3 max-w-md font-sans font-normal leading-relaxed tracking-wide drop-shadow-[0_1px_4px_rgba(0,0,0,0.4)]"
+        <p className="mt-3 max-w-[28rem] font-sans font-normal leading-relaxed tracking-wide drop-shadow-[0_1px_4px_rgba(0,0,0,0.4)]"
           style={{
             fontSize: 'clamp(0.75rem, 0.95vw, 0.9rem)',
             color: 'rgba(247, 246, 243, 0.78)',
           }}
         >
-          Strategic product designer and creative technologist bridging the gap between design vision and front-end execution. I craft interfaces that feel inevitable.
+          I turn complex product ideas into clear systems, testable interfaces, and front-end experiences that are ready to build.
+        </p>
+
+        {/* CTAs */}
+        <div className="mt-7 flex flex-wrap justify-center gap-4 pointer-events-auto">
+          <button 
+            onClick={() => document.getElementById('experiments')?.scrollIntoView({ behavior: 'smooth' })}
+            className="rounded-full bg-bone px-7 py-3 font-sans text-[0.7rem] font-semibold uppercase tracking-[0.2em] text-void transition-transform hover:scale-105"
+          >
+            View Selected Work
+          </button>
+          <a 
+            href="./resume.pdf" 
+            target="_blank"
+            rel="noopener noreferrer"
+            className="rounded-full border border-bone/30 bg-black/20 backdrop-blur-sm px-7 py-3 font-sans text-[0.7rem] font-semibold uppercase tracking-[0.2em] text-bone transition-all hover:bg-bone/10"
+          >
+            Résumé &nearr;
+          </a>
+        </div>
+        
+        {/* Availability Line */}
+        <p className="mt-5 font-sans text-[0.65rem] tracking-[0.1em] text-bone/50 uppercase">
+          Open to design engineering roles in Bengaluru or remote.
         </p>
       </div>
 

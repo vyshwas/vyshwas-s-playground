@@ -286,14 +286,14 @@ export default function FooterExit() {
 
       <div className="mt-20 flex flex-col items-center gap-6 text-center">
         <span className="font-sans text-[0.68rem] font-medium uppercase tracking-[0.35em] text-titanium-dim" data-cursor="text">
-          [ Chapter 06 — Contact &amp; Terminal ]
+          [ Chapter 06 — Contact & Terminal ]
         </span>
-        <h2 className="max-w-2xl font-display text-3xl leading-[1.1] text-bone md:text-5xl" data-cursor="text">
-          Have a product that needs design depth?{' '}
-          <span className="text-titanium">Let's build it.</span>
+        <h2 className="max-w-2xl font-display text-4xl leading-[1.05] italic text-[#121212] md:text-5xl" data-cursor="text">
+          Looking for a product designer who can carry an idea into interaction?
         </h2>
-        <p className="max-w-md text-sm font-normal leading-relaxed text-titanium" data-cursor="text">
-          Open to full-time product design roles and select freelance engagements.
+        <p className="max-w-md text-[0.75rem] font-sans leading-relaxed text-titanium/80 mb-2" data-cursor="text">
+          I’m interested in product design and design-engineering roles where systems thinking, prototyping, and front-end judgment matter.<br/><br/>
+          <span className="uppercase tracking-[0.1em] font-medium">Bengaluru · Open to remote or relocation</span>
         </p>
 
         {/* Harmonized Candidate Contact Suite */}
@@ -301,74 +301,68 @@ export default function FooterExit() {
           <Magnetic as="div" strength={0.35}>
             <a
               href="mailto:vyommehta197@gmail.com?subject=Product%20Design%20%26%20Design%20Engineering%20Inquiry%20%E2%80%94%20Vishwas%20Mehta"
-              className="group relative inline-flex items-center gap-3 rounded-full bg-[#121212] px-7 py-3.5 font-sans text-xs font-medium tracking-[0.14em] uppercase text-[#f7f6f3] shadow-xl hover:bg-black transition-all duration-300"
+              className="group relative inline-flex items-center gap-3 rounded-full bg-[#121212] px-8 py-3.5 font-sans text-xs font-semibold tracking-[0.14em] uppercase text-[#f7f6f3] shadow-xl hover:scale-105 hover:bg-black transition-all duration-300"
               aria-label="Email Vishwas Mehta at vyommehta197@gmail.com"
               data-cursor="magnetic"
             >
-              <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-              <span>Contact Vishwas</span>
-              <span className="text-white/40 group-hover:text-white/80 transition-colors hidden md:inline">
-                (vyommehta197@gmail.com)
-              </span>
-              <span className="text-white/60 transition-transform group-hover:translate-x-0.5">↗</span>
+              <span>Email Vishwas</span>
             </a>
           </Magnetic>
-
-          <button
-            type="button"
-            onClick={handleCopyEmail}
-            className="inline-flex items-center gap-2 rounded-full border border-black/15 bg-white/70 backdrop-blur-md px-5 py-3.5 font-sans text-xs font-medium uppercase tracking-[0.12em] text-[#121212] hover:border-black/35 hover:bg-white transition-all shadow-sm active:scale-95"
-            data-cursor="hover"
-            aria-label="Copy email address"
-          >
-            {copied ? (
-              <span className="text-emerald-600 font-semibold">✓ Copied to clipboard</span>
-            ) : (
-              <>
-                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                  <rect x="9" y="9" width="13" height="13" rx="2" ry="2" />
-                  <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" />
-                </svg>
-                <span>Copy Email</span>
-              </>
-            )}
-          </button>
 
           <Magnetic as="div" strength={0.35}>
             <a
               href="./resume.pdf"
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center justify-center rounded-full border border-black/15 bg-transparent px-6 py-3.5 font-sans text-xs uppercase tracking-[0.14em] text-bone transition-all duration-300 hover:border-black/50 hover:bg-black/5"
+              className="inline-flex items-center justify-center rounded-full border border-black/15 bg-white/70 backdrop-blur-md px-6 py-3.5 font-sans text-xs font-medium uppercase tracking-[0.14em] text-[#121212] hover:border-black/35 hover:bg-white transition-all duration-300 shadow-sm"
               data-cursor="magnetic"
             >
-              View Resume ↗
+              Résumé &nearr;
+            </a>
+          </Magnetic>
+          
+          <Magnetic as="div" strength={0.35}>
+            <a
+              href="https://linkedin.com/in/vyshwasmehta"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center justify-center rounded-full border border-black/15 bg-white/70 backdrop-blur-md px-6 py-3.5 font-sans text-xs font-medium uppercase tracking-[0.14em] text-[#121212] hover:border-black/35 hover:bg-white transition-all duration-300 shadow-sm"
+              data-cursor="magnetic"
+            >
+              LinkedIn &nearr;
             </a>
           </Magnetic>
         </div>
-        <div className="mt-6 flex items-center gap-8">
-          {[
-            { label: 'GitHub', href: 'https://github.com/vyshwas' },
-            { label: 'LinkedIn', href: 'https://linkedin.com/in/vyshwasmehta' },
-            { label: 'Twitter', href: 'https://twitter.com/vyshwas' },
-            { label: 'Email', href: 'mailto:vyommehta197@gmail.com' },
-          ].map((s) => (
-            <a
-              key={s.label}
-              href={s.href}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="font-sans text-[0.6rem] uppercase tracking-[0.25em] text-titanium-dim transition-colors hover:text-bone"
-              data-cursor="magnetic"
-            >
-              {s.label} ↗
-            </a>
-          ))}
+        
+        <div className="mt-16 flex flex-col items-center justify-center gap-3">
+          <p className="font-sans text-[0.65rem] uppercase tracking-[0.3em] text-titanium font-semibold">
+            DESIGNED AND BUILT BY VISHWAS MEHTA
+          </p>
+          <p className="font-sans text-[0.6rem] uppercase tracking-[0.2em] text-titanium-dim">
+            BENGALURU, INDIA
+            {konamiActive && <span className="ml-2 text-cyan animate-pulse"> ⚡ KONAMI ACTIVE ⚡</span>}
+          </p>
+          
+          <div className="mt-4 flex flex-wrap justify-center items-center gap-6">
+            {[
+              { label: 'Email', href: 'mailto:vyommehta197@gmail.com' },
+              { label: 'LinkedIn', href: 'https://linkedin.com/in/vyshwasmehta' },
+              { label: 'Résumé', href: './resume.pdf' },
+              { label: 'GitHub', href: 'https://github.com/vyshwas' },
+            ].map((s) => (
+              <a
+                key={s.label}
+                href={s.href}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="font-sans text-[0.6rem] font-medium uppercase tracking-[0.25em] text-titanium transition-colors hover:text-[#121212]"
+                data-cursor="hover"
+              >
+                {s.label}
+              </a>
+            ))}
+          </div>
         </div>
-        <p className="mt-10 font-sans text-[0.6rem] uppercase tracking-[0.3em] text-titanium-dim">
-          built quietly — vishwas mehta, {new Date().getFullYear()}
-          {konamiActive && <span className="ml-2 text-cyan animate-pulse"> ◆ KONAMI ACTIVE ◆</span>}
-        </p>
       </div>
     </footer>
   )
