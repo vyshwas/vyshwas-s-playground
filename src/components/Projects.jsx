@@ -23,8 +23,9 @@ const projects = [
     stack: ['Figma', 'Protopie'],
     protoUrl: './assets/nocturne-prototype.html?v=2',
     protoScale: 0.65,
-    preview: './assets/project_nocturne.png',
-    previewAlt: 'Nocturne night-mode storefront with surge timer and UPI-first search',
+    preview: './assets/project_nocturne_checkout.png',
+    previewAlt: 'Nocturne blame-absorbing checkout error receipt with saved order and state recovery',
+    previewPos: 'object-[center_42%]',
     pos: { top: '26%', left: '5%', rotate: '-8deg' },
     size: 'w-[260px] h-[310px] md:w-[300px] md:h-[370px] lg:w-[320px] lg:h-[400px]',
   },
@@ -47,6 +48,7 @@ const projects = [
     protoScale: 0.65,
     preview: './assets/project_munim.png',
     previewAlt: 'Munim ledger showing spend against a fixed NPCI delegation ceiling',
+    previewPos: 'object-top',
     pos: { bottom: '6%', left: '30%', rotate: '6deg' },
     size: 'w-[250px] h-[300px] md:w-[280px] md:h-[350px] lg:w-[300px] lg:h-[380px]',
   },
@@ -67,8 +69,9 @@ const projects = [
     stack: ['Figma', 'Protopie'],
     protoUrl: './assets/awara-prototype.html',
     protoScale: 1.0,
-    preview: './assets/project_awara.png',
-    previewAlt: 'Awara identity card — awara, wanderer; a free-spirited traveler',
+    preview: './assets/project_awara_itinerary.png',
+    previewAlt: 'Awara living adaptive itinerary timeline showing Day 1 Old City Jaipur schedule and adjust sheets',
+    previewPos: 'object-[center_12%]',
     pos: { top: '28%', right: '5%', rotate: '5deg' },
     size: 'w-[270px] h-[320px] md:w-[310px] md:h-[380px] lg:w-[340px] lg:h-[420px]',
   }
@@ -203,7 +206,7 @@ export default function Projects() {
                   alt={p.previewAlt}
                   loading="lazy"
                   decoding="async"
-                  className="absolute inset-x-0 top-0 h-[62%] w-full object-cover object-top opacity-90 transition-opacity duration-500 group-hover:opacity-100"
+                  className={`absolute inset-x-0 top-0 h-[62%] w-full object-cover ${p.previewPos || 'object-top'} opacity-90 transition-opacity duration-500 group-hover:opacity-100`}
                 />
                 {/* Scrim: keeps the title legible over any screenshot */}
                 <div className="absolute inset-0 bg-gradient-to-b from-transparent via-[#141414]/88 to-[#141414]" />
@@ -268,7 +271,7 @@ export default function Projects() {
                   alt={p.previewAlt}
                   loading="lazy"
                   decoding="async"
-                  className="absolute inset-x-0 top-0 h-[54%] w-full object-cover object-top opacity-90"
+                  className={`absolute inset-x-0 top-0 h-[54%] w-full object-cover ${p.previewPos || 'object-top'} opacity-90`}
                 />
                 <div className="absolute inset-0 bg-gradient-to-b from-transparent via-[#141414]/88 to-[#141414]" />
                 <div className="absolute inset-0 rounded-[2rem] border border-white/10" />
