@@ -71,6 +71,9 @@ export default function Hero() {
         },
       })
 
+      // Initialize the sharp text overlay
+      gsap.set('.hero-statement-overlay', { xPercent: -50, yPercent: -50, scale: 1/12 })
+
       // 1. Editorial copy fades up and out
       tl.to('.hero-editorial-copy', {
         opacity: 0,
@@ -235,7 +238,6 @@ export default function Hero() {
           top: '49.54%',
           width: '100vw',
           height: '100vh',
-          transform: 'translate(-50%, -50%) scale(0.083333)',
         }}
       >
         <span className="font-mono uppercase tracking-[0.25em] text-cyan font-bold mb-6 drop-shadow-md"
