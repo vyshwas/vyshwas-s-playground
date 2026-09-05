@@ -2,12 +2,12 @@ import { useLayoutEffect, useRef, useEffect, useState } from 'react'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import { reducedMotion } from '../App.jsx'
+import CrtShader from './CrtShader.jsx'
 
 gsap.registerPlugin(ScrollTrigger)
 
 export default function Hero() {
   const root = useRef(null)
-  const canvasRef = useRef(null)
   const [glassStyle, setGlassStyle] = useState({
     left: '50.29%',
     top: '49.54%',
@@ -51,33 +51,6 @@ export default function Hero() {
     updateGlass()
     window.addEventListener('resize', updateGlass)
     return () => window.removeEventListener('resize', updateGlass)
-  }, [])
-
-  // ─── CRT Static Noise Canvas ───
-  useEffect(() => {
-    if (reducedMotion() || !canvasRef.current) return
-    const canvas = canvasRef.current
-    const ctx = canvas.getContext('2d')
-    let animId
-    const cw = (canvas.width = 180)
-    const ch = (canvas.height = 140)
-    const imgData = ctx.createImageData(cw, ch)
-    const buffer32 = new Uint32Array(imgData.data.buffer)
-
-    const drawNoise = () => {
-      const len = buffer32.length
-      for (let i = 0; i < len; i++) {
-        const gray = (Math.random() * 55 + 20) | 0
-        const tintR = Math.min(255, gray + 28)
-        const tintG = Math.min(255, gray + 18)
-        buffer32[i] = (230 << 24) | (gray << 16) | (tintG << 8) | tintR
-      }
-      ctx.putImageData(imgData, 0, 0)
-      animId = requestAnimationFrame(drawNoise)
-    }
-
-    drawNoise()
-    return () => cancelAnimationFrame(animId)
   }, [])
 
   // ─── Scroll-Driven Zoom Animation ───
@@ -195,59 +168,8 @@ export default function Hero() {
           }}
         >
           {/* CRT Phosphor Viewport — strict clipping with tight radius matching the real glass corners */}
-          <div className="hero-screen-portal absolute inset-0 overflow-hidden rounded-[3px] sm:rounded-[4px] shadow-[inset_0_0_12px_rgba(0,0,0,0.9)] bg-[#070d09] flex items-center justify-center">
-            {/* Procedural CRT Noise */}
-            <canvas
-              ref={canvasRef}
-              className="absolute inset-0 w-full h-full object-cover opacity-35 mix-blend-screen crt-flicker"
-              aria-hidden="true"
-            />
-
-            {/* Horizontal Scanlines */}
-            <div
-              className="absolute inset-0 pointer-events-none opacity-30"
-              style={{
-                backgroundImage: `repeating-linear-gradient(
-                  to bottom,
-                  transparent 0px,
-                  transparent 2px,
-                  rgba(0, 0, 0, 0.5) 2px,
-                  rgba(0, 0, 0, 0.5) 4px
-                )`,
-              }}
-            />
-
-            {/* 
-              Sharp CRT Screen Content 
-              We render this at 12x native size (width: 1200%, height: 1200%) 
-              and CSS transform it down by 1/12. When the parent scales up to 12x, 
-              this ends up at exactly 1x, perfectly sharp without rasterization blur. 
-            */}
-            <div className="absolute top-1/2 left-1/2 flex items-center justify-center pointer-events-auto z-[5]"
-              style={{
-                width: '1200%',
-                height: '1200%',
-                transform: 'translate(-50%, -50%) scale(0.083333)',
-              }}
-            >
-              {/* Actual Content Container at normal readable dimensions but scaled down */}
-              <div className="w-[85%] h-[85%] flex flex-col items-center justify-center text-center p-8 border border-[#39ff14]/20 bg-black/40 backdrop-blur-[2px] rounded-2xl group hover:border-[#39ff14]/60 transition-colors duration-500 cursor-crosshair">
-                <span className="font-mono font-bold tracking-[0.25em] text-[#39ff14] text-3xl mb-8 group-hover:animate-pulse">
-                  [ INTERACTIVE MODE ]
-                </span>
-                
-                <h2 className="font-display italic text-[#e6fced] text-6xl leading-[1.2] drop-shadow-[0_0_12px_rgba(57,255,20,0.6)] mb-10 max-w-4xl">
-                  &ldquo;I build tactile prototypes to validate ideas before committing to production.&rdquo;
-                </h2>
-                
-                <button 
-                  type="button" 
-                  className="px-10 py-5 rounded-full border-2 border-[#39ff14] text-[#39ff14] font-mono font-bold text-2xl tracking-widest hover:bg-[#39ff14] hover:text-black transition-all duration-300"
-                >
-                  INITIALIZE SYSTEM
-                </button>
-              </div>
-            </div>
+          <div className="hero-screen-portal absolute inset-0 overflow-hidden rounded-[3px] sm:rounded-[4px] shadow-[inset_0_0_12px_rgba(0,0,0,0.9)] bg-[#070d09]">
+            <CrtShader />
           </div>
         </div>
       </div>
