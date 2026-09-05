@@ -23,24 +23,10 @@
       if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
       window.scrollTo(0, 0);
     </script>
-    <script type="module" crossorigin src="./assets/index-DWnt0jkU.js"></script>
+    <script type="module" crossorigin src="./assets/index-DhQEQGJU.js"></script>
     <link rel="stylesheet" crossorigin href="./assets/index-DKBfY_yU.css">
   </head>
   <body>
-    <script>
-      window.addEventListener('error', (event) => {
-        fetch('http://localhost:5183/__log_error', {
-          method: 'POST',
-          body: event.error ? event.error.stack : event.message
-        });
-      });
-      window.addEventListener('unhandledrejection', (event) => {
-        fetch('http://localhost:5183/__log_error', {
-          method: 'POST',
-          body: event.reason ? event.reason.stack : event.reason
-        });
-      });
-    </script>
     <div id="root"></div>
   </body>
 </html>
