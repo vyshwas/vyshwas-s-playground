@@ -253,7 +253,7 @@ export default function Hero() {
         >
           {/* Animated Downward Indicator */}
           <div className="w-3.5 h-5 rounded-full border border-black/50 flex justify-center pt-1">
-            <span className="w-1 h-1.5 rounded-full bg-bone animate-bounce" />
+            <span className="w-1 h-1.5 rounded-full bg-bone animate-scroll-hint" />
           </div>
 
           <span className="font-sans text-[0.68rem] font-semibold tracking-[0.22em] uppercase text-bone">
