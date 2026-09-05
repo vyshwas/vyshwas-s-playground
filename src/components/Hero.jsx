@@ -2,7 +2,6 @@ import { useLayoutEffect, useRef, useEffect, useState } from 'react'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import { reducedMotion } from '../App.jsx'
-import CrtShader from './CrtShader.jsx'
 
 gsap.registerPlugin(ScrollTrigger)
 
@@ -96,7 +95,27 @@ export default function Hero() {
         ease: 'power2.inOut',
       }, 0)
 
-      // 4. Dissolve hero as screen fills viewport
+      // 4. Scale the statement overlay perfectly in sync with the zoom
+      tl.to('.hero-statement-overlay', {
+        scale: 1.0,
+        duration: 1.0,
+        ease: 'power2.inOut',
+      }, 0)
+
+      // 5. Stagger reveal the statement text as we zoom in
+      tl.fromTo('.hero-statement-overlay > *', 
+        { opacity: 0, y: 8 },
+        {
+          opacity: 1,
+          y: 0,
+          stagger: 0.15,
+          duration: 0.4,
+          ease: 'power2.out',
+        }, 
+        0.25
+      )
+
+      // 6. Dissolve hero as screen fills viewport
       tl.to(root.current, {
         opacity: 0,
         duration: 0.18,
@@ -157,21 +176,7 @@ export default function Hero() {
           }}
         />
 
-        {/* ─── CRT Monitor Screen Overlay ─── */}
-        <div
-          className="hero-screen-frame absolute z-10 pointer-events-none -translate-x-1/2 -translate-y-1/2"
-          style={{
-            left: glassStyle.left,
-            top: glassStyle.top,
-            width: glassStyle.width,
-            height: glassStyle.height,
-          }}
-        >
-          {/* CRT Phosphor Viewport — strict clipping with tight radius matching the real glass corners */}
-          <div className="hero-screen-portal absolute inset-0 overflow-hidden rounded-[3px] sm:rounded-[4px] shadow-[inset_0_0_12px_rgba(0,0,0,0.9)] bg-[#070d09]">
-            <CrtShader />
-          </div>
-        </div>
+
       </div>
 
       {/* ─── 2. Editorial Copy — Generous breathing room from nav, centered in upper golden zone ─── */}
@@ -217,11 +222,40 @@ export default function Hero() {
             color: 'rgba(247, 246, 243, 0.78)',
           }}
         >
-          Local-first AI tools, design systems, and vision-based automation — bridging the valley between Figma and production code.
+          Strategic product designer and creative technologist bridging the gap between design vision and front-end execution. I craft interfaces that feel inevitable.
         </p>
       </div>
 
-      {/* ─── 3. Studio Archive Watermark ─── */}
+      {/* ─── 3. Sharp Second Positioning Statement ─── */}
+      {/* Placed outside the 12x zoom stage to prevent rasterization blur. GSAP will scale it from 1/12 to 1.0 */}
+      <div 
+        className="hero-statement-overlay absolute z-[30] pointer-events-none flex flex-col items-center justify-center text-center"
+        style={{
+          left: '50.29%',
+          top: '49.54%',
+          width: '100vw',
+          height: '100vh',
+          transform: 'translate(-50%, -50%) scale(0.083333)',
+        }}
+      >
+        <span className="font-mono uppercase tracking-[0.25em] text-cyan font-bold mb-6 drop-shadow-md"
+          style={{ fontSize: 'clamp(0.8rem, 1.2vw, 1rem)' }}
+        >
+          [ POSITIONING ]
+        </span>
+        <h2 className="statement-word font-display italic text-bone leading-[1.15] tracking-tight drop-shadow-[0_0_12px_rgba(255,255,255,0.4)] mb-8 max-w-4xl"
+          style={{ fontSize: 'clamp(3rem, 6vw, 5rem)' }}
+        >
+          &ldquo;I turn complex ideas into products people understand, trust, and remember.&rdquo;
+        </h2>
+        <p className="statement-word font-mono uppercase tracking-[0.18em] text-cyan/80 font-semibold drop-shadow-sm"
+          style={{ fontSize: 'clamp(0.8rem, 1vw, 1rem)' }}
+        >
+          Systems Thinking Before Visual Polish
+        </p>
+      </div>
+
+      {/* ─── 4. Watermark & Scroll Cue ─── */}
       <h2
         className="hero-watermark font-mono absolute z-[5] pointer-events-none select-none text-left whitespace-nowrap uppercase drop-shadow-[0_1px_3px_rgba(0,0,0,0.4)]"
         style={{
