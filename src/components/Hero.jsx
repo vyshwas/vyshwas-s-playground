@@ -140,7 +140,7 @@ export default function Hero() {
         <div className="inline-flex items-center gap-2 mb-3 px-3 py-1 rounded-full bg-white/80 backdrop-blur-md border border-black/10 shadow-[0_2px_10px_rgba(0,0,0,0.04)]">
           <span className="w-1.5 h-1.5 rounded-full bg-bone animate-pulse" />
           <span className="font-sans text-[0.68rem] md:text-[0.74rem] font-semibold tracking-[0.25em] uppercase text-bone">
-            Strategic Product Designer &amp; Design Engineer
+            [ PRODUCT DESIGNER &amp; DESIGN ENGINEER ]
           </span>
         </div>
 
@@ -226,23 +226,20 @@ export default function Hero() {
         </div>
       </div>
 
-      {/* ─── 5. Shaded Editorial Watermark: "EXPERIENCED DESIGNER" ─── */}
+      {/* ─── 5. Shaded Editorial Watermark: Studio Archive Telemetry ─── */}
       <h2
-        className="hero-watermark absolute z-[5] pointer-events-none select-none text-center whitespace-nowrap text-bone"
+        className="hero-watermark font-mono absolute z-[5] pointer-events-none select-none text-left whitespace-nowrap text-bone uppercase"
         style={{
-          bottom: '1.5vh',
-          left: '50%',
-          transform: 'translateX(-50%)',
-          width: '100vw',
-          fontFamily: '"Instrument Serif", Georgia, serif',
-          fontStyle: 'italic',
-          fontSize: 'clamp(3.5rem, 11vw, 11rem)',
-          lineHeight: 0.8,
-          letterSpacing: '-0.02em',
-          opacity: 0.08,
+          bottom: '2.2vh',
+          left: '2.5rem',
+          width: 'auto',
+          fontSize: 'clamp(0.42rem, 0.78vw, 0.68rem)',
+          lineHeight: 1.2,
+          letterSpacing: '0.13em',
+          opacity: 0.45,
         }}
       >
-        EXPERIENCED DESIGNER
+        12°58'N 77°35'E — STUDIO ARCHIVE — BENGALURU, IN
       </h2>
 
       {/* ─── 6. High-Contrast "Scroll to Explore" Navigation Capsule ─── */}

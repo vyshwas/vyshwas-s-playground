@@ -2,9 +2,9 @@ import { useState, useEffect, useRef } from 'react'
 import { scrollToTarget } from '../App.jsx'
 
 const links = [
-  { id: 'lab', label: 'Lab', href: '#lab' },
   { id: 'experiments', label: 'Work', href: '#experiments' },
   { id: 'system', label: 'Principles', href: '#system' },
+  { id: 'lab', label: 'Lab', href: '#lab' },
   { id: 'about', label: 'About', href: '#about' },
 ]
 
@@ -121,7 +121,7 @@ export default function Nav() {
             className="nav-backyard-btn"
             data-cursor="magnetic"
           >
-            Portfolio ↗
+            Case Studies ↗
           </a>
         </nav>
 
@@ -191,7 +191,7 @@ export default function Nav() {
             rel="noopener noreferrer"
             className="mt-2 inline-flex items-center gap-2 rounded-full border border-black/20 bg-black/5 px-6 py-2.5 font-sans text-xs uppercase tracking-[0.18em] text-bone transition-colors hover:bg-bone hover:text-white"
           >
-            Portfolio ↗
+            Case Studies ↗
           </a>
         </div>
       )}

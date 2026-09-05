@@ -307,10 +307,15 @@ export default function LabReveal() {
   return (
     <section ref={mountRef} id="lab" className="relative h-screen bg-void hw" aria-label="The lab — interactive particle lab">
       <div ref={stageRef} className="sticky top-0 flex h-screen flex-col items-center justify-center overflow-hidden">
-        <p className="pointer-events-none absolute top-[9vh] font-sans text-[0.65rem] uppercase tracking-[0.35em] text-titanium-dim">
+        {/* Legibility scrims: the particle sphere spans the full viewport, so the
+            type needs a ground of its own to stay readable at every phase. */}
+        <div className="pointer-events-none absolute inset-x-0 top-0 z-[1] h-[26vh] bg-gradient-to-b from-[#f7f6f3] via-[#f7f6f3]/85 to-transparent" />
+        <div className="pointer-events-none absolute inset-x-0 bottom-0 z-[1] h-[40vh] bg-gradient-to-t from-[#f7f6f3] via-[#f7f6f3]/90 to-transparent" />
+
+        <p className="pointer-events-none absolute top-[10vh] z-[2] font-sans text-[0.65rem] uppercase tracking-[0.35em] text-titanium-dim">
           [ Chapter 02 — Enter the Lab ]
         </p>
-        <div className="pointer-events-none absolute bottom-[16vh] flex flex-col items-center gap-3 text-center">
+        <div className="pointer-events-none absolute bottom-[16vh] z-[2] flex flex-col items-center gap-3 text-center">
           <span key={'l' + phase} className="phase-in font-sans text-[0.6rem] uppercase tracking-[0.4em] text-bone">
             {PHASES[phase].label}
           </span>
@@ -318,7 +323,7 @@ export default function LabReveal() {
             {PHASES[phase].text}
           </h2>
         </div>
-        <div className="pointer-events-none absolute bottom-[7vh] flex items-center gap-6 font-sans text-[0.55rem] uppercase tracking-[0.25em] text-titanium-dim">
+        <div className="pointer-events-none absolute bottom-[7vh] z-[2] flex items-center gap-6 font-sans text-[0.55rem] uppercase tracking-[0.25em] text-titanium-dim">
           <span>drag — spin</span>
           <span className="h-3 w-px bg-black/20" />
           <span>move — disturb</span>

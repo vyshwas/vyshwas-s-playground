@@ -286,7 +286,7 @@ export default function FooterExit() {
         <span className="font-sans text-[0.65rem] uppercase tracking-[0.35em] text-titanium-dim" data-cursor="text">
           [ Let's Talk ]
         </span>
-        <h2 className="max-w-2xl text-3xl font-bold tracking-[-0.03em] text-bone md:text-5xl" data-cursor="text">
+        <h2 className="max-w-2xl font-display text-3xl leading-[1.1] text-bone md:text-5xl" data-cursor="text">
           Have a product that needs design depth?{' '}
           <span className="text-titanium">Let's build it.</span>
         </h2>
@@ -308,7 +308,7 @@ export default function FooterExit() {
             className="inline-flex items-center justify-center rounded-full border border-titanium/40 px-9 py-4 font-sans text-[0.7rem] uppercase tracking-[0.22em] text-bone transition-colors duration-300 hover:border-cyan hover:text-cyan"
             data-cursor="magnetic"
           >
-            Portfolio ↗
+            Case Studies ↗
           </Magnetic>
         </div>
         <div className="mt-6 flex items-center gap-8">

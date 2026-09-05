@@ -1,5 +1,4 @@
 import { useEffect, useRef } from 'react'
-import * as THREE from 'three'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import Lenis from 'lenis'
@@ -151,7 +150,7 @@ export default function App() {
           const rect = sec.getBoundingClientRect()
           return rect.top <= 100 && rect.bottom > 100
         })
-        const nextIdx = THREE.MathUtils.clamp(currentIdx + (e.key === 'ArrowDown' ? 1 : -1), 0, chapters.length - 1)
+        const nextIdx = Math.min(Math.max(currentIdx + (e.key === 'ArrowDown' ? 1 : -1), 0), chapters.length - 1)
         if (nextIdx !== currentIdx) scrollToTarget(`#${chapters[nextIdx].id}`)
       }
     }

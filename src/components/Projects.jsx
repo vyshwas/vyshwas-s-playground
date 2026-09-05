@@ -23,8 +23,9 @@ const projects = [
     stack: ['Figma', 'Protopie'],
     protoUrl: './assets/nocturne-prototype.html?v=2',
     protoScale: 0.65,
-    color: 'from-blue-500 to-blue-700',
-    pos: { top: '12%', left: '6%', rotate: '-8deg' },
+    preview: './assets/project_nocturne.png',
+    previewAlt: 'Nocturne night-mode storefront with surge timer and UPI-first search',
+    pos: { top: '26%', left: '5%', rotate: '-8deg' },
     size: 'w-[260px] h-[310px] md:w-[300px] md:h-[370px] lg:w-[320px] lg:h-[400px]',
   },
   {
@@ -44,8 +45,9 @@ const projects = [
     stack: ['Figma', 'Protopie'],
     protoUrl: './assets/munim-prototype.html',
     protoScale: 0.65,
-    color: 'from-orange-500 to-red-500',
-    pos: { bottom: '8%', left: '28%', rotate: '6deg' },
+    preview: './assets/project_munim.png',
+    previewAlt: 'Munim ledger showing spend against a fixed NPCI delegation ceiling',
+    pos: { bottom: '6%', left: '30%', rotate: '6deg' },
     size: 'w-[250px] h-[300px] md:w-[280px] md:h-[350px] lg:w-[300px] lg:h-[380px]',
   },
   {
@@ -65,8 +67,9 @@ const projects = [
     stack: ['Figma', 'Protopie'],
     protoUrl: './assets/awara-prototype.html',
     protoScale: 1.0,
-    color: 'from-zinc-700 to-black',
-    pos: { top: '15%', right: '8%', rotate: '5deg' },
+    preview: './assets/project_awara.png',
+    previewAlt: 'Awara identity card — awara, wanderer; a free-spirited traveler',
+    pos: { top: '28%', right: '5%', rotate: '5deg' },
     size: 'w-[270px] h-[320px] md:w-[310px] md:h-[380px] lg:w-[340px] lg:h-[420px]',
   }
 ]
@@ -165,18 +168,20 @@ export default function Projects() {
             />
           </div>
 
-          {/* Center Pill */}
-          <div className="relative z-30 pointer-events-none">
-            <div className="rounded-[2.5rem] border-[4px] border-dashed border-[#ff2a00] p-1.5 shadow-[0_0_20px_rgba(255,42,0,0.3)] bg-[#ff2a00]/10">
-              <div className="bg-[#181818] rounded-[2rem] px-10 py-4 md:px-12 md:py-5 flex items-center justify-center">
-                <h2 className="text-white text-4xl md:text-6xl font-bold tracking-tight m-0 leading-none">
-                  Selected Work!
-                </h2>
-              </div>
-            </div>
-            
-
-
+          {/* Chapter title — anchored clear of the scattered card zone */}
+          <div className="absolute top-[9vh] left-1/2 -translate-x-1/2 z-30 pointer-events-none text-center w-full px-6">
+            <p className="font-sans text-[0.65rem] uppercase tracking-[0.35em] text-titanium mb-4">
+              [ Chapter 03 — Selected Works ]
+            </p>
+            <h2 className="font-display italic text-[#121212] text-5xl md:text-7xl tracking-tight m-0 leading-[0.95]">
+              Selected Works
+            </h2>
+            <p className="font-sans text-[0.7rem] uppercase tracking-[0.3em] text-titanium mt-4">
+              2024 &ndash; 2026
+            </p>
+            <p className="font-sans text-[0.75rem] text-titanium/80 mt-3 max-w-[26rem] mx-auto leading-relaxed">
+              Each project ships with a fully clickable prototype. Select any card.
+            </p>
           </div>
 
           {/* Scattered Project Cards (desktop) */}
@@ -189,30 +194,40 @@ export default function Projects() {
                 onClick={() => openDrawer(p)}
                 data-cursor="hover"
               >
-                {/* Gradient background */}
-                <div className={`absolute inset-0 bg-gradient-to-br ${p.color} opacity-90 transition-opacity group-hover:opacity-100`} />
-                <div className="absolute inset-0 bg-white/10" />
-                <div className="absolute inset-0 border-[3px] border-white/20 rounded-[2.5rem]" />
+                {/* Obsidian ink surface */}
+                <div className="absolute inset-0 bg-[#141414]" />
+
+                {/* Real interface proof */}
+                <img
+                  src={p.preview}
+                  alt={p.previewAlt}
+                  loading="lazy"
+                  decoding="async"
+                  className="absolute inset-x-0 top-0 h-[62%] w-full object-cover object-top opacity-90 transition-opacity duration-500 group-hover:opacity-100"
+                />
+                {/* Scrim: keeps the title legible over any screenshot */}
+                <div className="absolute inset-0 bg-gradient-to-b from-transparent via-[#141414]/88 to-[#141414]" />
+                <div className="absolute inset-0 rounded-[2.5rem] border border-white/10" />
 
                 <div className="relative z-10 flex justify-between items-start">
-                  <span className="bg-black/20 text-white px-4 py-1.5 rounded-full font-sans text-sm tracking-widest uppercase border border-white/10">
+                  <span className="bg-black/60 text-[#f7f6f3] px-4 py-1.5 rounded-full font-sans text-xs tracking-[0.2em] uppercase border border-white/10 backdrop-blur-sm">
                     {p.no}
                   </span>
-                  <div className="w-10 h-10 rounded-full bg-white/20 flex items-center justify-center border border-white/10 transition-transform group-hover:scale-110">
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <div className="w-10 h-10 rounded-full bg-black/60 flex items-center justify-center border border-white/10 backdrop-blur-sm transition-transform group-hover:scale-110">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#f7f6f3" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                       <path d="M5 12h14M12 5l7 7-7 7"/>
                     </svg>
                   </div>
                 </div>
 
                 <div className="relative z-10 mt-auto">
-                  <h3 className="text-white text-3xl md:text-4xl lg:text-5xl font-bold tracking-tight mb-2 drop-shadow-sm">
+                  <h3 className="font-display italic text-[#f7f6f3] text-3xl md:text-4xl lg:text-5xl tracking-tight mb-2">
                     {p.title}
                   </h3>
-                  <p className="text-white/80 text-sm font-medium max-w-[90%] leading-snug mb-4">
+                  <p className="text-[#f7f6f3]/70 text-sm max-w-[90%] leading-snug mb-4">
                     {p.tagline}
                   </p>
-                  <span className="inline-flex items-center gap-2 text-white text-xs font-bold uppercase tracking-widest opacity-0 translate-y-2 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-300">
+                  <span className="inline-flex items-center gap-2 text-[#f7f6f3] text-[0.65rem] uppercase tracking-[0.25em] opacity-0 translate-y-2 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-300">
                     View Prototype
                     <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
                       <path d="M5 12h14M12 5l7 7-7 7"/>
@@ -222,32 +237,21 @@ export default function Projects() {
               </div>
             ))}
 
-            {/* Decorative sticky note */}
-            <div className="absolute bottom-[22%] left-[6%] rotate-[-6deg] bg-[#4facfe] text-black p-4 rounded-xl shadow-lg w-48 font-medium text-sm border border-blue-300 z-30">
-              Every project ships with a fully clickable interactive prototype.
-              <div className="mt-3 text-xs opacity-50 text-right">@vyshwas</div>
-            </div>
-
-            {/* Decorative yellow label */}
-            <div className="absolute top-[18%] right-[22%] rotate-[8deg] bg-[#ffd54f] text-black px-4 py-2 rounded-md shadow-md font-bold text-sm z-30" style={{ borderColor: 'rgba(0,0,0,0.1)' }}>
-              Click any card →
-            </div>
-            
-            {/* Decorative purple dashed box */}
-            <div className="absolute bottom-[12%] right-[12%] rotate-[-15deg] w-36 h-36 bg-[#8b5cf6] border-[6px] border-dashed border-[#1a1a1a] rounded-3xl shadow-xl z-10 hidden lg:block opacity-85" />
           </div>
         </div>
 
         {/* ─── MOBILE LAYOUT: Stacked scrollable cards ─── */}
         <div className="md:hidden px-5 py-16">
           <div className="mb-10 text-center">
-            <div className="inline-block rounded-[1.5rem] border-[3px] border-dashed border-[#ff2a00] p-1 bg-[#ff2a00]/10">
-              <div className="bg-[#181818] rounded-[1.2rem] px-6 py-3">
-                <h2 className="text-white text-2xl font-bold tracking-tight leading-none">
-                  Selected Work!
-                </h2>
-              </div>
-            </div>
+            <p className="font-sans text-[0.6rem] uppercase tracking-[0.35em] text-titanium mb-3">
+              [ Chapter 03 — Selected Works ]
+            </p>
+            <h2 className="font-display italic text-[#121212] text-4xl tracking-tight leading-[0.95] m-0">
+              Selected Works
+            </h2>
+            <p className="font-sans text-[0.65rem] uppercase tracking-[0.3em] text-titanium mt-3">
+              2024 &ndash; 2026
+            </p>
           </div>
           
           <div className="flex flex-col gap-6">
@@ -258,29 +262,36 @@ export default function Projects() {
                 onClick={() => openDrawer(p)}
                 data-cursor="hover"
               >
-                <div className={`absolute inset-0 bg-gradient-to-br ${p.color} opacity-90`} />
-                <div className="absolute inset-0 bg-white/10" />
-                <div className="absolute inset-0 border-[3px] border-white/20 rounded-[2rem]" />
+                <div className="absolute inset-0 bg-[#141414]" />
+                <img
+                  src={p.preview}
+                  alt={p.previewAlt}
+                  loading="lazy"
+                  decoding="async"
+                  className="absolute inset-x-0 top-0 h-[54%] w-full object-cover object-top opacity-90"
+                />
+                <div className="absolute inset-0 bg-gradient-to-b from-transparent via-[#141414]/88 to-[#141414]" />
+                <div className="absolute inset-0 rounded-[2rem] border border-white/10" />
 
                 <div className="relative z-10 flex justify-between items-start">
-                  <span className="bg-black/20 text-white px-3 py-1 rounded-full font-sans text-xs tracking-widest uppercase border border-white/10">
+                  <span className="bg-black/60 text-[#f7f6f3] px-3 py-1 rounded-full font-sans text-[0.65rem] tracking-[0.2em] uppercase border border-white/10 backdrop-blur-sm">
                     {p.no}
                   </span>
-                  <div className="w-9 h-9 rounded-full bg-white/20 flex items-center justify-center border border-white/10">
-                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <div className="w-9 h-9 rounded-full bg-black/60 flex items-center justify-center border border-white/10 backdrop-blur-sm">
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#f7f6f3" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                       <path d="M5 12h14M12 5l7 7-7 7"/>
                     </svg>
                   </div>
                 </div>
 
                 <div className="relative z-10 mt-auto">
-                  <h3 className="text-white text-3xl font-bold tracking-tight mb-1.5 drop-shadow-sm">
+                  <h3 className="font-display italic text-[#f7f6f3] text-3xl tracking-tight mb-1.5">
                     {p.title}
                   </h3>
-                  <p className="text-white/80 text-sm font-medium leading-snug mb-3">
+                  <p className="text-[#f7f6f3]/70 text-sm leading-snug mb-3">
                     {p.tagline}
                   </p>
-                  <span className="inline-flex items-center gap-2 text-white text-xs font-bold uppercase tracking-widest">
+                  <span className="inline-flex items-center gap-2 text-[#f7f6f3] text-[0.65rem] uppercase tracking-[0.25em]">
                     View Prototype →
                   </span>
                 </div>
@@ -308,11 +319,12 @@ export default function Projects() {
           {/* Close button (always visible) */}
           <button
             onClick={closeDrawer}
-            className="absolute top-4 right-4 z-50 flex h-11 w-11 items-center justify-center rounded-full bg-white/10 hover:bg-white/20 transition-colors border border-white/10"
+            className="absolute top-5 right-5 z-50 flex h-11 items-center gap-2.5 rounded-full border border-white/15 bg-black/60 px-4 font-sans text-[0.65rem] uppercase tracking-[0.25em] text-[#f7f6f3] backdrop-blur-md transition-colors hover:bg-white/15 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#f7f6f3]"
             aria-label="Close drawer"
             data-cursor="hover"
           >
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            Esc
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
               <path d="M18 6L6 18M6 6l12 12" />
             </svg>
           </button>
@@ -402,7 +414,7 @@ export default function Projects() {
             <div className="absolute inset-0 bg-void duotone" />
             
             {/* Ambient glows behind the prototype */}
-            <div className={`absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[60%] h-[80%] rounded-full bg-gradient-to-br ${activeProto?.color} blur-[120px] opacity-10`} />
+            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[60%] h-[80%] rounded-full bg-white blur-[120px] opacity-[0.07]" />
 
             {activeProto && (
               <div className="relative z-10 w-full h-full max-w-[440px] max-h-[900px] flex items-center justify-center mx-auto">
