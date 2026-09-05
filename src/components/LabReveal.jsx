@@ -179,15 +179,25 @@ export default function LabReveal() {
             p += 0.018 * vec3(sin(uTime*0.6+aRand*40.0), cos(uTime*0.5+aRand*35.0), sin(uTime*0.7+aRand*25.0));
             float gridness = smoothstep(2.55, 3.0, m);
             p.y += sin(p.x*1.6+uTime*1.4) * cos(p.z*1.6+uTime*1.1) * 0.22 * gridness;
-            vec2 d = p.xy - uMouse;
+
+            // 1. Transform local vertex p into world coordinates using modelMatrix
+            // This ensures interaction stays locked to the screen/mouse, regardless of sphere Y-rotation or drag spin
+            vec4 worldPos = modelMatrix * vec4(p, 1.0);
+
+            // 2. Compute tactile repulsion/attraction in world space against uMouse
+            vec2 d = worldPos.xy - uMouse;
             float dist = length(d);
-            float f = smoothstep(1.15, 0.0, dist) * uRepel;
-            p.xy += (d / max(dist, 0.001)) * f * 0.55;
-            p.z += f * 0.3 * sin(uTime*3.0+aRand*20.0);
+            float f = smoothstep(1.3, 0.0, dist) * uRepel;
+            worldPos.xy += (d / max(dist, 0.0001)) * f * 0.6;
+            worldPos.z += f * 0.28 * sin(uTime * 3.0 + aRand * 20.0);
+
+            // 3. Morph burst effect
             float seg = fract(min(m, 2.999));
             float burst = sin(seg * 3.14159) * step(0.01, m);
-            p += normalize(p + 0.001) * burst * (0.3 + aRand * 0.55) * 0.5;
-            vec4 mv = modelViewMatrix * vec4(p, 1.0);
+            worldPos.xyz += normalize(worldPos.xyz + 0.001) * burst * (0.3 + aRand * 0.55) * 0.5;
+
+            // 4. View matrix maps world space to camera view space
+            vec4 mv = viewMatrix * worldPos;
             vGlow = f + burst * 0.7;
             gl_PointSize = uSize * (26.0 / -mv.z) * (0.7 + aRand * 0.6) + burst * 1.5;
             gl_Position = projectionMatrix * mv;
@@ -331,7 +341,7 @@ if (reducedMotion()) {
   return (
     <section ref={mountRef} id="lab" className="relative flex h-screen items-center justify-center bg-void hw" aria-label="The lab">
       <div className="max-w-xl px-6 text-center">
-        <p className="font-sans text-[0.65rem] uppercase tracking-[0.35em] text-titanium-dim">[ Chapter 02 — The Lab ]</p>
+        <p className="font-sans text-[0.65rem] uppercase tracking-[0.35em] text-titanium-dim">[ Chapter 03 — The Lab ]</p>
         <h2 className="mt-6 text-3xl font-semibold text-bone md:text-5xl">
           Not a template — <span className="font-display">hand-written WebGL</span>, tuned to 60fps.
         </h2>
@@ -367,7 +377,7 @@ return (
       )}
 
       <p className="pointer-events-none absolute top-[10vh] z-[2] font-sans text-[0.65rem] uppercase tracking-[0.35em] text-[#333333] font-medium">
-        [ Chapter 02 — Enter the Lab ]
+        [ Chapter 03 — Enter the Lab ]
       </p>
       <div className="pointer-events-none absolute bottom-[16vh] z-[2] flex flex-col items-center gap-3 text-center">
         <span key={'l' + phase} className="phase-in font-sans text-[0.6rem] uppercase tracking-[0.4em] text-bone">

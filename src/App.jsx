@@ -7,7 +7,7 @@ import Hero from './components/Hero.jsx'
 import LabReveal from './components/LabReveal.jsx'
 import Projects from './components/Projects.jsx'
 import Bento from './components/Bento.jsx'
-import AboutSandbox from './components/AboutSandbox.jsx'
+import About from './components/About.jsx'
 import FooterExit from './components/FooterExit.jsx'
 import AmbientWebGL from './components/AmbientWebGL.jsx'
 import MagneticCursor from './components/MagneticCursor.jsx'
@@ -29,11 +29,12 @@ export function scrollToTarget(target) {
 }
 
 const chapters = [
-  { id: 'hero', label: 'Sandbox', key: '1' },
-  { id: 'lab', label: 'Lab', key: '2' },
-  { id: 'experiments', label: 'Experiments', key: '3' },
-  { id: 'system', label: 'System', key: '4' },
-  { id: 'exit', label: 'Exit', key: '5' },
+  { id: 'hero', label: 'Cover', key: '1' },
+  { id: 'about', label: 'About', key: '2' },
+  { id: 'lab', label: 'Lab', key: '3' },
+  { id: 'experiments', label: 'Work', key: '4' },
+  { id: 'system', label: 'Principles', key: '5' },
+  { id: 'exit', label: 'Contact', key: '6' },
 ]
 
 const wowMoments = [
@@ -130,7 +131,7 @@ export default function App() {
   useEffect(() => {
     const handleKeyDown = (e) => {
       if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return
-      if (e.key >= '1' && e.key <= '5') {
+      if (e.key >= '1' && e.key <= '6') {
         e.preventDefault()
         const idx = parseInt(e.key, 10) - 1
         if (chapters[idx]) scrollToTarget(`#${chapters[idx].id}`)
@@ -215,10 +216,10 @@ export default function App() {
       <Nav />
       <main>
         <Hero />
+        <About />
         <LabReveal />
         <Projects />
         <Bento />
-        <AboutSandbox />
         <FooterExit />
       </main>
     </div>

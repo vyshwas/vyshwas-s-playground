@@ -286,7 +286,7 @@ export default function FooterExit() {
 
       <div className="mt-20 flex flex-col items-center gap-6 text-center">
         <span className="font-sans text-[0.68rem] font-medium uppercase tracking-[0.35em] text-titanium-dim" data-cursor="text">
-          [ Let's Talk ]
+          [ Chapter 06 — Contact &amp; Terminal ]
         </span>
         <h2 className="max-w-2xl font-display text-3xl leading-[1.1] text-bone md:text-5xl" data-cursor="text">
           Have a product that needs design depth?{' '}

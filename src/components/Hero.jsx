@@ -1,13 +1,58 @@
-import { useLayoutEffect, useRef, useEffect } from 'react'
+import { useLayoutEffect, useRef, useEffect, useState } from 'react'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
-import { reducedMotion, scrollToTarget } from '../App.jsx'
+import { reducedMotion } from '../App.jsx'
 
 gsap.registerPlugin(ScrollTrigger)
 
 export default function Hero() {
   const root = useRef(null)
   const canvasRef = useRef(null)
+  const [glassStyle, setGlassStyle] = useState({
+    left: '50.29%',
+    top: '49.54%',
+    width: '105px',
+    height: '89px',
+  })
+
+  // Exact CRT Glass bounds calibration based on 1376x768 native image
+  // Bounding box of inner CRT glass: x=639.5, y=336, w=105, h=89
+  // cx = 692.0 (50.29%), cy = 380.5 (49.54%)
+  useLayoutEffect(() => {
+    function updateGlass() {
+      if (!root.current) return
+      const w = root.current.clientWidth
+      const h = root.current.clientHeight
+      const imgAspect = 1376 / 768
+      const boxAspect = w / h
+      let rw, rh, ox, oy
+      if (boxAspect > imgAspect) {
+        rw = w
+        rh = w / imgAspect
+        ox = 0
+        oy = (h - rh) / 2
+      } else {
+        rh = h
+        rw = h * imgAspect
+        ox = (w - rw) / 2
+        oy = 0
+      }
+      const cx = ox + rw * (692.0 / 1376)
+      const cy = oy + rh * (380.5 / 768)
+      const gw = rw * (105.0 / 1376)
+      const gh = rh * (89.0 / 768)
+      setGlassStyle({
+        left: `${cx}px`,
+        top: `${cy}px`,
+        width: `${gw}px`,
+        height: `${gh}px`,
+      })
+    }
+
+    updateGlass()
+    window.addEventListener('resize', updateGlass)
+    return () => window.removeEventListener('resize', updateGlass)
+  }, [])
 
   // Animated CRT static noise on the TV screen
   useEffect(() => {
@@ -23,7 +68,6 @@ export default function Hero() {
     const drawNoise = () => {
       const len = buffer32.length
       for (let i = 0; i < len; i++) {
-        // Soft amber-white phosphor noise matching the museum CRT screen
         const gray = (Math.random() * 55 + 20) | 0
         const tintR = Math.min(255, gray + 28)
         const tintG = Math.min(255, gray + 18)
@@ -41,8 +85,6 @@ export default function Hero() {
     if (reducedMotion()) return
 
     const ctx = gsap.context(() => {
-      // Image 5 (vintage retro computer monitor on concrete plinth):
-      // Center X = 49.8%, Center Y = 51.6%
       const FINAL_SCALE = 12.0
 
       const tl = gsap.timeline({
@@ -65,7 +107,7 @@ export default function Hero() {
         ease: 'power2.inOut',
       }, 0)
 
-      // 2. Fade out the bottom watermark and high-contrast scroll cue early
+      // 2. Fade out the bottom watermark and subtle scroll cue early
       tl.to(['.hero-watermark', '.hero-scroll-cue'], {
         opacity: 0,
         y: 15,
@@ -73,33 +115,48 @@ export default function Hero() {
         ease: 'power2.inOut',
       }, 0)
 
-      // 3. Zoom the museum background image directly into the monitor screen center
-      tl.to('.hero-bg', {
+      // 3. Zoom the unified stage directly into the monitor screen center
+      // Total duration 1.0 maps across the full scroll distance
+      tl.to('.hero-zoom-stage', {
         scale: FINAL_SCALE,
-        ease: 'power2.in',
+        transformOrigin: '50.29% 49.54%',
+        duration: 1.0,
+        ease: 'power2.inOut',
       }, 0)
 
-      // 4. Scale the monitor screen frame in exact lockstep
-      tl.to('.hero-screen-frame', {
-        scale: FINAL_SCALE,
-        ease: 'power2.in',
-      }, 0)
-
-      // 5. Fade out the screen text early as the camera approaches the glass
-      tl.to('.hero-screen-text', {
+      // 4. As zoom starts, fade out the initial small HUD
+      tl.to('.hero-screen-hud', {
         opacity: 0,
-        scale: 1.5,
-        duration: 0.35,
+        duration: 0.15,
         ease: 'power1.in',
-      }, 0.08)
+      }, 0.05)
 
-      // 6. As the TV screen expands to fill 100% of the viewport (progress 0.78 -> 1.0),
-      // seamlessly dissolve the hero container so the camera enters directly into Chapter 02 (The Lab)
+      // 5. Reveal statement right as the CRT begins expanding
+      tl.fromTo('.hero-screen-statement',
+        { opacity: 0, scale: 0.8 },
+        {
+          opacity: 1,
+          scale: 1.0,
+          duration: 0.35,
+          ease: 'power2.out',
+        },
+        0.15
+      )
+
+      // 6. Fade statement out as screen completes filling viewport
+      tl.to('.hero-screen-statement', {
+        opacity: 0,
+        scale: 1.3,
+        duration: 0.2,
+        ease: 'power1.in',
+      }, 0.70)
+
+      // 7. Seamlessly dissolve the hero container as the screen reaches 100vw
       tl.to(root.current, {
         opacity: 0,
-        duration: 0.22,
+        duration: 0.18,
         ease: 'power1.inOut',
-      }, 0.78)
+      }, 0.82)
 
     }, root.current)
 
@@ -113,66 +170,47 @@ export default function Hero() {
       className="relative z-20 h-screen w-full overflow-hidden bg-void hw pointer-events-auto"
       aria-label="Vishwas Mehta — Strategic Product Designer & Design Engineer"
     >
-      {/* ─── 1. Museum Gallery Background Image (Image 5 - Vintage Monitor on Concrete Plinth) ─── */}
+      {/* ─── 1. Unified Zoom Stage (Background Image + Monitor Screen locked in exact unison) ─── */}
       <div
-        className="hero-bg absolute inset-0 bg-cover bg-center bg-no-repeat hw"
+        className="hero-zoom-stage absolute inset-0 hw pointer-events-none"
         style={{
-          backgroundImage: 'url(./assets/hero-tv.jpg)',
-          transformOrigin: '49.8% 51.6%',
-          willChange: 'transform',
-        }}
-      />
-
-      {/* ─── 2. Subtle Museum Room Vignette ─── */}
-      <div
-        className="absolute inset-0 z-[4] pointer-events-none"
-        style={{
-          background:
-            'radial-gradient(ellipse 70% 70% at 49.8% 51.6%, transparent 0%, rgba(18,18,18,0.18) 100%)',
-        }}
-      />
-
-      {/* ─── 3. Top Section: Architectural Identity & Role Hierarchy ─── */}
-      <div className="hero-editorial-copy absolute top-[10vh] sm:top-[11vh] inset-x-0 z-10 flex flex-col items-center text-center px-6 pointer-events-none">
-        {/* Recruiter Role Eyebrow Tag */}
-        <div className="inline-flex items-center gap-2 mb-2 px-3 py-1 rounded-full bg-white/85 backdrop-blur-md border border-black/10 shadow-[0_2px_10px_rgba(0,0,0,0.04)]">
-          <span className="w-1.5 h-1.5 rounded-full bg-bone animate-pulse" />
-          <span className="font-sans text-[0.66rem] md:text-[0.72rem] font-semibold tracking-[0.22em] uppercase text-bone">
-            [ STRATEGIC PRODUCT DESIGNER &amp; DESIGN ENGINEER ]
-          </span>
-        </div>
-
-        {/* Primary Header: Proportioned & Elegant */}
-        <h1 className="max-w-3xl font-display italic text-2xl sm:text-3xl md:text-4xl lg:text-[2.6rem] leading-[1.12] text-bone tracking-tight drop-shadow-sm">
-          Design that ships. Code that feels.
-        </h1>
-
-        {/* Supporting Subheading */}
-        <p className="mt-2 max-w-lg font-sans text-xs sm:text-sm md:text-[0.88rem] font-normal leading-relaxed text-[#333333] tracking-wide">
-          Systems thinking before visual polish. Designing &amp; building local-first AI tools,
-          production systems, and interactive prototypes in Bengaluru.
-        </p>
-      </div>
-
-      {/* ─── 4. Vintage Monitor Screen Overlay (Calibrated to Glass Center) ─── */}
-      <div
-        className="hero-screen-frame absolute z-10 pointer-events-none"
-        style={{
-          left: '50.1%',
-          top: '50.6%',
-          width: 'clamp(108px, 8.8vw, 126px)',
-          height: 'clamp(120px, 15.2vh, 138px)',
-          transform: 'translate(-50%, -50%)',
-          transformOrigin: 'center center',
+          transformOrigin: '50.29% 49.54%',
           willChange: 'transform',
         }}
       >
-        {/* Animated CRT Screen Phosphor & Noise */}
-        <div className="hero-screen-portal absolute inset-0 overflow-hidden rounded-[10px] shadow-[inset_0_0_12px_rgba(0,0,0,0.9)] bg-[#0b100d]">
+        {/* Background Image: Museum Gallery with Vintage Monitor on Concrete Plinth */}
+        <div
+          className="hero-bg absolute inset-0 bg-cover bg-center bg-no-repeat hw"
+          style={{
+            backgroundImage: 'url(./assets/hero-tv.jpg)',
+          }}
+        />
+
+        {/* Subtle Museum Room Vignette */}
+        <div
+          className="absolute inset-0 pointer-events-none"
+          style={{
+            background:
+              'radial-gradient(ellipse 70% 70% at 50.29% 49.54%, transparent 0%, rgba(18,18,18,0.18) 100%)',
+          }}
+        />
+
+        {/* Vintage Monitor Screen Overlay (Locked to Glass Center inside the Stage) */}
+        <div
+          className="hero-screen-frame absolute z-10 pointer-events-none -translate-x-1/2 -translate-y-1/2"
+          style={{
+            left: glassStyle.left,
+            top: glassStyle.top,
+            width: glassStyle.width,
+            height: glassStyle.height,
+          }}
+        >
+        {/* Animated CRT Screen Phosphor & Noise with strict bezel clipping */}
+        <div className="hero-screen-portal absolute inset-0 overflow-hidden rounded-[8px] sm:rounded-[10px] shadow-[inset_0_0_12px_rgba(0,0,0,0.9)] bg-[#070d09]">
           {/* Procedural CRT Noise Canvas */}
           <canvas
             ref={canvasRef}
-            className="absolute inset-0 w-full h-full object-cover opacity-35 mix-blend-screen"
+            className="absolute inset-0 w-full h-full object-cover opacity-35 mix-blend-screen crt-flicker"
             aria-hidden="true"
           />
 
@@ -192,40 +230,74 @@ export default function Hero() {
 
           {/* Moving CRT Sweep Beam */}
           <div className="crt-sweep-line" />
-        </div>
 
-        {/* Screen Text Content: Crisp, Prominent Positioning Statement */}
-        <div className="hero-screen-text absolute inset-0 z-[3] flex flex-col justify-between p-2 sm:p-2.5 text-center crt-flicker">
-          {/* Telemetry Header */}
-          <div className="flex items-center justify-between border-b border-white/15 pb-0.5 px-0.5">
-            <span className="font-mono text-[0.42rem] sm:text-[0.48rem] font-bold tracking-[0.2em] uppercase text-[#a8ffb2]">
-              SYS.01 // LIVE
+          {/* State A: Initial Unzoomed Screen Status HUD (Crisp, high-contrast, perfectly sized for 105x89 CRT) */}
+          <div className="hero-screen-hud absolute inset-0 z-[4] flex flex-col items-center justify-between p-1.5 select-none pointer-events-none">
+            {/* Top Status Telemetry */}
+            <div className="w-full flex items-center justify-between border-b border-[#39ff14]/30 pb-0.5 px-0.5">
+              <div className="flex items-center gap-1">
+                <span className="w-1.5 h-1.5 rounded-full bg-[#39ff14] shadow-[0_0_6px_#39ff14] animate-pulse" />
+                <span className="font-mono text-[7px] font-bold tracking-widest text-[#39ff14] uppercase">
+                  LIVE
+                </span>
+              </div>
+              <span className="font-mono text-[6.5px] font-medium text-[#39ff14]/80 tracking-wider">
+                SYS.01
+              </span>
+            </div>
+
+            {/* Center: Authoritative Identity */}
+            <div className="flex flex-col items-center my-auto text-center px-1">
+              <span className="font-mono text-[8.5px] font-bold tracking-[0.16em] uppercase text-[#e6fced] drop-shadow-[0_0_5px_rgba(57,255,20,0.7)]">
+                VISHWAS
+              </span>
+              <span className="font-mono text-[6.5px] font-semibold tracking-[0.12em] uppercase text-[#39ff14] mt-0.5">
+                DESIGN &bull; CODE
+              </span>
+            </div>
+
+            {/* Bottom Terminal Prompt */}
+            <div className="w-full flex items-center justify-center border-t border-[#39ff14]/25 pt-0.5">
+              <span className="font-mono text-[6.5px] font-medium tracking-wider text-[#39ff14]/95 flex items-center gap-0.5">
+                <span className="animate-pulse">&gt;</span> scroll to enter
+              </span>
+            </div>
+          </div>
+
+          {/* State B: Zoom-In Luminous Positioning Statement (Emerges during camera flight) */}
+          <div className="hero-screen-statement absolute inset-0 z-[5] flex flex-col items-center justify-center p-2 text-center select-none pointer-events-none opacity-0">
+            <span className="font-mono text-[5.5px] uppercase tracking-[0.25em] text-[#39ff14] mb-1 font-bold">
+              [ POSITIONING ]
             </span>
-            <span className="w-1 h-1 rounded-full bg-[#39ff14] animate-pulse" />
-          </div>
-
-          {/* Core Positioning Statement (Clearly Readable & Centered) */}
-          <div className="my-auto py-0.5">
-            <h2
-              className="font-display italic text-[#f7f6f3] text-center leading-[1.14] tracking-tight"
-              style={{
-                fontSize: 'clamp(0.64rem, 0.82vw, 0.94rem)',
-                textShadow: '0 0 8px rgba(255,255,255,0.7)',
-              }}
-            >
-              I turn complex ideas into products people understand, trust, and remember.
+            <h2 className="font-display italic text-[#f7f6f3] text-[8.5px] leading-[1.12] tracking-tight max-w-[86%] drop-shadow-[0_0_8px_rgba(255,255,255,0.85)]">
+              &ldquo;I turn complex ideas into products people understand, trust, and remember.&rdquo;
             </h2>
-          </div>
-
-          {/* Telemetry Footer */}
-          <div className="flex items-center justify-between border-t border-white/15 pt-0.5 px-0.5 font-mono text-[0.38rem] sm:text-[0.44rem] text-white/70 uppercase tracking-[0.14em]">
-            <span>V. MEHTA</span>
-            <span>BLR · IN</span>
+            <p className="font-mono text-[4.8px] uppercase tracking-[0.18em] text-[#a8ffb2] mt-1 font-semibold">
+              Systems Thinking Before Visual Polish
+            </p>
           </div>
         </div>
       </div>
+      </div>
 
-      {/* ─── 5. Shaded Editorial Watermark: Studio Archive Telemetry ─── */}
+      {/* ─── 2. Top Section: Architectural Identity & Refined Typographic Hierarchy ─── */}
+      <div className="hero-editorial-copy absolute top-[8.5vh] sm:top-[9.5vh] inset-x-0 z-10 flex flex-col items-center text-center px-6 pointer-events-none">
+        <div className="flex items-center gap-2 mb-2.5">
+          <span className="w-1.5 h-1.5 rounded-full bg-bone opacity-60" />
+          <p className="font-sans text-[0.68rem] sm:text-[0.74rem] font-semibold tracking-[0.26em] uppercase text-bone">
+            Strategic Product Designer &amp; Design Engineer
+          </p>
+        </div>
+        <h1 className="max-w-4xl font-display italic text-3xl sm:text-4xl md:text-5xl lg:text-[3.6rem] leading-[1.05] text-bone tracking-tight font-normal drop-shadow-sm">
+          Design that ships. Code that feels.
+        </h1>
+        <p className="mt-3 max-w-lg font-sans text-xs sm:text-sm md:text-[0.92rem] font-normal leading-relaxed text-[#444444] tracking-wide">
+          Designing &amp; engineering local-first AI tools, enterprise software systems,
+          and tactile interactive prototypes in Bengaluru.
+        </p>
+      </div>
+
+      {/* ─── 3. Shaded Editorial Watermark: Studio Archive Telemetry ─── */}
       <h2
         className="hero-watermark font-mono absolute z-[5] pointer-events-none select-none text-left whitespace-nowrap text-bone uppercase"
         style={{
@@ -241,28 +313,14 @@ export default function Hero() {
         12°58'N 77°35'E — STUDIO ARCHIVE — BENGALURU, IN
       </h2>
 
-      {/* ─── 6. High-Contrast "Scroll to Explore" Navigation Capsule ─── */}
-      <div className="hero-scroll-cue absolute bottom-8 left-1/2 -translate-x-1/2 z-20 flex flex-col items-center">
-        <button
-          type="button"
-          onClick={() => scrollToTarget('#lab')}
-          className="group pointer-events-auto flex items-center gap-3 px-5 py-2.5 rounded-full bg-white/95 backdrop-blur-md border border-black/20 shadow-[0_6px_20px_rgba(0,0,0,0.12)] hover:border-black/50 hover:shadow-[0_8px_28px_rgba(0,0,0,0.18)] transition-all duration-300 focus:outline-none"
-          data-cursor="magnetic"
-          aria-label="Scroll to enter the Lab"
-        >
-          {/* Animated Downward Indicator */}
-          <div className="w-3.5 h-5 rounded-full border border-black/50 flex justify-center pt-1">
-            <span className="w-1 h-1.5 rounded-full bg-bone animate-scroll-hint" />
-          </div>
-
-          <span className="font-sans text-[0.68rem] font-semibold tracking-[0.22em] uppercase text-bone">
-            Scroll to explore
-          </span>
-
-          <span className="font-sans text-[0.72rem] text-black/50 group-hover:translate-y-0.5 transition-transform">
-            ↓
-          </span>
-        </button>
+      {/* ─── 4. Subtle Minimalist Scroll Indicator (Whisper-quiet hairline, no pill) ─── */}
+      <div className="hero-scroll-cue absolute bottom-5 left-1/2 -translate-x-1/2 z-20 flex flex-col items-center pointer-events-none opacity-45">
+        <div className="w-[1px] h-6 bg-bone/25 relative overflow-hidden rounded-full">
+          <div className="w-full h-2.5 bg-bone animate-scroll-drop absolute top-0" />
+        </div>
+        <span className="font-sans text-[0.52rem] tracking-[0.3em] uppercase text-bone mt-2 select-none">
+          scroll
+        </span>
       </div>
     </section>
   )

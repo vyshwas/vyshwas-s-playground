@@ -2,10 +2,11 @@ import { useState, useEffect, useRef } from 'react'
 import { scrollToTarget } from '../App.jsx'
 
 const links = [
+  { id: 'about', label: 'About', href: '#about' },
+  { id: 'lab', label: 'Lab', href: '#lab' },
   { id: 'experiments', label: 'Work', href: '#experiments' },
   { id: 'system', label: 'Principles', href: '#system' },
-  { id: 'lab', label: 'Lab', href: '#lab' },
-  { id: 'about', label: 'About', href: '#about' },
+  { id: 'exit', label: 'Contact', href: '#exit' },
 ]
 
 export default function Nav() {

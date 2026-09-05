@@ -201,7 +201,7 @@ export default function Bento() {
     <section id="system" className="relative bg-void px-6 py-[16vh] md:px-[8vw]" aria-label="How I think — principles">
       <header className="mb-10 flex flex-col gap-5">
         <span className="font-sans text-[0.65rem] uppercase tracking-[0.35em] text-titanium-dim" data-cursor="text">
-          [ How I Think — Principles ]
+          [ Chapter 05 — Principles ]
         </span>
         <h2 className="max-w-3xl font-display text-5xl leading-[1.02] text-bone md:text-7xl" data-cursor="text">
           Five beliefs, drawn in ink.

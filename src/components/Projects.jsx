@@ -231,7 +231,7 @@ export default function Projects() {
           {/* Chapter title — anchored clear of the scattered card zone */}
           <div className="absolute top-[9vh] left-1/2 -translate-x-1/2 z-30 pointer-events-none text-center w-full px-6">
             <p className="font-sans text-[0.65rem] uppercase tracking-[0.35em] text-titanium mb-4">
-              [ Chapter 03 — Selected Works ]
+              [ Chapter 04 — Selected Works ]
             </p>
             <h2 className="font-display italic text-[#121212] text-5xl md:text-7xl tracking-tight m-0 leading-[0.95]">
               Selected Works
@@ -304,7 +304,7 @@ export default function Projects() {
         <div className="md:hidden px-5 py-16">
           <div className="mb-10 text-center">
             <p className="font-sans text-[0.6rem] uppercase tracking-[0.35em] text-titanium mb-3">
-              [ Chapter 03 — Selected Works ]
+              [ Chapter 04 — Selected Works ]
             </p>
             <h2 className="font-display italic text-[#121212] text-4xl tracking-tight leading-[0.95] m-0">
               Selected Works
