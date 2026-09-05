@@ -21,14 +21,14 @@ export default function Nav() {
       setScrolled(scrollY > 50)
 
       // Active section detection
-      const scrollPos = scrollY + window.innerHeight * 0.35
+      const triggerY = window.innerHeight * 0.35 // Detect based on what's in the top 35% of screen
       let current = ''
       for (const link of links) {
         const el = document.getElementById(link.id)
         if (el) {
-          const top = el.offsetTop
-          const height = el.offsetHeight
-          if (scrollPos >= top && scrollPos < top + height) {
+          const rect = el.getBoundingClientRect()
+          // If the element's top is above the trigger point AND its bottom is below the trigger point
+          if (rect.top <= triggerY && rect.bottom > triggerY) {
             current = link.id
             break
           }

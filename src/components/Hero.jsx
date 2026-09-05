@@ -217,15 +217,36 @@ export default function Hero() {
               }}
             />
 
-            {/* CRT Sweep Beam */}
-            <div className="crt-sweep-line" />
-
-            {/* Simple Glowing Prompt */}
-            <div className="z-[5] font-mono font-bold text-[#39ff14] flex items-center gap-[2px]"
-              style={{ fontSize: '12px', textShadow: '0 0 8px rgba(57,255,20,0.8)' }}
+            {/* 
+              Sharp CRT Screen Content 
+              We render this at 12x native size (width: 1200%, height: 1200%) 
+              and CSS transform it down by 1/12. When the parent scales up to 12x, 
+              this ends up at exactly 1x, perfectly sharp without rasterization blur. 
+            */}
+            <div className="absolute top-1/2 left-1/2 flex items-center justify-center pointer-events-auto z-[5]"
+              style={{
+                width: '1200%',
+                height: '1200%',
+                transform: 'translate(-50%, -50%) scale(0.083333)',
+              }}
             >
-              <span>&gt;</span>
-              <span className="w-[8px] h-[14px] bg-[#39ff14] animate-pulse" />
+              {/* Actual Content Container at normal readable dimensions but scaled down */}
+              <div className="w-[85%] h-[85%] flex flex-col items-center justify-center text-center p-8 border border-[#39ff14]/20 bg-black/40 backdrop-blur-[2px] rounded-2xl group hover:border-[#39ff14]/60 transition-colors duration-500 cursor-crosshair">
+                <span className="font-mono font-bold tracking-[0.25em] text-[#39ff14] text-3xl mb-8 group-hover:animate-pulse">
+                  [ INTERACTIVE MODE ]
+                </span>
+                
+                <h2 className="font-display italic text-[#e6fced] text-6xl leading-[1.2] drop-shadow-[0_0_12px_rgba(57,255,20,0.6)] mb-10 max-w-4xl">
+                  &ldquo;I build tactile prototypes to validate ideas before committing to production.&rdquo;
+                </h2>
+                
+                <button 
+                  type="button" 
+                  className="px-10 py-5 rounded-full border-2 border-[#39ff14] text-[#39ff14] font-mono font-bold text-2xl tracking-widest hover:bg-[#39ff14] hover:text-black transition-all duration-300"
+                >
+                  INITIALIZE SYSTEM
+                </button>
+              </div>
             </div>
           </div>
         </div>
@@ -274,8 +295,7 @@ export default function Hero() {
             color: 'rgba(247, 246, 243, 0.78)',
           }}
         >
-          Designing &amp; engineering local-first AI tools, enterprise software systems,
-          and tactile interactive prototypes in Bengaluru.
+          Local-first AI tools, design systems, and vision-based automation — bridging the valley between Figma and production code.
         </p>
       </div>
 
