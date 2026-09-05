@@ -21,13 +21,12 @@ const projects = [
       'Strategic trust markers at peak hesitation moments'
     ],
     stack: ['Figma', 'Protopie'],
-    protoUrl: './assets/nocturne-prototype.html?v=2',
-    protoScale: 0.65,
+    protoUrl: './assets/nocturne-prototype.html?embed=1',
     preview: './assets/project_nocturne_checkout.png',
     previewAlt: 'Nocturne blame-absorbing checkout error receipt with saved order and state recovery',
     previewPos: 'object-[center_42%]',
-    pos: { top: '26%', left: '5%', rotate: '-8deg' },
-    size: 'w-[260px] h-[310px] md:w-[300px] md:h-[370px] lg:w-[320px] lg:h-[400px]',
+    pos: { top: '22%', left: '4%', rotate: '-7deg' },
+    size: 'w-[260px] h-[340px] md:w-[280px] md:h-[360px] lg:w-[290px] lg:h-[380px]',
   },
   {
     no: '02',
@@ -44,13 +43,12 @@ const projects = [
       'Transparent ledger loops for real-time auditability'
     ],
     stack: ['Figma', 'Protopie'],
-    protoUrl: './assets/munim-prototype.html',
-    protoScale: 0.65,
+    protoUrl: './assets/munim-prototype.html?embed=1',
     preview: './assets/project_munim.png',
     previewAlt: 'Munim ledger showing spend against a fixed NPCI delegation ceiling',
     previewPos: 'object-top',
-    pos: { bottom: '6%', left: '30%', rotate: '6deg' },
-    size: 'w-[250px] h-[300px] md:w-[280px] md:h-[350px] lg:w-[300px] lg:h-[380px]',
+    pos: { bottom: '6%', left: '18%', rotate: '5deg' },
+    size: 'w-[250px] h-[330px] md:w-[270px] md:h-[350px] lg:w-[280px] lg:h-[370px]',
   },
   {
     no: '03',
@@ -67,13 +65,60 @@ const projects = [
       'Striking vermilion-and-ink editorial visual system'
     ],
     stack: ['Figma', 'Protopie'],
-    protoUrl: './assets/awara-prototype.html',
-    protoScale: 1.0,
+    protoUrl: './assets/awara-prototype.html?embed=1',
     preview: './assets/project_awara_itinerary.png',
     previewAlt: 'Awara living adaptive itinerary timeline showing Day 1 Old City Jaipur schedule and adjust sheets',
     previewPos: 'object-[center_12%]',
-    pos: { top: '28%', right: '5%', rotate: '5deg' },
-    size: 'w-[270px] h-[320px] md:w-[310px] md:h-[380px] lg:w-[340px] lg:h-[420px]',
+    pos: { top: '22%', right: '4%', rotate: '6deg' },
+    size: 'w-[260px] h-[340px] md:w-[280px] md:h-[360px] lg:w-[290px] lg:h-[380px]',
+  },
+  {
+    no: '04',
+    title: 'The Whole Fruit',
+    tagline: 'Brand strategy and packaging system built on restraint.',
+    year: '2024',
+    role: 'Strategist & Brand Designer',
+    context: 'Wellness and consumer goods rely on loud claims and generic "premium" tropes that erode consumer trust.',
+    problem: 'How can a product communicate distinct value at a glance—then continue delivering on that promise through every brand decision without relying on empty marketing claims?',
+    approach: 'My M.Des dissertation project. The brief: build a wellness brand confident enough to look expensive without saying "premium" anywhere on the pack. I engineered a type-led system (bespoke mark, disciplined palette, packaging architecture) documented as a strategic positioning framework to demonstrate restraint as a design decision.',
+    outcome: [
+      'Comprehensive brand architecture & packaging system',
+      'Documented strategic positioning framework for restraint',
+      'M.Des dissertation project awarded top academic honors'
+    ],
+    stack: ['Figma', 'Illustrator', 'Packaging'],
+    protoUrl: '',
+    preview: './assets/project_wholefruit.png',
+    previewAlt: 'The Whole Fruit packaging architecture and brand identity system',
+    previewPos: 'object-center',
+    link: 'https://www.behance.net/vishwashmehta',
+    linkLabel: 'See Brand System ↗',
+    pos: { bottom: '6%', right: '18%', rotate: '-5deg' },
+    size: 'w-[250px] h-[330px] md:w-[270px] md:h-[350px] lg:w-[280px] lg:h-[370px]',
+  },
+  {
+    no: '05',
+    title: 'Gamut',
+    tagline: 'A color-and-type systems engine encoding design judgment into tokens.',
+    year: '2025',
+    role: 'Founder & Systems Designer',
+    context: 'Product designers and frontend engineers frequently struggle with color accessibility and token architecture, relying on manual calculations or trial-and-error across themes.',
+    problem: 'How might design tooling help teams reuse systematic judgment—not just raw hex codes—across growing design systems and themes?',
+    approach: 'A color-and-type systems engine built from my resource, The Brand Color Bible. Encoded 60-30-10 color rules, ten laws of color, and archetype-driven harmonies directly into the engine so every palette is contrast-checked (WCAG 2.1) in both light and dark before export. Includes a generator, real-time fixer, and design token exporter.',
+    outcome: [
+      'Automated dual-mode light/dark contrast verification',
+      'Production token export for Tailwind, CSS & JSON',
+      'Live engine actively used by designers worldwide'
+    ],
+    stack: ['React', 'Design Tokens', 'Tailwind', 'Color Science'],
+    protoUrl: '',
+    preview: './assets/project_gamut.png',
+    previewAlt: 'Gamut color-and-type design token engine interface',
+    previewPos: 'object-top',
+    link: 'https://vyshwas.github.io/gamut/',
+    linkLabel: 'Launch Token Engine ↗',
+    pos: { bottom: '10%', left: 'calc(50% - 140px)', rotate: '2deg' },
+    size: 'w-[250px] h-[330px] md:w-[270px] md:h-[350px] lg:w-[280px] lg:h-[370px]',
   }
 ]
 
@@ -182,8 +227,8 @@ export default function Projects() {
             <p className="font-sans text-[0.7rem] uppercase tracking-[0.3em] text-titanium mt-4">
               2024 &ndash; 2026
             </p>
-            <p className="font-sans text-[0.75rem] text-titanium/80 mt-3 max-w-[26rem] mx-auto leading-relaxed">
-              Each project ships with a fully clickable prototype. Select any card.
+            <p className="font-sans text-[0.75rem] text-titanium/80 mt-3 max-w-[28rem] mx-auto leading-relaxed">
+              Interactive systems, prototypes, and documented case studies. Select any card.
             </p>
           </div>
 
@@ -231,7 +276,7 @@ export default function Projects() {
                     {p.tagline}
                   </p>
                   <span className="inline-flex items-center gap-2 text-[#f7f6f3] text-[0.65rem] uppercase tracking-[0.25em] opacity-0 translate-y-2 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-300">
-                    View Prototype
+                    {p.protoUrl ? 'View Prototype' : (p.linkLabel ? p.linkLabel.replace(' ↗', '') : 'View System')}
                     <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
                       <path d="M5 12h14M12 5l7 7-7 7"/>
                     </svg>
@@ -288,14 +333,14 @@ export default function Projects() {
                 </div>
 
                 <div className="relative z-10 mt-auto">
-                  <h3 className="font-display italic text-[#f7f6f3] text-3xl tracking-tight mb-1.5">
+                  <h3 className="font-display italic text-[#f7f6f3] text-3xl tracking-tight mb-2">
                     {p.title}
                   </h3>
-                  <p className="text-[#f7f6f3]/70 text-sm leading-snug mb-3">
+                  <p className="text-[#f7f6f3]/70 text-xs leading-snug mb-3">
                     {p.tagline}
                   </p>
                   <span className="inline-flex items-center gap-2 text-[#f7f6f3] text-[0.65rem] uppercase tracking-[0.25em]">
-                    View Prototype →
+                    {p.protoUrl ? 'View Prototype →' : `${p.linkLabel ? p.linkLabel.replace(' ↗', '') : 'View System'} →`}
                   </span>
                 </div>
               </div>
@@ -317,7 +362,10 @@ export default function Projects() {
         />
         
         {/* Drawer panel */}
-        <div className="relative w-full md:w-[92vw] lg:w-[88vw] max-w-7xl h-full bg-[#121212] pointer-events-auto shadow-2xl flex flex-col md:flex-row border-l border-white/10 overflow-hidden">
+        <div 
+          data-lenis-prevent="true"
+          className="relative w-full md:w-[92vw] lg:w-[88vw] max-w-7xl h-full bg-[#121212] pointer-events-auto shadow-2xl flex flex-col md:flex-row border-l border-white/10 overflow-hidden"
+        >
           
           {/* Close button (always visible) */}
           <button
@@ -333,7 +381,11 @@ export default function Projects() {
           </button>
 
           {/* Left Panel: Project Write-up */}
-          <div className="w-full h-[45vh] md:h-full md:w-[380px] lg:w-[460px] bg-[#1a1a1a] flex-shrink-0 border-b md:border-b-0 md:border-r border-white/10 overflow-y-auto overscroll-contain p-6 md:p-10 block">
+          <div 
+            data-lenis-prevent="true"
+            onWheel={(e) => e.stopPropagation()}
+            className="w-full h-[45vh] md:h-full md:w-[380px] lg:w-[460px] bg-[#1a1a1a] flex-shrink-0 border-b md:border-b-0 md:border-r border-white/10 overflow-y-auto overscroll-contain p-6 md:p-10 block"
+          >
             {activeProto && (
               <div className="space-y-7 pb-10">
                 {/* Header */}
@@ -402,35 +454,94 @@ export default function Projects() {
                   </ul>
                 </div>
 
+                {/* Direct Action Link */}
+                {activeProto.link ? (
+                  <div className="pt-2">
+                    <a
+                      href={activeProto.link}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center justify-center gap-2.5 w-full py-3.5 px-5 rounded-full bg-white/10 hover:bg-white/20 text-[#f7f6f3] font-sans text-xs uppercase tracking-[0.2em] font-semibold border border-white/15 transition-all text-center"
+                    >
+                      {activeProto.linkLabel || 'Open Project ↗'}
+                    </a>
+                  </div>
+                ) : activeProto.protoUrl && (
+                  <div className="pt-2">
+                    <a
+                      href={activeProto.protoUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center justify-center gap-2.5 w-full py-3 px-4 rounded-full bg-white/10 hover:bg-white/20 text-[#f7f6f3] font-sans text-[0.7rem] uppercase tracking-[0.2em] border border-white/15 transition-all text-center"
+                    >
+                      Launch Standalone Prototype ↗
+                    </a>
+                  </div>
+                )}
+
                 {/* Scroll indicator for mobile — tells user the prototype is below */}
                 <div className="md:hidden text-center pt-4 border-t border-white/8">
                   <span className="font-sans text-[10px] uppercase tracking-widest text-white/40">
-                    ↓ Scroll down for interactive prototype
+                    ↓ Scroll down for {activeProto.protoUrl ? 'interactive prototype' : 'visual system'}
                   </span>
                 </div>
               </div>
             )}
           </div>
 
-          {/* Right Panel: Interactive Prototype */}
-          <div className="flex-1 w-full h-[55vh] md:h-full bg-black relative flex items-center justify-center p-4 overflow-hidden">
+          {/* Right Panel: Interactive Prototype or Visual Showcase */}
+          <div 
+            data-lenis-prevent="true"
+            className="flex-1 w-full h-[55vh] md:h-full bg-black relative flex items-center justify-center p-2 sm:p-4 md:p-6 overflow-hidden"
+          >
             <div className="absolute inset-0 bg-void duotone" />
             
             {/* Ambient glows behind the prototype */}
             <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[60%] h-[80%] rounded-full bg-white blur-[120px] opacity-[0.07]" />
 
             {activeProto && (
-              <div className="relative z-10 w-full h-full max-w-[440px] max-h-[900px] flex items-center justify-center mx-auto">
-                <iframe
-                  src={activeProto.protoUrl}
-                  title={`${activeProto.title} Prototype`}
-                  className="w-full h-full rounded-[3rem] shadow-2xl border-[6px] border-white/5 bg-black hw origin-center transition-transform duration-500"
-                  style={{
-                    transform: `scale(${activeProto.protoScale || 1})`,
-                    clipPath: 'inset(0 round 3rem)'
-                  }}
-                />
-              </div>
+              activeProto.protoUrl ? (
+                /* Interactive Phone Prototype */
+                <div 
+                  data-lenis-prevent="true"
+                  className="relative z-10 w-full h-full max-w-[480px] flex items-center justify-center mx-auto"
+                >
+                  <iframe
+                    src={activeProto.protoUrl}
+                    title={`${activeProto.title} Interactive Prototype`}
+                    className="w-full h-full max-h-[880px] border-0 bg-transparent rounded-none md:rounded-[3rem] transition-all"
+                    style={{
+                      transform: 'scale(min(1, calc((100vh - 48px) / 860)))',
+                      transformOrigin: 'center center'
+                    }}
+                  />
+                </div>
+              ) : (
+                /* Visual Showcase for Case Studies (Whole Fruit, Gamut) */
+                <div 
+                  data-lenis-prevent="true"
+                  className="relative z-10 w-full h-full max-w-3xl flex flex-col items-center justify-center p-4 md:p-8 mx-auto"
+                >
+                  <div className="relative w-full max-h-[70vh] rounded-2xl overflow-hidden border border-white/10 shadow-2xl bg-[#141414] mb-6 flex items-center justify-center">
+                    <img
+                      src={activeProto.preview}
+                      alt={activeProto.previewAlt || activeProto.title}
+                      className="w-full h-full object-contain max-h-[62vh]"
+                    />
+                  </div>
+                  {activeProto.link && (
+                    <a
+                      href={activeProto.link}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center gap-2.5 px-7 py-3.5 rounded-full bg-[#f7f6f3] text-[#121212] font-sans text-xs font-semibold uppercase tracking-[0.2em] transition-transform hover:scale-105 active:scale-95 shadow-xl"
+                      data-cursor="hover"
+                    >
+                      {activeProto.linkLabel || 'Explore System ↗'}
+                    </a>
+                  )}
+                </div>
+              )
             )}
           </div>
         </div>

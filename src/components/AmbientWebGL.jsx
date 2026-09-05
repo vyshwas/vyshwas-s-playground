@@ -60,16 +60,26 @@ const VignetteShader = {
   `,
 }
 
+function hasWebGL() {
+  if (typeof window === 'undefined') return false
+  try {
+    const canvas = document.createElement('canvas')
+    return !!(window.WebGLRenderingContext && (canvas.getContext('webgl') || canvas.getContext('experimental-webgl') || canvas.getContext('webgl2')))
+  } catch {
+    return false
+  }
+}
+
 export default function AmbientWebGL() {
   const containerRef = useRef(null)
 
   useEffect(() => {
-    if (reducedMotion()) return
+    if (reducedMotion() || !hasWebGL()) return
 
     const container = containerRef.current
     if (!container) return
 
-    const cleanup = (() => {
+    try {
       const scene = new THREE.Scene()
       const camera = new THREE.OrthographicCamera(-1, 1, 1, -1, 0, 1)
 
@@ -317,10 +327,14 @@ export default function AmbientWebGL() {
         geometry.dispose()
         material.dispose()
         composer.passes.forEach(p => p.dispose?.())
-        container.removeChild(renderer.domElement)
+        if (renderer.domElement && container.contains(renderer.domElement)) {
+          container.removeChild(renderer.domElement)
+        }
       }
-    })()
-    return cleanup
+    } catch (err) {
+      console.warn('[AmbientWebGL] Fallback: WebGL initialization bypassed:', err)
+      return undefined
+    }
   }, [])
 
   return <div ref={containerRef} className="fixed inset-0 z-0 pointer-events-none" aria-hidden="true" />

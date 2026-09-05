@@ -302,13 +302,13 @@ export default function FooterExit() {
             vyommehta197@gmail.com
           </Magnetic>
           <Magnetic as="a" strength={0.4}
-            href="https://vyshwas.github.io/"
+            href="./resume.pdf"
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center justify-center rounded-full border border-titanium/40 px-9 py-4 font-sans text-[0.7rem] uppercase tracking-[0.22em] text-bone transition-colors duration-300 hover:border-cyan hover:text-cyan"
+            className="inline-flex items-center justify-center rounded-full border border-titanium/40 px-9 py-4 font-sans text-[0.7rem] uppercase tracking-[0.22em] text-bone transition-colors duration-300 hover:border-bone hover:text-bone"
             data-cursor="magnetic"
           >
-            Case Studies ↗
+            View Resume ↗
           </Magnetic>
         </div>
         <div className="mt-6 flex items-center gap-8">

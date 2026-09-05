@@ -102,26 +102,15 @@ export default function Nav() {
           {/* Divider */}
           <span className="text-black/15 text-xs select-none">|</span>
 
-          {/* Resume Link */}
+          {/* Resume CTA Pill */}
           <a
             href="./resume.pdf"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="font-display text-[0.95rem] text-bone/80 hover:text-bone transition-colors duration-200 tracking-[0.03em] hover:underline underline-offset-4"
-            data-cursor="magnetic"
-          >
-            [ Resume ]
-          </a>
-
-          {/* Portfolio CTA Pill */}
-          <a
-            href="https://vyshwas.github.io/"
             target="_blank"
             rel="noopener noreferrer"
             className="nav-backyard-btn"
             data-cursor="magnetic"
           >
-            Case Studies ↗
+            Resume ↗
           </a>
         </nav>
 
@@ -180,18 +169,9 @@ export default function Nav() {
             href="./resume.pdf"
             target="_blank"
             rel="noopener noreferrer"
-            className="font-display text-2xl italic text-bone tracking-[0.05em] mt-4"
+            className="mt-4 inline-flex items-center justify-center gap-2 rounded-full border border-black/20 bg-black/5 px-6 py-3 font-sans text-xs uppercase tracking-[0.2em] text-bone transition-colors hover:bg-bone hover:text-white"
           >
-            [ Resume ]
-          </a>
-
-          <a
-            href="https://vyshwas.github.io/"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="mt-2 inline-flex items-center gap-2 rounded-full border border-black/20 bg-black/5 px-6 py-2.5 font-sans text-xs uppercase tracking-[0.18em] text-bone transition-colors hover:bg-bone hover:text-white"
-          >
-            Case Studies ↗
+            Download Resume ↗
           </a>
         </div>
       )}

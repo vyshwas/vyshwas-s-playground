@@ -3,6 +3,11 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
+<script>
+  if (window.self !== window.top || location.search.indexOf('embed') !== -1) {
+    document.documentElement.classList.add('is-embed');
+  }
+</script>
 </head>
 <body>
 <title>Nocturne · Checkout Prototype</title>
@@ -394,6 +399,28 @@
   }
   @media (prefers-reduced-motion:reduce){
     *,*::before,*::after{animation-duration:.01ms !important;animation-iteration-count:1 !important;transition-duration:.01ms !important}
+  }
+  /* Embedded mode for drawer */
+  .is-embed body { overflow: hidden !important; background: #0b0f17 !important; margin: 0 !important; }
+  .is-embed .nx-page {
+    min-height: 100vh !important;
+    height: 100vh !important;
+    padding: 0 !important;
+    overflow: hidden !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    background: transparent !important;
+    background-image: none !important;
+  }
+  .is-embed .nx-head,
+  .is-embed .stage-chips,
+  .is-embed .nx-controls,
+  .is-embed .nx-footnote,
+  .is-embed .nx-stars { display: none !important; }
+  .is-embed .nx-phone {
+    margin: 0 auto !important;
+    box-shadow: 0 0 0 1px rgba(255,255,255,0.08), 0 25px 60px rgba(0,0,0,0.7) !important;
   }
 </style>
 

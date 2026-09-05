@@ -79,10 +79,21 @@ function genGrid() {
   return a
 }
 
+function hasWebGL() {
+  if (typeof window === 'undefined') return false
+  try {
+    const canvas = document.createElement('canvas')
+    return !!(window.WebGLRenderingContext && (canvas.getContext('webgl') || canvas.getContext('experimental-webgl') || canvas.getContext('webgl2')))
+  } catch {
+    return false
+  }
+}
+
 export default function LabReveal() {
   const mountRef = useRef(null)
   const stageRef = useRef(null)
   const [phase, setPhase] = useState(0)
+  const [webglActive] = useState(() => hasWebGL())
   const phaseRef = useRef(0)
 
   useEffect(() => {
@@ -90,16 +101,36 @@ export default function LabReveal() {
     const container = mountRef.current
     if (!container) return
 
-    const ctx = gsap.context(() => {
-      if (stageRef.current) {
-        gsap.fromTo(stageRef.current, { opacity: 0, scale: 0.95 }, {
-          opacity: 1, scale: 1, ease: 'none',
-          scrollTrigger: { trigger: container, start: 'top 90%', end: 'top 15%', scrub: 0.6 },
+    if (!webglActive) {
+      const ctx = gsap.context(() => {
+        ScrollTrigger.create({
+          trigger: container,
+          start: 'top top',
+          end: 'bottom bottom',
+          scrub: true,
+          onUpdate: (self) => {
+            const p = Math.min(3, Math.floor(self.progress * 4))
+            if (p !== phaseRef.current) {
+              phaseRef.current = p
+              setPhase(p)
+            }
+          },
         })
-      }
+      }, container)
+      return () => ctx.revert()
+    }
 
-      const scene = new THREE.Scene()
-      const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true, powerPreference: 'high-performance' })
+    const ctx = gsap.context(() => {
+      try {
+        if (stageRef.current) {
+          gsap.fromTo(stageRef.current, { opacity: 0, scale: 0.95 }, {
+            opacity: 1, scale: 1, ease: 'none',
+            scrollTrigger: { trigger: container, start: 'top 90%', end: 'top 15%', scrub: 0.6 },
+          })
+        }
+
+        const scene = new THREE.Scene()
+        const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true, powerPreference: 'high-performance' })
       renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
       renderer.setSize(container.clientWidth, container.clientHeight)
       renderer.domElement.style.cssText = 'position:absolute;inset:0;width:100%;height:100%;cursor:grab;touch-action:pan-y;'
@@ -286,51 +317,86 @@ export default function LabReveal() {
         renderer.dispose()
         canvas.remove()
       }
-    }, mountRef.current)
+    } catch (err) {
+      console.warn('[LabReveal] WebGL setup failed, falling back to static wireframe:', err)
+      setWebglActive(false)
+      return undefined
+    }
+  }, mountRef.current)
 
     return () => ctx.revert()
-  }, [])
+  }, [webglActive])
 
-  if (reducedMotion()) {
-    return (
-      <section ref={mountRef} id="lab" className="relative flex h-screen items-center justify-center bg-void hw" aria-label="The lab">
-        <div className="max-w-xl px-6 text-center">
-          <p className="font-sans text-[0.65rem] uppercase tracking-[0.35em] text-titanium-dim">[ Chapter 02 — The Lab ]</p>
-          <h2 className="mt-6 text-3xl font-semibold text-bone md:text-5xl">
-            Not a template — <span className="font-display">hand-written WebGL</span>, tuned to 60fps.
-          </h2>
-        </div>
-      </section>
-    )
-  }
-
+if (reducedMotion()) {
   return (
-    <section ref={mountRef} id="lab" className="relative h-screen bg-void hw" aria-label="The lab — interactive particle lab">
-      <div ref={stageRef} className="sticky top-0 flex h-screen flex-col items-center justify-center overflow-hidden">
-        {/* Legibility scrims: the particle sphere spans the full viewport, so the
-            type needs a ground of its own to stay readable at every phase. */}
-        <div className="pointer-events-none absolute inset-x-0 top-0 z-[1] h-[26vh] bg-gradient-to-b from-[#f7f6f3] via-[#f7f6f3]/85 to-transparent" />
-        <div className="pointer-events-none absolute inset-x-0 bottom-0 z-[1] h-[40vh] bg-gradient-to-t from-[#f7f6f3] via-[#f7f6f3]/90 to-transparent" />
-
-        <p className="pointer-events-none absolute top-[10vh] z-[2] font-sans text-[0.65rem] uppercase tracking-[0.35em] text-titanium-dim">
-          [ Chapter 02 — Enter the Lab ]
-        </p>
-        <div className="pointer-events-none absolute bottom-[16vh] z-[2] flex flex-col items-center gap-3 text-center">
-          <span key={'l' + phase} className="phase-in font-sans text-[0.6rem] uppercase tracking-[0.4em] text-bone">
-            {PHASES[phase].label}
-          </span>
-          <h2 key={phase} className="phase-in text-3xl font-semibold tracking-tight text-bone md:text-5xl" data-cursor="text">
-            {PHASES[phase].text}
-          </h2>
-        </div>
-        <div className="pointer-events-none absolute bottom-[7vh] z-[2] flex items-center gap-6 font-sans text-[0.55rem] uppercase tracking-[0.25em] text-titanium-dim">
-          <span>drag — spin</span>
-          <span className="h-3 w-px bg-black/20" />
-          <span>move — disturb</span>
-          <span className="h-3 w-px bg-black/20" />
-          <span>hold — gather</span>
-        </div>
+    <section ref={mountRef} id="lab" className="relative flex h-screen items-center justify-center bg-void hw" aria-label="The lab">
+      <div className="max-w-xl px-6 text-center">
+        <p className="font-sans text-[0.65rem] uppercase tracking-[0.35em] text-titanium-dim">[ Chapter 02 — The Lab ]</p>
+        <h2 className="mt-6 text-3xl font-semibold text-bone md:text-5xl">
+          Not a template — <span className="font-display">hand-written WebGL</span>, tuned to 60fps.
+        </h2>
       </div>
     </section>
   )
+}
+
+return (
+  <section ref={mountRef} id="lab" className="relative h-screen bg-void hw" aria-label="The lab — interactive particle lab">
+    <div ref={stageRef} className="sticky top-0 flex h-screen flex-col items-center justify-center overflow-hidden">
+      {/* Legibility scrims: the particle sphere spans the full viewport, so the
+          type needs a ground of its own to stay readable at every phase. */}
+      <div className="pointer-events-none absolute inset-x-0 top-0 z-[1] h-[26vh] bg-gradient-to-b from-[#f7f6f3] via-[#f7f6f3]/85 to-transparent" />
+      <div className="pointer-events-none absolute inset-x-0 bottom-0 z-[1] h-[40vh] bg-gradient-to-t from-[#f7f6f3] via-[#f7f6f3]/90 to-transparent" />
+
+      {/* WebGL Fallback Wireframe (when WebGL is offline) */}
+      {!webglActive && (
+        <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none z-0">
+          <div className="relative w-72 h-72 md:w-96 md:h-96 flex items-center justify-center">
+            <svg className="w-full h-full animate-[spin_50s_linear_infinite] opacity-35" viewBox="0 0 400 400" fill="none">
+              <circle cx="200" cy="200" r="160" stroke="#121212" strokeWidth="1" strokeDasharray="4 8" />
+              <ellipse cx="200" cy="200" rx="170" ry="65" stroke="#121212" strokeWidth="1" transform="rotate(25 200 200)" opacity="0.6" />
+              <ellipse cx="200" cy="200" rx="170" ry="65" stroke="#121212" strokeWidth="1" transform="rotate(-25 200 200)" opacity="0.6" />
+              <ellipse cx="200" cy="200" rx="170" ry="65" stroke="#121212" strokeWidth="1" transform="rotate(90 200 200)" opacity="0.5" />
+              <circle cx="200" cy="200" r="6" fill="#121212" />
+            </svg>
+            <div className="absolute top-[48%] px-3 py-1 rounded-full border border-black/10 bg-white/70 backdrop-blur-sm font-sans text-[0.6rem] uppercase tracking-[0.25em] text-titanium shadow-sm">
+              [ WebGL Offline — Architectural Fallback ]
+            </div>
+          </div>
+        </div>
+      )}
+
+      <p className="pointer-events-none absolute top-[10vh] z-[2] font-sans text-[0.65rem] uppercase tracking-[0.35em] text-titanium-dim">
+        [ Chapter 02 — Enter the Lab ]
+      </p>
+      <div className="pointer-events-none absolute bottom-[16vh] z-[2] flex flex-col items-center gap-3 text-center">
+        <span key={'l' + phase} className="phase-in font-sans text-[0.6rem] uppercase tracking-[0.4em] text-bone">
+          {PHASES[phase].label}
+        </span>
+        <h2 key={phase} className="phase-in text-3xl font-semibold tracking-tight text-bone md:text-5xl" data-cursor="text">
+          {PHASES[phase].text}
+        </h2>
+      </div>
+      <div className="pointer-events-none absolute bottom-[7vh] z-[2] flex items-center gap-6 font-sans text-[0.55rem] uppercase tracking-[0.25em] text-titanium-dim">
+        {webglActive ? (
+          <>
+            <span>drag — spin</span>
+            <span className="h-3 w-px bg-black/20" />
+            <span>move — disturb</span>
+            <span className="h-3 w-px bg-black/20" />
+            <span>hold — gather</span>
+          </>
+        ) : (
+          <>
+            <span>wireframe orbital</span>
+            <span className="h-3 w-px bg-black/20" />
+            <span>scroll — advance phase</span>
+            <span className="h-3 w-px bg-black/20" />
+            <span>system active</span>
+          </>
+        )}
+      </div>
+    </div>
+  </section>
+)
 }
