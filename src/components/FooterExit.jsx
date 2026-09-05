@@ -78,6 +78,7 @@ export default function FooterExit() {
   const [showMatrix, setShowMatrix] = useState(false)
   const [konamiFlash, setKonamiFlash] = useState(false)
   const inputRef = useRef(null)
+  const engaged = useRef(false)
   const konamiBuffer = useRef([])
   const [konamiActive, setKonamiActive] = useState(false)
   const matrixCanvasRef = useRef(null)
@@ -239,16 +240,19 @@ export default function FooterExit() {
   }
 
   useEffect(() => {
-    inputRef.current?.focus()
+    // Only steal focus after the user has engaged the terminal — an
+    // autofocus on mount would capture every keydown site-wide (the app's
+    // 1–6 / arrow-key chapter navigation checks e.target for INPUT).
+    if (engaged.current) inputRef.current?.focus()
   }, [history.length])
 
   return (
-    <footer id="contact" className="relative z-10 w-full bg-void px-6 py-28 md:px-[8vw]">
+    <footer id="contact" className="relative z-10 w-full bg-void px-6 py-32 md:px-[8vw] md:py-44">
       <div id="exit" className="absolute top-0 pointer-events-none" />
       <canvas ref={matrixCanvasRef} className={`matrix-rain ${showMatrix ? 'active' : ''}`} aria-hidden="true" />
       <div className={`konami-flash ${konamiFlash ? 'active' : ''}`} aria-hidden="true" />
 
-      <div className="mx-auto max-w-3xl overflow-hidden rounded-2xl border border-black/10 bg-panel shadow-2xl">
+      <div className="mx-auto max-w-3xl overflow-hidden rounded-2xl border border-black/10 bg-panel shadow-2xl" onClick={() => { engaged.current = true; inputRef.current?.focus() }}>
         <div className="flex items-center gap-2 border-b border-black/10 bg-panel-2 px-4 py-3">
           <span className="h-2.5 w-2.5 rounded-full bg-black/15" />
           <span className="h-2.5 w-2.5 rounded-full bg-black/15" />
@@ -284,20 +288,20 @@ export default function FooterExit() {
         </div>
       </div>
 
-      <div className="mt-20 flex flex-col items-center gap-6 text-center">
+      <div className="mt-28 flex flex-col items-center gap-8 text-center md:mt-36">
         <span className="font-sans text-[0.68rem] font-medium uppercase tracking-[0.35em] text-titanium-dim" data-cursor="text">
           [ Chapter 06 — Contact & Terminal ]
         </span>
         <h2 className="max-w-2xl font-display text-4xl leading-[1.05] italic text-[#121212] md:text-5xl" data-cursor="text">
-          Looking for a product designer who can carry an idea into interaction?
+          Available for product design & design engineering roles.
         </h2>
         <p className="max-w-md text-[0.75rem] font-sans leading-relaxed text-titanium/80 mb-2" data-cursor="text">
-          I’m interested in product design and design-engineering roles where systems thinking, prototyping, and front-end judgment matter.<br/><br/>
-          <span className="uppercase tracking-[0.1em] font-medium">Bengaluru · Open to remote or relocation</span>
+          I'm Vishwas — a strategic product designer & design engineer who carries ideas from systems thinking into shipped, testable interfaces. Open to full-time roles and high-conviction 0→1 contracts.<br/><br/>
+          <span className="uppercase tracking-[0.1em] font-medium">Bengaluru · Open to remote</span>
         </p>
 
         {/* Harmonized Candidate Contact Suite */}
-        <div className="mt-4 flex flex-col sm:flex-row items-center gap-4 z-10">
+        <div className="mt-8 flex flex-col sm:flex-row items-center gap-4 z-10">
           <Magnetic as="div" strength={0.35}>
             <a
               href="mailto:vyommehta197@gmail.com?subject=Product%20Design%20%26%20Design%20Engineering%20Inquiry%20%E2%80%94%20Vishwas%20Mehta"
@@ -317,7 +321,7 @@ export default function FooterExit() {
               className="inline-flex items-center justify-center rounded-full border border-black/15 bg-white/70 backdrop-blur-md px-6 py-3.5 font-sans text-xs font-medium uppercase tracking-[0.14em] text-[#121212] hover:border-black/35 hover:bg-white transition-all duration-300 shadow-sm"
               data-cursor="magnetic"
             >
-              Résumé &nearr;
+              Résumé ↗
             </a>
           </Magnetic>
           
@@ -329,12 +333,12 @@ export default function FooterExit() {
               className="inline-flex items-center justify-center rounded-full border border-black/15 bg-white/70 backdrop-blur-md px-6 py-3.5 font-sans text-xs font-medium uppercase tracking-[0.14em] text-[#121212] hover:border-black/35 hover:bg-white transition-all duration-300 shadow-sm"
               data-cursor="magnetic"
             >
-              LinkedIn &nearr;
+              LinkedIn ↗
             </a>
           </Magnetic>
         </div>
         
-        <div className="mt-16 flex flex-col items-center justify-center gap-3">
+        <div className="mt-24 flex flex-col items-center justify-center gap-4 md:mt-32">
           <p className="font-sans text-[0.65rem] uppercase tracking-[0.3em] text-titanium font-semibold">
             DESIGNED AND BUILT BY VISHWAS MEHTA
           </p>
@@ -342,26 +346,6 @@ export default function FooterExit() {
             BENGALURU, INDIA
             {konamiActive && <span className="ml-2 text-cyan animate-pulse"> ⚡ KONAMI ACTIVE ⚡</span>}
           </p>
-          
-          <div className="mt-4 flex flex-wrap justify-center items-center gap-6">
-            {[
-              { label: 'Email', href: 'mailto:vyommehta197@gmail.com' },
-              { label: 'LinkedIn', href: 'https://linkedin.com/in/vyshwasmehta' },
-              { label: 'Résumé', href: './resume.pdf' },
-              { label: 'GitHub', href: 'https://github.com/vyshwas' },
-            ].map((s) => (
-              <a
-                key={s.label}
-                href={s.href}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="font-sans text-[0.6rem] font-medium uppercase tracking-[0.25em] text-titanium transition-colors hover:text-[#121212]"
-                data-cursor="hover"
-              >
-                {s.label}
-              </a>
-            ))}
-          </div>
         </div>
       </div>
     </footer>

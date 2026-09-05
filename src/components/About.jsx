@@ -74,13 +74,13 @@ export default function About() {
 
         <div className="mt-20 flex flex-wrap items-center justify-center gap-4 text-[0.65rem] font-sans uppercase tracking-[0.2em] text-titanium/80">
           <span>PROBLEM FRAMING</span>
-          <span className="text-cyan">&middot;</span>
+          <span className="text-cyan">·</span>
           <span>PRODUCT SYSTEMS</span>
-          <span className="text-cyan">&middot;</span>
+          <span className="text-cyan">·</span>
           <span>INTERACTION DESIGN</span>
-          <span className="text-cyan">&middot;</span>
+          <span className="text-cyan">·</span>
           <span>PROTOTYPING</span>
-          <span className="text-cyan">&middot;</span>
+          <span className="text-cyan">·</span>
           <span>FRONT-END EXECUTION</span>
         </div>
       </div>

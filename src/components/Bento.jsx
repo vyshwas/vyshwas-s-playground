@@ -138,55 +138,38 @@ const principles = [
   },
 ]
 
-function PrincipleRow({ p }) {
-  const ref = useRef(null)
-
-  useLayoutEffect(() => {
-    if (reducedMotion()) return
-    const ctx = gsap.context(() => {
-      gsap.from(ref.current.querySelectorAll('.p-reveal'), {
-        y: 40, opacity: 0, stagger: 0.08, duration: 0.9, ease: 'power3.out',
-        scrollTrigger: { trigger: ref.current, start: 'top 80%', once: true },
-      })
-    }, ref.current)
-    return () => ctx.revert()
-  }, [])
-
+function PrincipleCard({ p }) {
   return (
     <article
-      ref={ref}
-      className={`prow group relative grid items-center gap-8 border-t border-black/10 py-16 md:grid-cols-12 md:gap-12 md:py-20`}
+      className="prow group relative flex h-full flex-col overflow-hidden rounded-xl border border-black/10 bg-panel transition-colors duration-500 hover:border-black/25"
       data-cursor="default"
     >
-      <span
-        aria-hidden="true"
-        className="pointer-events-none absolute -top-2 right-0 select-none font-display text-[9rem] leading-none text-black/[0.05] md:text-[13rem]"
-      >
-        {p.n}
-      </span>
-
-      <div className={`p-reveal relative col-span-12 md:col-span-5 ${p.flip ? 'md:order-3' : ''}`}>
-        <div className="relative aspect-[280/180] overflow-hidden rounded-xl border border-black/10 bg-panel transition-colors duration-500 group-hover:border-black/25">
-          <p.Diagram />
-        </div>
+      <div className="relative aspect-[280/110] border-b border-black/10">
+        <p.Diagram />
+        <span
+          aria-hidden="true"
+          className="pointer-events-none absolute right-3 top-1 select-none font-display text-5xl leading-none text-black/[0.07]"
+        >
+          {p.n}
+        </span>
       </div>
 
-      <div className={`col-span-12 md:col-span-7 ${p.flip ? 'md:order-1 md:text-right' : ''}`}>
-        <span className="p-reveal font-sans text-[0.6rem] uppercase tracking-[0.35em] text-titanium-dim">
+      <div className="flex flex-1 flex-col p-6">
+        <span className="font-sans text-[0.6rem] uppercase tracking-[0.35em] text-titanium-dim">
           Principle {p.n}
         </span>
         <h3
-          className="p-reveal mt-4 max-w-xl font-display text-4xl leading-[1.05] text-bone md:text-6xl"
+          className="mt-2 font-display text-2xl leading-[1.1] text-bone"
           data-cursor="text"
         >
           {p.title}
         </h3>
-        <p className={`p-reveal mt-5 max-w-md text-base font-light leading-relaxed text-titanium ${p.flip ? 'md:ml-auto' : ''}`} data-cursor="text">
+        <p className="mt-3 text-sm font-light leading-relaxed text-titanium" data-cursor="text">
           {p.support}
         </p>
-        <div className={`p-reveal mt-7 flex flex-wrap gap-2.5 ${p.flip ? 'md:justify-end' : ''}`}>
+        <div className="mt-4 flex flex-wrap gap-2">
           {p.chips.map((c) => (
-            <span key={c} className="rounded-full border border-black/20 px-3.5 py-1.5 font-sans text-[0.55rem] uppercase tracking-[0.18em] text-titanium">
+            <span key={c} className="rounded-full border border-black/20 px-3 py-1 font-sans text-[0.55rem] uppercase tracking-[0.18em] text-titanium">
               {c}
             </span>
           ))}
@@ -197,13 +180,26 @@ function PrincipleRow({ p }) {
 }
 
 export default function Bento() {
+  const root = useRef(null)
+
+  useLayoutEffect(() => {
+    if (reducedMotion()) return
+    const ctx = gsap.context(() => {
+      gsap.from(root.current.querySelectorAll('.pcard'), {
+        y: 24, opacity: 0, stagger: 0.06, duration: 0.7, ease: 'power3.out',
+        scrollTrigger: { trigger: root.current, start: 'top 80%', once: true },
+      })
+    }, root.current)
+    return () => ctx.revert()
+  }, [])
+
   return (
-    <section id="system" className="relative bg-void px-6 py-[16vh] md:px-[8vw]" aria-label="How I think — principles">
-      <header className="mb-10 flex flex-col gap-5">
+    <section ref={root} id="system" className="relative bg-void px-6 py-20 md:px-[8vw] md:py-28" aria-label="How I think — principles">
+      <header className="mb-8 flex flex-col gap-4">
         <span className="font-sans text-[0.65rem] uppercase tracking-[0.35em] text-titanium-dim" data-cursor="text">
           [ Chapter 05 — Principles ]
         </span>
-        <h2 className="max-w-3xl font-display text-5xl leading-[1.02] text-bone md:text-7xl" data-cursor="text">
+        <h2 className="max-w-3xl font-display text-4xl leading-[1.02] text-bone md:text-6xl" data-cursor="text">
           Five beliefs, drawn in ink.
         </h2>
         <p className="max-w-xl text-base font-light leading-relaxed text-titanium" data-cursor="text">
@@ -211,9 +207,38 @@ export default function Bento() {
         </p>
       </header>
 
-      {principles.map((p) => (
-        <PrincipleRow key={p.n} p={p} />
-      ))}
+      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+        {principles.map((p) => (
+          <div key={p.n} className="pcard">
+            <PrincipleCard p={p} />
+          </div>
+        ))}
+
+        {/* sixth cell — availability */}
+        <div className="pcard">
+          <div className="flex h-full flex-col justify-between gap-6 rounded-xl bg-bone p-6" data-cursor="default">
+            <span className="font-sans text-[0.6rem] uppercase tracking-[0.35em] text-void/50">
+              Currently
+            </span>
+            <p className="font-display text-2xl leading-[1.1] text-void" data-cursor="text">
+              Building daily. Open to product design & design engineering roles.
+            </p>
+            <button
+              type="button"
+              onClick={() => scrollToTarget('#contact')}
+              className="inline-flex w-fit items-center gap-2 rounded-full bg-void px-5 py-2.5 font-sans text-[0.65rem] font-semibold uppercase tracking-[0.18em] text-bone transition-transform duration-300 hover:scale-105"
+              data-cursor="magnetic"
+              aria-label="Jump to contact"
+            >
+              Start a conversation
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="h-3.5 w-3.5">
+                <path d="M5 12h14" strokeLinecap="round" />
+                <path d="M13 6l6 6-6 6" strokeLinecap="round" strokeLinejoin="round" />
+              </svg>
+            </button>
+          </div>
+        </div>
+      </div>
 
       {/* status strip */}
       <div className="flex flex-wrap items-center justify-between gap-4 border-t border-black/10 py-8 font-sans text-[0.6rem] uppercase tracking-[0.25em] text-titanium">
@@ -232,13 +257,13 @@ export default function Bento() {
       <button
         type="button"
         onClick={() => scrollToTarget('#experiments')}
-        className="group mt-6 flex w-full items-center justify-between gap-6 rounded-2xl bg-bone px-8 py-10 text-left transition-transform duration-300 hover:-translate-y-0.5 md:px-14 md:py-14"
+        className="group mt-4 flex w-full items-center justify-between gap-6 rounded-2xl bg-bone px-6 py-6 text-left transition-transform duration-300 hover:-translate-y-0.5 md:px-10 md:py-8"
         data-cursor="magnetic"
         aria-label="Jump to selected work"
       >
         <span>
           <span className="block font-sans text-[0.55rem] uppercase tracking-[0.3em] text-bone/50">See it applied</span>
-          <span className="mt-3 block max-w-xl font-display text-3xl leading-tight text-void md:text-5xl" data-cursor="text">
+          <span className="mt-3 block max-w-xl font-display text-2xl leading-tight text-void md:text-3xl" data-cursor="text">
             Every principle above shows up in the shipped work.
           </span>
         </span>

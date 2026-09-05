@@ -1,7 +1,7 @@
 import { useLayoutEffect, useRef, useEffect, useState } from 'react'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
-import { reducedMotion } from '../App.jsx'
+import { reducedMotion, scrollToTarget } from '../App.jsx'
 
 gsap.registerPlugin(ScrollTrigger)
 
@@ -68,16 +68,34 @@ export default function Hero() {
           pin: true,
           pinSpacing: false,
           anticipatePin: 1,
+          invalidateOnRefresh: true,
+          // Boundary snaps: scrub lag can leave the timeline hovering in a
+          // half-zoomed ghost state right at the edges (fast flicks, smooth
+          // scroll glides, refresh-while-scrolled). Crossing a boundary pins
+          // the exact end state so a stuck mid-state is impossible.
+          onLeaveBack: () => tl.progress(0),
+          onLeave: () => tl.progress(1),
         },
       })
 
       // Initialize the sharp text overlay
       gsap.set('.hero-statement-overlay', { xPercent: -50, yPercent: -50, scale: 1/12 })
+      // Park the statement words hidden upfront so reverse scrub always
+      // has a deterministic hidden state (no fromTo re-init edge cases).
+      gsap.set('.hero-statement-overlay > *', { opacity: 0, y: 8 })
 
       // 1. Editorial copy fades up and out
       tl.to('.hero-editorial-copy', {
         opacity: 0,
         y: -40,
+        duration: 0.25,
+        ease: 'power2.inOut',
+      }, 0)
+
+      // 1b. Bottom cluster drifts down and out (lives below the TV)
+      tl.to('.hero-bottom-cluster', {
+        opacity: 0,
+        y: 24,
         duration: 0.25,
         ease: 'power2.inOut',
       }, 0)
@@ -106,15 +124,14 @@ export default function Hero() {
       }, 0)
 
       // 5. Stagger reveal the statement text as we zoom in
-      tl.fromTo('.hero-statement-overlay > *', 
-        { opacity: 0, y: 8 },
+      tl.to('.hero-statement-overlay > *',
         {
           opacity: 1,
           y: 0,
           stagger: 0.15,
           duration: 0.4,
           ease: 'power2.out',
-        }, 
+        },
         0.25
       )
 
@@ -204,7 +221,7 @@ export default function Hero() {
               color: '#f7f6f3',
             }}
           >
-            Strategic Product Designer &amp; Design Engineer
+            Strategic Product Designer & Design Engineer
           </p>
         </div>
 
@@ -217,21 +234,26 @@ export default function Hero() {
         >
           Design that ships.<br className="hidden sm:block" /> Code that feels.
         </h1>
+      </div>
 
+      {/* ─── 2b. Bottom cluster — subtitle, CTAs, availability parked below the TV ─── */}
+      <div className="hero-bottom-cluster absolute inset-x-0 z-10 flex flex-col items-center gap-5 px-6 pointer-events-none"
+        style={{ bottom: 'clamp(84px, 12vh, 130px)' }}
+      >
         {/* Subtitle */}
-        <p className="mt-3 max-w-[28rem] font-sans font-normal leading-relaxed tracking-wide drop-shadow-[0_1px_4px_rgba(0,0,0,0.4)]"
+        <p className="max-w-[28rem] text-center font-sans font-normal leading-relaxed tracking-wide drop-shadow-[0_1px_4px_rgba(0,0,0,0.4)]"
           style={{
             fontSize: 'clamp(0.75rem, 0.95vw, 0.9rem)',
-            color: 'rgba(247, 246, 243, 0.78)',
+            color: 'rgba(247, 246, 243, 0.85)',
           }}
         >
           I turn complex product ideas into clear systems, testable interfaces, and front-end experiences that are ready to build.
         </p>
 
         {/* CTAs */}
-        <div className="mt-7 flex flex-wrap justify-center gap-4 pointer-events-auto">
+        <div className="flex flex-wrap justify-center gap-4 pointer-events-auto">
           <button 
-            onClick={() => document.getElementById('experiments')?.scrollIntoView({ behavior: 'smooth' })}
+            onClick={() => scrollToTarget('#experiments')}
             className="rounded-full bg-bone px-7 py-3 font-sans text-[0.7rem] font-semibold uppercase tracking-[0.2em] text-void transition-transform hover:scale-105"
           >
             View Selected Work
@@ -242,13 +264,13 @@ export default function Hero() {
             rel="noopener noreferrer"
             className="rounded-full border border-bone/30 bg-black/20 backdrop-blur-sm px-7 py-3 font-sans text-[0.7rem] font-semibold uppercase tracking-[0.2em] text-bone transition-all hover:bg-bone/10"
           >
-            Résumé &nearr;
+            Résumé ↗
           </a>
         </div>
         
         {/* Availability Line */}
-        <p className="mt-5 font-sans text-[0.65rem] tracking-[0.1em] text-bone/50 uppercase">
-          Open to design engineering roles in Bengaluru or remote.
+        <p className="font-sans text-[0.65rem] tracking-[0.1em] text-bone/50 uppercase text-center drop-shadow-[0_1px_4px_rgba(0,0,0,0.4)]">
+          Open to product design & design engineering roles — Bengaluru · Open to remote.
         </p>
       </div>
 
@@ -271,7 +293,7 @@ export default function Hero() {
         <h2 className="statement-word font-display italic text-bone leading-[1.15] tracking-tight drop-shadow-[0_0_12px_rgba(255,255,255,0.4)] mb-8 max-w-4xl"
           style={{ fontSize: 'clamp(3rem, 6vw, 5rem)' }}
         >
-          &ldquo;I turn complex ideas into products people understand, trust, and remember.&rdquo;
+          "I turn complex ideas into products people understand, trust, and remember."
         </h2>
         <p className="statement-word font-mono uppercase tracking-[0.18em] text-cyan/80 font-semibold drop-shadow-sm"
           style={{ fontSize: 'clamp(0.8rem, 1vw, 1rem)' }}

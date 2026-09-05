@@ -237,7 +237,7 @@ export default function Projects() {
               Selected Works
             </h2>
             <p className="font-sans text-[0.7rem] uppercase tracking-[0.3em] text-titanium mt-4">
-              2024 &ndash; 2026
+              2024 – 2026
             </p>
             <p className="font-sans text-[0.75rem] text-titanium/80 mt-3 max-w-[28rem] mx-auto leading-relaxed">
               Interactive systems, prototypes, and documented case studies. Select any card.
@@ -310,7 +310,7 @@ export default function Projects() {
               Selected Works
             </h2>
             <p className="font-sans text-[0.65rem] uppercase tracking-[0.3em] text-titanium mt-3">
-              2024 &ndash; 2026
+              2024 – 2026
             </p>
           </div>
           

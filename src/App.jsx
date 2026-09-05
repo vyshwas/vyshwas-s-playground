@@ -18,11 +18,26 @@ export const reducedMotion = () =>
   window.matchMedia('(prefers-reduced-motion: reduce)').matches
 
 export function scrollToTarget(target) {
+  // A smooth Lenis glide back up through the pinned hero scrub timeline
+  // strands mid-zoom ghost states (and can stall at the pin end), so any
+  // top/hero-bound jump goes instant + state-synced instead. All other
+  // chapter jumps keep the smooth glide (they never cross the pin).
+  const isTop = target === 0 || target === '#hero'
   const lenis = window.__lenis
   if (lenis) {
-    lenis.scrollTo(target, { duration: 1.6 })
-  } else if (typeof target === 'string') {
-    document.querySelector(target)?.scrollIntoView({ behavior: 'smooth' })
+    if (isTop) {
+      lenis.scrollTo(0, { immediate: true })
+    } else {
+      lenis.scrollTo(target, { duration: 1.6 })
+    }
+    return
+  }
+  if (typeof target === 'string') {
+    if (isTop) {
+      window.scrollTo(0, 0)
+    } else {
+      document.querySelector(target)?.scrollIntoView({ behavior: 'smooth' })
+    }
   } else {
     window.scrollTo({ top: 0, behavior: 'smooth' })
   }
