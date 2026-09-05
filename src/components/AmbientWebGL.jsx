@@ -244,13 +244,13 @@ export default function AmbientWebGL() {
 
         if (isKonami) {
           bloomPass.strength = 1.2
-          chromaticPass.uniforms.offset.value = 0.04
+          chromaticPass.uniforms.offset.value.set(0.04, 0)
           vignettePass.uniforms.darkness.value = 2.0
           particles.rotation.y = elapsed * 0.5
           particles.rotation.x = elapsed * 0.2
         } else {
           bloomPass.strength = 0.3
-          chromaticPass.uniforms.offset.value = 0.003
+          chromaticPass.uniforms.offset.value.set(0.003, 0)
           vignettePass.uniforms.darkness.value = 1.2
           particles.rotation.y = 0
           particles.rotation.x = 0

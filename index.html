@@ -25,20 +25,6 @@
     </script>
   </head>
   <body>
-    <script>
-      window.addEventListener('error', (event) => {
-        fetch('http://localhost:5183/__log_error', {
-          method: 'POST',
-          body: event.error ? event.error.stack : event.message
-        });
-      });
-      window.addEventListener('unhandledrejection', (event) => {
-        fetch('http://localhost:5183/__log_error', {
-          method: 'POST',
-          body: event.reason ? event.reason.stack : event.reason
-        });
-      });
-    </script>
     <div id="root"></div>
     <script type="module" src="/src/main.jsx"></script>
   </body>
