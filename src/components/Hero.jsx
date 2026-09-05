@@ -123,34 +123,7 @@ export default function Hero() {
         ease: 'power2.inOut',
       }, 0)
 
-      // 4. Fade out HUD as zoom starts
-      tl.to('.hero-screen-hud', {
-        opacity: 0,
-        duration: 0.15,
-        ease: 'power1.in',
-      }, 0.05)
-
-      // 5. Reveal positioning statement during zoom
-      tl.fromTo('.hero-screen-statement',
-        { opacity: 0, scale: 0.8 },
-        {
-          opacity: 1,
-          scale: 1.0,
-          duration: 0.35,
-          ease: 'power2.out',
-        },
-        0.15
-      )
-
-      // 6. Fade statement out as screen fills viewport
-      tl.to('.hero-screen-statement', {
-        opacity: 0,
-        scale: 1.3,
-        duration: 0.2,
-        ease: 'power1.in',
-      }, 0.70)
-
-      // 7. Dissolve hero
+      // 4. Dissolve hero as screen fills viewport
       tl.to(root.current, {
         opacity: 0,
         duration: 0.18,
@@ -222,7 +195,7 @@ export default function Hero() {
           }}
         >
           {/* CRT Phosphor Viewport — strict clipping with tight radius matching the real glass corners */}
-          <div className="hero-screen-portal absolute inset-0 overflow-hidden rounded-[3px] sm:rounded-[4px] shadow-[inset_0_0_12px_rgba(0,0,0,0.9)] bg-[#070d09]">
+          <div className="hero-screen-portal absolute inset-0 overflow-hidden rounded-[3px] sm:rounded-[4px] shadow-[inset_0_0_12px_rgba(0,0,0,0.9)] bg-[#070d09] flex items-center justify-center">
             {/* Procedural CRT Noise */}
             <canvas
               ref={canvasRef}
@@ -247,76 +220,12 @@ export default function Hero() {
             {/* CRT Sweep Beam */}
             <div className="crt-sweep-line" />
 
-            {/* State A: Initial HUD — monospace telemetry, proportionally sized to CRT glass */}
-            <div className="hero-screen-hud absolute inset-0 z-[4] flex flex-col items-center justify-between select-none pointer-events-none"
-              style={{ padding: '6%' }}
+            {/* Simple Glowing Prompt */}
+            <div className="z-[5] font-mono font-bold text-[#39ff14] flex items-center gap-[2px]"
+              style={{ fontSize: '12px', textShadow: '0 0 8px rgba(57,255,20,0.8)' }}
             >
-              {/* Top Status */}
-              <div className="w-full flex items-center justify-between"
-                style={{ borderBottom: '1px solid rgba(57,255,20,0.3)', paddingBottom: '4%' }}
-              >
-                <div className="flex items-center" style={{ gap: '4%' }}>
-                  <span className="rounded-full bg-[#39ff14] shadow-[0_0_6px_#39ff14] animate-pulse"
-                    style={{ width: 'clamp(3px, 6%, 6px)', height: 'clamp(3px, 6%, 6px)' }}
-                  />
-                  <span className="font-mono font-bold tracking-widest text-[#39ff14] uppercase"
-                    style={{ fontSize: 'clamp(5px, 7%, 8px)', lineHeight: 1 }}
-                  >
-                    LIVE
-                  </span>
-                </div>
-                <span className="font-mono font-medium text-[#39ff14]/80 tracking-wider"
-                  style={{ fontSize: 'clamp(4.5px, 6%, 7px)', lineHeight: 1 }}
-                >
-                  SYS.01
-                </span>
-              </div>
-
-              {/* Center: Identity */}
-              <div className="flex flex-col items-center my-auto text-center" style={{ padding: '0 4%' }}>
-                <span className="font-mono font-bold tracking-[0.16em] uppercase text-[#e6fced] drop-shadow-[0_0_5px_rgba(57,255,20,0.7)]"
-                  style={{ fontSize: 'clamp(7px, 9%, 10px)', lineHeight: 1 }}
-                >
-                  VISHWAS
-                </span>
-                <span className="font-mono font-semibold tracking-[0.12em] uppercase text-[#39ff14]"
-                  style={{ fontSize: 'clamp(5px, 6.5%, 8px)', lineHeight: 1, marginTop: '4%' }}
-                >
-                  DESIGN &bull; CODE
-                </span>
-              </div>
-
-              {/* Bottom Prompt */}
-              <div className="w-full flex items-center justify-center"
-                style={{ borderTop: '1px solid rgba(57,255,20,0.25)', paddingTop: '4%' }}
-              >
-                <span className="font-mono font-medium tracking-wider text-[#39ff14]/95 flex items-center"
-                  style={{ fontSize: 'clamp(5px, 6.5%, 8px)', lineHeight: 1, gap: '3%' }}
-                >
-                  <span className="animate-pulse">&gt;</span> scroll to enter
-                </span>
-              </div>
-            </div>
-
-            {/* State B: Positioning Statement — revealed during zoom flight */}
-            <div className="hero-screen-statement absolute inset-0 z-[5] flex flex-col items-center justify-center text-center select-none pointer-events-none opacity-0"
-              style={{ padding: '8%' }}
-            >
-              <span className="font-mono uppercase tracking-[0.25em] text-[#39ff14] font-bold"
-                style={{ fontSize: 'clamp(4.5px, 5.5%, 7px)', lineHeight: 1, marginBottom: '6%' }}
-              >
-                [ POSITIONING ]
-              </span>
-              <h2 className="font-display italic text-[#f7f6f3] leading-[1.12] tracking-tight drop-shadow-[0_0_8px_rgba(255,255,255,0.85)]"
-                style={{ fontSize: 'clamp(7px, 9%, 11px)', maxWidth: '88%' }}
-              >
-                &ldquo;I turn complex ideas into products people understand, trust, and remember.&rdquo;
-              </h2>
-              <p className="font-mono uppercase tracking-[0.18em] text-[#a8ffb2] font-semibold"
-                style={{ fontSize: 'clamp(4px, 5%, 6px)', lineHeight: 1, marginTop: '6%' }}
-              >
-                Systems Thinking Before Visual Polish
-              </p>
+              <span>&gt;</span>
+              <span className="w-[8px] h-[14px] bg-[#39ff14] animate-pulse" />
             </div>
           </div>
         </div>
