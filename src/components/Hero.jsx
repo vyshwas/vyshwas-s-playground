@@ -176,6 +176,7 @@ export default function Hero() {
     let animationId = 0
     let lastProgress = 0
     let clock = new THREE.Clock()
+    let cleanupFn = null
 
     const initThree = () => {
       const heroRoot = root.current
@@ -319,9 +320,15 @@ export default function Hero() {
     }
 
     if (video.readyState >= 2) {
-      initThree()
+      cleanupFn = initThree()
     } else {
-      video.addEventListener('loadeddata', initThree, { once: true })
+      const handleLoad = () => { cleanupFn = initThree() }
+      video.addEventListener('loadeddata', handleLoad, { once: true })
+      cleanupFn = () => video.removeEventListener('loadeddata', handleLoad)
+    }
+
+    return () => {
+      if (cleanupFn) cleanupFn()
     }
   }, [])
 

@@ -69,7 +69,7 @@ export default function AmbientWebGL() {
     const container = containerRef.current
     if (!container) return
 
-    (() => {
+    const cleanup = (() => {
       const scene = new THREE.Scene()
       const camera = new THREE.OrthographicCamera(-1, 1, 1, -1, 0, 1)
 
@@ -320,6 +320,7 @@ export default function AmbientWebGL() {
         container.removeChild(renderer.domElement)
       }
     })()
+    return cleanup
   }, [])
 
   return <div ref={containerRef} className="fixed inset-0 z-0 pointer-events-none" aria-hidden="true" />
