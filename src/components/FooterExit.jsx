@@ -1,351 +1,189 @@
-import { useEffect, useRef, useState, useCallback } from 'react'
-import Magnetic from './Magnetic.jsx'
-
-const commands = {
-  whoami: 'vishwas — strategic designer & design engineer, bengaluru',
-  'ls ./next': 'portfolio/  github/  experiments/',
-  'cat manifesto.txt': `Systems before surfaces.
-Code as craft, not commodity.
-Local-first is not optional.
-Curiosity compounds.`,
-  'neofetch': `       .---.       vishwas@playground
-      /     \\      ----------------
-      \\.@-@./      OS: Local-First Linux
-      /\\_/\\ \\     Kernel: Curiosity 1.0
-     //_/_\\_\\\\    Uptime: ∞
-    (  \\___/  )   Shell: zsh + wonder
-   /_/'   \\_\\    Packages: 42 (and counting)
-  (_/       \\_)  `,
-  help: `Available commands:
-  whoami          — identity
-  ls ./next       — what's next
-  cat manifesto   — the philosophy
-  neofetch        — system info
-  konami          — 🎮
-  clear           — clean slate
-  exit            — return to portfolio`,
-  konami: `↑ ↑ ↓ ↓ ← → ← → B A
-
-🎮 KONAMI CODE ACCEPTED
-
-Unlocking: "infinite curiosity" mode
-Particle intensity: MAX
-Glitch intensity: MAX
-Easter egg: terminal theme cycle enabled
-
-Type 'theme' to cycle.`,
-  theme: `Theme cycling enabled.
-Available: void (default), amber, cyan, matrix, retro
-Usage: theme <name>`,
-  exit: 'Exiting playground... see you in the portfolio.',
-  clear: '__CLEAR__',
+import { useEffect, useRef, useState } from 'react'
+import { scrollToTarget } from '../lib/motion.js'
+import Icon from './Icon.jsx'
+const email = 'vyommehta197@gmail.com'
+const replies = {
+  help: 'whoami · work · principles · resume · email · clear · exit',
+  whoami:
+    'Vishwas Mehta. Strategic Product Designer & Design Engineer. Bengaluru, India.',
+  principles:
+    'Systems thinking before visual polish. Design that ships. Code that feels.',
+  email,
+  resume: 'Use the résumé link below to inspect or download the PDF.',
+  work: 'Opening selected work…',
 }
-
-const easterEggs = {
-  'sudo make me a sandwich': 'Okay. 🥪',
-  'vim': 'You are now in vim. Type :q to quit. (Just kidding — you are free.)',
-  'hello world': 'Hello, world. 👋 Ready to build something?',
-  'make it pop': 'Increasing contrast... ✨ Done. Everything pops now.',
-  'dark mode': 'Already there. 🌑',
-  'light mode': 'Retina damage inbound... ☀️ Just kidding. Stay in the void.',
-}
-
-const konamiSequence = ['ArrowUp', 'ArrowUp', 'ArrowDown', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'ArrowLeft', 'ArrowRight', 'KeyB', 'KeyA']
-
-const commandList = Object.keys(commands).concat(Object.keys(easterEggs))
-
-function highlightOutput(text) {
-  return text
-    .replace(/^(\$ .+)$/gm, '<span class="cmd">$1</span>')
-    .replace(/^(vishwas@.+)$/gm, '<span class="prompt">$1</span>')
-    .replace(/\b(ERROR|error|failed|not found)\b/g, '<span class="error">$&</span>')
-    .replace(/\b(OK|ok|success|running|enabled|active)\b/g, '<span class="success">$&</span>')
-    .replace(/\b(∞|42|v1\.0\.0)\b/g, '<span class="highlight">$&</span>')
-    .replace(/(\/\/ .+)$/gm, '<span class="comment">$1</span>')
-    .replace(/(\[ .+? \])/g, '<span class="bracket">$1</span>')
-    .replace(/(🎮|🥪|👋|✨|🌑|☀️|◆)/g, '<span class="emoji">$1</span>')
-}
-
 export default function FooterExit() {
-  const [history, setHistory] = useState([
-    { type: 'output', text: 'playground v1.0.0 — type "help" for commands', raw: 'playground v1.0.0 — type "help" for commands' },
-    { type: 'output', text: '', raw: '' },
-  ])
+  const [copyStatus, setCopyStatus] = useState('')
   const [input, setInput] = useState('')
-  const [theme, setTheme] = useState('void')
-  const [historyIndex, setHistoryIndex] = useState(-1)
-  const [inputHistory, setInputHistory] = useState([])
-  const [showMatrix, setShowMatrix] = useState(false)
-  const [konamiFlash, setKonamiFlash] = useState(false)
-  const inputRef = useRef(null)
-  const engaged = useRef(false)
-  const konamiBuffer = useRef([])
-  const [konamiActive, setKonamiActive] = useState(false)
-  const matrixCanvasRef = useRef(null)
-  const [copied, setCopied] = useState(false)
-
-  const handleCopyEmail = (e) => {
-    e?.preventDefault()
-    e?.stopPropagation()
-    navigator.clipboard?.writeText('vyommehta197@gmail.com')
-    setCopied(true)
-    setTimeout(() => setCopied(false), 2200)
+  const [history, setHistory] = useState([
+    {
+      text: 'A little room for curiosity. Type help to explore.',
+      type: 'output',
+    },
+  ])
+  const terminal = useRef(null),
+    output = useRef(null),
+    timer = useRef(null)
+  useEffect(() => () => clearTimeout(timer.current), [])
+  const copy = async () => {
+    clearTimeout(timer.current)
+    try {
+      await navigator.clipboard.writeText(email)
+      setCopyStatus('Email copied')
+    } catch {
+      setCopyStatus('Copy unavailable. Select the email address to copy it.')
+    }
+    timer.current = setTimeout(() => setCopyStatus(''), 4000)
   }
-
-  const addOutput = useCallback((text, type = 'output') => {
-    const raw = typeof text === 'string' ? text : String(text)
-    const highlighted = highlightOutput(raw)
-    setHistory(h => [...h, { type, text: highlighted, raw }])
-  }, [])
-
-  useEffect(() => {
-    const onKeyDown = (e) => {
-      if (document.activeElement === inputRef.current) return
-      konamiBuffer.current.push(e.code)
-      if (konamiBuffer.current.length > konamiSequence.length) konamiBuffer.current.shift()
-      if (konamiBuffer.current.join(',') === konamiSequence.join(',')) {
-        setKonamiActive(true)
-        setKonamiFlash(true)
-        document.body.classList.add('konami-mode')
-        setTimeout(() => setKonamiFlash(false), 150)
-        addOutput('$ konami', 'input')
-        addOutput(commands.konami, 'output')
-        konamiBuffer.current = []
-      }
-    }
-    window.addEventListener('keydown', onKeyDown)
-    return () => window.removeEventListener('keydown', onKeyDown)
-  }, [addOutput])
-
-  useEffect(() => {
-    if (showMatrix) {
-      const canvas = matrixCanvasRef.current
-      if (!canvas) return
-      const ctx = canvas.getContext('2d')
-      canvas.width = window.innerWidth
-      canvas.height = window.innerHeight
-      const chars = 'アイウエオカキクケコサシスセソタチツテトナニヌネノハヒフヘホマミムメモヤユヨラリルレロワヲン0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ'
-      const fontSize = 14
-      const columns = Math.floor(canvas.width / fontSize)
-      const drops = new Array(columns).fill(1)
-      const accent = document.documentElement.style.getPropertyValue('--accent') || '#121212'
-      const accent2 = document.documentElement.style.getPropertyValue('--accent2') || '#444444'
-
-      let frameId = 0
-      function drawMatrix() {
-        const isLowQuality = document.documentElement.classList.contains('low-quality')
-        if (isLowQuality) {
-          frameId = requestAnimationFrame(drawMatrix)
-          return
-        }
-        ctx.fillStyle = 'rgba(6, 6, 7, 0.05)'
-        ctx.fillRect(0, 0, canvas.width, canvas.height)
-        ctx.font = `${fontSize}px monospace`
-        for (let i = 0; i < drops.length; i++) {
-          const char = chars[Math.floor(Math.random() * chars.length)]
-          const x = i * fontSize
-          const y = drops[i] * fontSize
-          const hue = Math.random() > 0.7 ? accent : accent2
-          ctx.fillStyle = hue
-          ctx.fillText(char, x, y)
-          if (y > canvas.height && Math.random() > 0.975) drops[i] = 0
-          drops[i]++
-        }
-        frameId = requestAnimationFrame(drawMatrix)
-      }
-      drawMatrix()
-      return () => cancelAnimationFrame(frameId)
-    }
-  }, [showMatrix])
-
-  const execute = useCallback((cmd) => {
-    const trimmed = cmd.trim()
-    addOutput(`$ ${trimmed}`, 'input')
-    if (inputHistory.length === 0 || inputHistory[inputHistory.length - 1] !== trimmed) {
-      setInputHistory(h => [...h.slice(-49), trimmed])
-    }
-    setHistoryIndex(-1)
-
-    if (!trimmed) return
-
-    if (trimmed in easterEggs) {
-      addOutput(easterEggs[trimmed], 'output')
-      return
-    }
-
-    if (trimmed in commands) {
-      if (trimmed === 'clear') {
-        setHistory([{ type: 'output', text: 'playground v1.0.0 — type "help" for commands', raw: 'playground v1.0.0 — type "help" for commands' }, { type: 'output', text: '', raw: '' }])
-        return
-      }
-      if (trimmed === 'exit') {
-        addOutput(commands.exit, 'output')
-        setTimeout(() => window.open('https://vyshwas.github.io/', '_blank'), 800)
-        return
-      }
-      if (trimmed === 'konami') {
-        setKonamiActive(true)
-        setKonamiFlash(true)
-        document.body.classList.add('konami-mode')
-        setTimeout(() => setKonamiFlash(false), 150)
-      }
-      if (trimmed.startsWith('theme ')) {
-        const t = trimmed.split(' ')[1]
-        if (['void', 'amber', 'cyan', 'matrix', 'retro'].includes(t)) {
-          setTheme(t)
-          setShowMatrix(t === 'matrix')
-          addOutput(`Theme switched to ${t}.${t === 'matrix' ? ' Matrix rain activated.' : ''}`, 'output')
-        } else {
-          addOutput(`Unknown theme: ${t}`, 'output')
-        }
-        return
-      }
-      addOutput(commands[trimmed], 'output')
-      return
-    }
-
-    addOutput(`command not found: ${trimmed}`, 'error')
-  }, [addOutput, inputHistory])
-
-  const handleSubmit = (e) => {
+  const execute = (e) => {
     e.preventDefault()
-    execute(input)
+    const command = input.trim().toLowerCase()
+    if (!command) return
     setInput('')
-  }
-
-  const handleKeyDown = (e) => {
-    if (e.key === 'ArrowUp') {
-      e.preventDefault()
-      if (inputHistory.length > 0) {
-        const nextIndex = historyIndex === -1 ? inputHistory.length - 1 : Math.max(0, historyIndex - 1)
-        setHistoryIndex(nextIndex)
-        setInput(inputHistory[nextIndex])
-      }
-    } else if (e.key === 'ArrowDown') {
-      e.preventDefault()
-      if (historyIndex !== -1) {
-        const nextIndex = historyIndex === inputHistory.length - 1 ? -1 : historyIndex + 1
-        setHistoryIndex(nextIndex)
-        setInput(nextIndex === -1 ? '' : inputHistory[nextIndex])
-      }
-    } else if (e.key === 'Tab') {
-      e.preventDefault()
-      const matches = commandList.filter(c => c.startsWith(input.toLowerCase()))
-      if (matches.length === 1) {
-        setInput(matches[0])
-      } else if (matches.length > 1) {
-        addOutput(matches.join('  '), 'output')
-      }
+    if (command === 'clear') {
+      setHistory([])
+      return
     }
+    if (command === 'exit') {
+      terminal.current.open = false
+      terminal.current.querySelector('summary').focus()
+      return
+    }
+    setHistory((h) => [
+      ...h.slice(-38),
+      { text: '$ ' + input.trim(), type: 'input' },
+      {
+        text:
+          replies[command] ||
+          'Unknown command. Type help to see what is available.',
+        type: 'output',
+      },
+    ])
+    if (command === 'work') scrollToTarget('#experiments')
+    requestAnimationFrame(() => {
+      if (output.current) output.current.scrollTop = output.current.scrollHeight
+    })
   }
-
-  useEffect(() => {
-    // Only steal focus after the user has engaged the terminal — an
-    // autofocus on mount would capture every keydown site-wide (the app's
-    // 1–6 / arrow-key chapter navigation checks e.target for INPUT).
-    if (engaged.current) inputRef.current?.focus()
-  }, [history.length])
-
   return (
-    <footer id="contact" className="relative z-10 w-full bg-void px-6 py-32 md:px-[8vw] md:py-44">
-      <div id="exit" className="absolute top-0 pointer-events-none" />
-      <canvas ref={matrixCanvasRef} className={`matrix-rain ${showMatrix ? 'active' : ''}`} aria-hidden="true" />
-      <div className={`konami-flash ${konamiFlash ? 'active' : ''}`} aria-hidden="true" />
-
-      <div className="mx-auto max-w-3xl overflow-hidden rounded-2xl border border-black/10 bg-panel shadow-2xl" onClick={() => { engaged.current = true; inputRef.current?.focus() }}>
-        <div className="flex items-center gap-2 border-b border-black/10 bg-panel-2 px-4 py-3">
-          <span className="h-2.5 w-2.5 rounded-full bg-black/15" />
-          <span className="h-2.5 w-2.5 rounded-full bg-black/15" />
-          <span className="h-2.5 w-2.5 rounded-full bg-cyan/70" />
-          <span className="ml-3 font-mono text-[0.6rem] uppercase tracking-[0.25em] text-titanium-dim">
-            playground — zsh
-          </span>
-          <span className="ml-auto font-mono text-[0.55rem] uppercase tracking-[0.2em] text-titanium-dim/50">
-            {theme.toUpperCase()} MODE
-          </span>
-        </div>
-        <div className="p-6 font-mono text-xs leading-relaxed md:p-8 md:text-sm max-h-[50vh] overflow-y-auto" style={{ fontFamily: 'var(--font-mono)' }}>
-          {history.map((h, i) => (
-            <div key={i} className={`whitespace-pre-wrap ${h.type === 'input' ? 'text-cyan' : h.type === 'error' ? 'text-red-400' : 'text-bone'}`} dangerouslySetInnerHTML={{ __html: h.text }} />
-          ))}
-          <form onSubmit={handleSubmit} className="flex items-center gap-2 mt-2">
-            <span className="text-cyan">$</span>
-            <input
-              ref={inputRef}
-              type="text"
-              value={input}
-              onChange={(e) => setInput(e.target.value)}
-              onKeyDown={handleKeyDown}
-              onSubmit={handleSubmit}
-              className="flex-1 bg-transparent border-none outline-none text-bone font-mono text-xs md:text-sm"
-              placeholder="type a command... (Tab: complete, ↑/↓: history)"
-              spellCheck={false}
-              autoComplete="off"
-              data-cursor="text"
-            />
-            <span className="cursor" aria-hidden="true" />
-          </form>
+    <footer
+      id="contact"
+      className="contact-section page-gutter"
+      aria-labelledby="contact-heading"
+    >
+      <div className="contact-top">
+        <span className="availability">
+          <i className="status-dot" />
+          Available for product design & design engineering roles
+        </span>
+        <span className="contact-location">
+          Bengaluru · Remote · Relocation
+        </span>
+      </div>
+      <h2 id="contact-heading">
+        Let’s make
+        <br />
+        <em>it matter.</em>
+      </h2>
+      <div className="contact-main">
+        <p>
+          I bring strategic product thinking and hands-on engineering to
+          ambitious teams. Have something worth building?
+        </p>
+        <div className="contact-actions">
+          <a className="button button-dark" href={'mailto:' + email}>
+            Email Vishwas <Icon name="external" />
+          </a>
+          <a
+            className="button"
+            href="./resume.pdf"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            View résumé <Icon name="external" />
+          </a>
+          <a
+            className="text-link"
+            href="./resume.pdf"
+            download="Vishwas-Mehta-Resume.pdf"
+          >
+            Download PDF <Icon name="arrow" />
+          </a>
         </div>
       </div>
-
-      <div className="mt-28 flex flex-col items-center gap-8 text-center md:mt-36">
-        <span className="font-sans text-[0.68rem] font-medium uppercase tracking-[0.35em] text-titanium-dim" data-cursor="text">
-          [ Chapter 06 — Contact & Terminal ]
+      <div className="contact-address">
+        <a href={'mailto:' + email}>{email}</a>
+        <button
+          className="icon-button"
+          onClick={copy}
+          aria-label="Copy email address"
+        >
+          <Icon name="copy" />
+        </button>
+        <span className="copy-status" role="status">
+          {copyStatus}
         </span>
-        <h2 className="max-w-2xl font-display text-4xl leading-[1.05] italic text-[#121212] md:text-5xl" data-cursor="text">
-          Available for product design & design engineering roles.
-        </h2>
-        <p className="max-w-md text-[0.75rem] font-sans leading-relaxed text-titanium/80 mb-2" data-cursor="text">
-          I'm Vishwas — a strategic product designer & design engineer who carries ideas from systems thinking into shipped, testable interfaces. Open to full-time roles and high-conviction 0→1 contracts.<br/><br/>
-          <span className="uppercase tracking-[0.1em] font-medium">Bengaluru · Open to remote</span>
-        </p>
-
-        {/* Harmonized Candidate Contact Suite */}
-        <div className="mt-8 flex flex-col sm:flex-row items-center gap-4 z-10">
-          <Magnetic as="div" strength={0.35}>
-            <a
-              href="mailto:vyommehta197@gmail.com?subject=Product%20Design%20%26%20Design%20Engineering%20Inquiry%20%E2%80%94%20Vishwas%20Mehta"
-              className="group relative inline-flex items-center gap-3 rounded-full bg-[#121212] px-8 py-3.5 font-sans text-xs font-semibold tracking-[0.14em] uppercase text-[#f7f6f3] shadow-xl hover:scale-105 hover:bg-black transition-all duration-300"
-              aria-label="Email Vishwas Mehta at vyommehta197@gmail.com"
-              data-cursor="magnetic"
+      </div>
+      <details className="contact-terminal" ref={terminal}>
+        <summary>
+          <span className="meta">~/playground</span>
+          <span>For the curious</span>
+          <Icon name="arrow" />
+        </summary>
+        <div
+          className="terminal-output"
+          ref={output}
+          role="log"
+          aria-label="Playground terminal output"
+          data-lenis-prevent
+        >
+          {history.map((line, i) => (
+            <p
+              className={line.type === 'input' ? 'terminal-command' : ''}
+              key={i}
             >
-              <span>Email Vishwas</span>
-            </a>
-          </Magnetic>
-
-          <Magnetic as="div" strength={0.35}>
-            <a
-              href="./resume.pdf"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center justify-center rounded-full border border-black/15 bg-white/70 backdrop-blur-md px-6 py-3.5 font-sans text-xs font-medium uppercase tracking-[0.14em] text-[#121212] hover:border-black/35 hover:bg-white transition-all duration-300 shadow-sm"
-              data-cursor="magnetic"
-            >
-              Résumé ↗
-            </a>
-          </Magnetic>
-          
-          <Magnetic as="div" strength={0.35}>
-            <a
-              href="https://linkedin.com/in/vyshwasmehta"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center justify-center rounded-full border border-black/15 bg-white/70 backdrop-blur-md px-6 py-3.5 font-sans text-xs font-medium uppercase tracking-[0.14em] text-[#121212] hover:border-black/35 hover:bg-white transition-all duration-300 shadow-sm"
-              data-cursor="magnetic"
-            >
-              LinkedIn ↗
-            </a>
-          </Magnetic>
+              {line.text}
+            </p>
+          ))}
         </div>
-        
-        <div className="mt-24 flex flex-col items-center justify-center gap-4 md:mt-32">
-          <p className="font-sans text-[0.65rem] uppercase tracking-[0.3em] text-titanium font-semibold">
-            DESIGNED AND BUILT BY VISHWAS MEHTA
-          </p>
-          <p className="font-sans text-[0.6rem] uppercase tracking-[0.2em] text-titanium-dim">
-            BENGALURU, INDIA
-            {konamiActive && <span className="ml-2 text-cyan animate-pulse"> ⚡ KONAMI ACTIVE ⚡</span>}
-          </p>
+        <form onSubmit={execute}>
+          <label htmlFor="terminal-input">Command</label>
+          <input
+            id="terminal-input"
+            value={input}
+            onChange={(e) => setInput(e.target.value)}
+            autoComplete="off"
+            spellCheck="false"
+            placeholder="Type help"
+          />
+          <button
+            type="submit"
+            className="icon-button"
+            aria-label="Run command"
+          >
+            <Icon name="arrow" />
+          </button>
+        </form>
+      </details>
+      <div className="footer-bottom">
+        <span>Designed & built by Vishwas Mehta</span>
+        <div>
+          <a
+            href="https://linkedin.com/in/vyshwasmehta"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            LinkedIn <Icon name="external" />
+          </a>
+          <a
+            href="https://github.com/vyshwas"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            GitHub <Icon name="external" />
+          </a>
+          <button onClick={() => scrollToTarget(0)}>
+            Back to top <Icon name="arrow" />
+          </button>
         </div>
       </div>
     </footer>

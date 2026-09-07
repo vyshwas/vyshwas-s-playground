@@ -1,36 +1,33 @@
-import React from 'react'
-
-export class ErrorBoundary extends React.Component {
-  constructor(props) {
-    super(props)
-    this.state = { hasError: false, error: null, errorInfo: null }
+import { Component } from 'react'
+export class ErrorBoundary extends Component {
+  state = { hasError: false }
+  static getDerivedStateFromError() {
+    return { hasError: true }
   }
-
-  static getDerivedStateFromError(error) {
-    return { hasError: true, error }
+  componentDidCatch(error, info) {
+    console.error('Playground rendering failed:', error, info)
   }
-
-  componentDidCatch(error, errorInfo) {
-    console.error('ErrorBoundary caught an error:', error, errorInfo)
-    this.setState({ errorInfo })
-  }
-
   render() {
-    if (this.state.hasError) {
-      return (
-        <div style={{ padding: '2rem', background: '#300', color: '#fff', minHeight: '100vh', fontFamily: 'monospace', zIndex: 999999, position: 'relative' }}>
-          <h2>Something went wrong.</h2>
-          <p>Please share this error message:</p>
-          <details style={{ whiteSpace: 'pre-wrap', marginTop: '1rem' }} open>
-            <summary>View Error Details</summary>
-            <br />
-            {this.state.error && this.state.error.toString()}
-            <br />
-            {this.state.errorInfo && this.state.errorInfo.componentStack}
-          </details>
+    if (!this.state.hasError) return this.props.children
+    return (
+      <main className="site-error page-gutter">
+        <h1>The playground couldn’t open.</h1>
+        <p>Reload the page, or view my résumé and get in touch directly.</p>
+        <div>
+          <button
+            className="button button-dark"
+            onClick={() => window.location.reload()}
+          >
+            Reload page
+          </button>
+          <a className="button" href="./resume.pdf">
+            View résumé
+          </a>
+          <a className="button" href="mailto:vyommehta197@gmail.com">
+            Email Vishwas
+          </a>
         </div>
-      )
-    }
-    return this.props.children
+      </main>
+    )
   }
 }

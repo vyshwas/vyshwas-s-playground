@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from 'react'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import Matter from 'matter-js'
-import { reducedMotion } from '../App.jsx'
+import { reducedMotion } from '../lib/motion.js'
 
 gsap.registerPlugin(ScrollTrigger)
 

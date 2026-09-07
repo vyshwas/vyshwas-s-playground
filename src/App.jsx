@@ -2,241 +2,87 @@ import { useEffect, useRef } from 'react'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import Lenis from 'lenis'
+import 'lenis/dist/lenis.css'
+import { useReducedMotion, scrollToTarget } from './lib/motion.js'
 import Nav from './components/Nav.jsx'
 import Hero from './components/Hero.jsx'
-import LabReveal from './components/LabReveal.jsx'
-import Projects from './components/Projects.jsx'
-import Bento from './components/Bento.jsx'
 import About from './components/About.jsx'
+import Projects from './components/Projects.jsx'
+import LabReveal from './components/LabReveal.jsx'
+import Bento from './components/Bento.jsx'
 import FooterExit from './components/FooterExit.jsx'
-import AmbientWebGL from './components/AmbientWebGL.jsx'
 import MagneticCursor from './components/MagneticCursor.jsx'
 
-gsap.registerPlugin(ScrollTrigger)
-
-export const reducedMotion = () =>
-  window.matchMedia('(prefers-reduced-motion: reduce)').matches
-
-export function scrollToTarget(target) {
-  // A smooth Lenis glide back up through the pinned hero scrub timeline
-  // strands mid-zoom ghost states (and can stall at the pin end), so any
-  // top/hero-bound jump goes instant + state-synced instead. All other
-  // chapter jumps keep the smooth glide (they never cross the pin).
-  const isTop = target === 0 || target === '#hero'
-  const lenis = window.__lenis
-  if (lenis) {
-    if (isTop) {
-      lenis.scrollTo(0, { immediate: true })
-    } else {
-      lenis.scrollTo(target, { duration: 1.6 })
-    }
-    return
-  }
-  if (typeof target === 'string') {
-    if (isTop) {
-      window.scrollTo(0, 0)
-    } else {
-      document.querySelector(target)?.scrollIntoView({ behavior: 'smooth' })
-    }
-  } else {
-    window.scrollTo({ top: 0, behavior: 'smooth' })
-  }
-}
-
-const chapters = [
-  { id: 'hero', label: 'Cover', key: '1' },
-  { id: 'about', label: 'About', key: '2' },
-  { id: 'lab', label: 'Lab', key: '3' },
-  { id: 'experiments', label: 'Work', key: '4' },
-  { id: 'system', label: 'Principles', key: '5' },
-  { id: 'exit', label: 'Contact', key: '6' },
-]
-
-const wowMoments = [
-  { chapter: 'hero', progress: 0.1, label: 'Video scale + headline split', fn: () => {} },
-  { chapter: 'hero', progress: 0.45, label: '3D particle burst', fn: () => {} },
-  { chapter: 'hero', progress: 0.72, label: 'Color grading peak', fn: () => {} },
-  { chapter: 'lab', progress: 0.15, label: 'Core sphere unlocks', fn: () => {} },
-  { chapter: 'lab', progress: 0.4, label: 'Rings begin rotation', fn: () => {} },
-  { chapter: 'lab', progress: 0.75, label: 'Light shafts activate', fn: () => {} },
-  { chapter: 'experiments', progress: 0.25, label: 'Mask sweep reveal', fn: () => {} },
-  { chapter: 'experiments', progress: 0.6, label: '3D carousel depth', fn: () => {} },
-  { chapter: 'system', progress: 0.3, label: 'Flip card hover', fn: () => {} },
-  { chapter: 'system', progress: 0.65, label: 'Magnetic tilt peak', fn: () => {} },
-  { chapter: 'exit', progress: 0.1, label: 'Terminal appears', fn: () => {} },
-  { chapter: 'exit', progress: 0.45, label: 'Konami unlocks', fn: () => {} },
-  { chapter: 'exit', progress: 0.8, label: 'Theme cycle peak', fn: () => {} },
-]
-
 export default function App() {
-  const fpsRef = useRef({ frames: 0, lastTime: 0, fps: 60 })
-  const qualityRef = useRef('high')
-
+  const calm = useReducedMotion()
+  const progress = useRef(null)
   useEffect(() => {
-    if ('scrollRestoration' in window.history) {
-      window.history.scrollRestoration = 'manual'
-    }
-    window.scrollTo(0, 0)
-    fpsRef.current.lastTime = performance.now()
-  }, [])
-
-  useEffect(() => {
-    let lenis
-    let raf
-    if (!reducedMotion()) {
-      lenis = new Lenis({ lerp: 0.09, smoothWheel: true })
-      lenis.on('scroll', ScrollTrigger.update)
-      raf = (time) => lenis.raf(time * 1000)
-      gsap.ticker.add(raf)
-      gsap.ticker.lagSmoothing(0)
-      window.__lenis = lenis
-    }
+    if (calm) return
+    const lenis = new Lenis({ lerp: 0.1, smoothWheel: true, syncTouch: false })
+    const update = () => ScrollTrigger.update()
+    const tick = (time) => lenis.raf(time * 1000)
+    lenis.on('scroll', update)
+    gsap.ticker.add(tick)
+    gsap.ticker.lagSmoothing(0)
+    window.__lenis = lenis
     return () => {
-      if (raf) gsap.ticker.remove(raf)
-      lenis?.destroy()
+      gsap.ticker.remove(tick)
+      lenis.off('scroll', update)
+      lenis.destroy()
       delete window.__lenis
     }
-  }, [])
-
+  }, [calm])
   useEffect(() => {
-    const bar = document.getElementById('progress-bar')
-    if (!bar || reducedMotion()) return
-    const st = ScrollTrigger.create({
+    let cancelled = false
+    const refresh = () => {
+      if (!cancelled) {
+        ScrollTrigger.sort()
+        ScrollTrigger.refresh()
+        window.__lenis?.resize()
+      }
+    }
+    const trigger = ScrollTrigger.create({
       start: 0,
-      end: () => document.documentElement.scrollHeight - window.innerHeight,
+      end: 'max',
       onUpdate: (self) => {
-        bar.style.transform = `scaleX(${self.progress})`
-        wowMoments.forEach((moment) => {
-          if (Math.abs(self.progress - moment.progress) < 0.02 && moment.fn) {
-            moment.fn()
-            moment.fn = null
-          }
-        })
+        if (progress.current)
+          progress.current.style.transform = 'scaleX(' + self.progress + ')'
       },
     })
-    return () => st.kill()
-  }, [])
-
-  useEffect(() => {
-    const handleLoad = () => {
-      ScrollTrigger.sort()
-      ScrollTrigger.refresh()
-    }
-    
-    // If already loaded
-    if (document.readyState === 'complete') {
-      handleLoad()
-    } else {
-      window.addEventListener('load', handleLoad)
-    }
-    
-    // Also do a few delayed refreshes just in case fonts/components mount late
-    const t1 = setTimeout(handleLoad, 500)
-    const t2 = setTimeout(handleLoad, 1500)
-    const t3 = setTimeout(handleLoad, 3000)
-
+    document.fonts.ready.then(refresh)
+    window.addEventListener('load', refresh)
+    const frame = requestAnimationFrame(refresh)
     return () => {
-      window.removeEventListener('load', handleLoad)
-      clearTimeout(t1)
-      clearTimeout(t2)
-      clearTimeout(t3)
+      cancelled = true
+      cancelAnimationFrame(frame)
+      trigger.kill()
+      window.removeEventListener('load', refresh)
     }
-  }, [])
-
-  useEffect(() => {
-    const handleKeyDown = (e) => {
-      if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return
-      if (e.key >= '1' && e.key <= '6') {
-        e.preventDefault()
-        const idx = parseInt(e.key, 10) - 1
-        if (chapters[idx]) scrollToTarget(`#${chapters[idx].id}`)
-      } else if (e.key === ' ' || e.key === 'Space') {
-        e.preventDefault()
-        if (window.__lenis) {
-          window.__lenis.stop()
-          setTimeout(() => window.__lenis?.start(), 2000)
-        }
-      } else if (e.key === 'k' || e.key === 'K') {
-        const konami = new KeyboardEvent('keydown', { code: 'KeyK' })
-        document.dispatchEvent(konami)
-      } else if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
-        const currentIdx = chapters.findIndex(c => {
-          const sec = document.getElementById(c.id)
-          if (!sec) return false
-          const rect = sec.getBoundingClientRect()
-          return rect.top <= 100 && rect.bottom > 100
-        })
-        const nextIdx = Math.min(Math.max(currentIdx + (e.key === 'ArrowDown' ? 1 : -1), 0), chapters.length - 1)
-        if (nextIdx !== currentIdx) scrollToTarget(`#${chapters[nextIdx].id}`)
-      }
-    }
-    window.addEventListener('keydown', handleKeyDown)
-    return () => window.removeEventListener('keydown', handleKeyDown)
-  }, [])
-
-  useEffect(() => {
-    let frameId = 0
-    function measureFPS(now) {
-      fpsRef.current.frames++
-      if (now - fpsRef.current.lastTime >= 1000) {
-        fpsRef.current.fps = fpsRef.current.frames
-        fpsRef.current.frames = 0
-        fpsRef.current.lastTime = now
-        if (fpsRef.current.fps < 30 && qualityRef.current === 'high') {
-          qualityRef.current = 'low'
-          document.documentElement.classList.add('low-quality')
-        } else if (fpsRef.current.fps > 50 && qualityRef.current === 'low') {
-          qualityRef.current = 'high'
-          document.documentElement.classList.remove('low-quality')
-        }
-      }
-      frameId = requestAnimationFrame(measureFPS)
-    }
-    frameId = requestAnimationFrame(measureFPS)
-    return () => cancelAnimationFrame(frameId)
-  }, [])
-
-  useEffect(() => {
-    const ctx = gsap.context(() => {
-      chapters.forEach((c, i) => {
-        ScrollTrigger.create({
-          trigger: `#${c.id}`,
-          start: 'top top',
-          end: i < chapters.length - 1 ? `#${chapters[i + 1].id} top` : '+=100%',
-          onEnter: () => {
-            document.body.dataset.chapter = c.id
-          },
-          onLeave: () => {
-            document.body.dataset.chapter = ''
-          },
-          onEnterBack: () => {
-            document.body.dataset.chapter = c.id
-          },
-        })
-      })
-    }, document.body)
-    return () => ctx.revert()
-  }, [])
-
+  }, [calm])
   return (
-    <div className="relative min-h-screen">
-      <AmbientWebGL />
+    <>
+      <a
+        className="skip-link"
+        href="#experiments"
+        onClick={(e) => {
+          e.preventDefault()
+          scrollToTarget('#experiments')
+          document.getElementById('experiments').focus({ preventScroll: true })
+        }}
+      >
+        Skip to selected work
+      </a>
+      <div className="reading-progress" ref={progress} aria-hidden="true" />
       <MagneticCursor />
-      <div className="paper-grain" aria-hidden="true" />
-      <div
-        id="progress-bar"
-        aria-hidden="true"
-        className="fixed top-0 left-0 z-[100] h-px w-full origin-left scale-x-0 bg-cyan hw"
-      />
       <Nav />
-      <main>
+      <main id="main">
         <Hero />
         <About />
-        <LabReveal />
         <Projects />
+        <LabReveal />
         <Bento />
-        <FooterExit />
       </main>
-    </div>
+      <FooterExit />
+    </>
   )
 }

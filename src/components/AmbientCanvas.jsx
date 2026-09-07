@@ -1,5 +1,5 @@
 import { useEffect, useRef } from 'react'
-import { reducedMotion } from '../App.jsx'
+import { reducedMotion } from '../lib/motion.js'
 
 export default function AmbientCanvas() {
   const canvasRef = useRef(null)
